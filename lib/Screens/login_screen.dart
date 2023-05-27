@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:gowild/Screens/HomeScreen.dart';
+import 'package:gowild/Screens/homeScreen.dart';
 import 'registration_screen.dart';
-import 'main.dart';
 // import 'dashboard_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -16,7 +15,7 @@ class LoginScreen extends StatelessWidget {
         primaryColor: Theme.of(context).colorScheme.primary,
         // pageColorDark: Theme.of(context).colorScheme.background,
         cardTheme: CardTheme(
-          color: Color.fromARGB(255, 255, 255, 255),
+          color: const Color.fromARGB(255, 255, 255, 255),
           elevation: 15,
           margin: const EdgeInsets.only(top: 15),
           shape: RoundedRectangleBorder(
@@ -42,7 +41,7 @@ class LoginScreen extends StatelessWidget {
       },
       onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => HomeScreen(),
+          builder: (context) => const HomeScreen(),
         ));
       },
       onRecoverPassword: (_) => Future(() => null),
@@ -63,5 +62,6 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
+  // ignore: non_constant_identifier_names
   DashboardScreen() {}
 }

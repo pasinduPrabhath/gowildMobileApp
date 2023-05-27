@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import '/reusable_components/inputFieldRegistration.dart';
 
 class RegistrationScreen extends StatefulWidget {
+  const RegistrationScreen({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _RegistrationScreenState createState() => _RegistrationScreenState();
 }
 
@@ -18,20 +22,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String _mobileNumber;
   late String _gender;
   late String _email;
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _birthday,
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-    if (picked != null && picked != _birthday) {
-      setState(() {
-        _birthday = picked;
-      });
-    }
-  }
 
   @override
   void initState() {
