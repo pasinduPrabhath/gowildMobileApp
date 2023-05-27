@@ -86,6 +86,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_form_builder:
+    dependency: "direct main"
+    description:
+      name: flutter_form_builder
+      sha256: "9b098f6a5f8a6381016a5fe9cdccc900683917d1fb930e1c6c6c051ca0f01f08"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.0.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -120,6 +128,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.4.0"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.18.1"
   js:
     dependency: transitive
     description:
@@ -200,6 +216,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  scroll_date_picker:
+    dependency: "direct main"
+    description:
+      name: scroll_date_picker
+      sha256: "65b4e0223f561a9475e156ff93fbe0712d2e995d399b40352b2f2f44540909d9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.1"
   sign_in_button:
     dependency: transitive
     description:
@@ -334,5 +358,5 @@ packages:
     source: hosted
     version: "2.1.4"
 sdks:
-  dart: ">=3.0.0-0 <4.0.0"
-  flutter: ">=3.3.0"
+  dart: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
