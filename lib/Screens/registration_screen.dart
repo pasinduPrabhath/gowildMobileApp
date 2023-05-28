@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gowild/routes/routes.dart';
+import 'package:gowild/screens/login_screen.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import '/reusable_components/inputFieldRegistration.dart';
@@ -278,7 +279,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRoutes.homeScreen);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()));
                   // if (_formKey.currentState!.validate()) {
                   //   _formKey.currentState!.save();
                   //   // TODO: Save registration data to database
