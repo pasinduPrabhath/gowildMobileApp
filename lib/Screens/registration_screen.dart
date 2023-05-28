@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '/reusable_components/inputFieldRegistration.dart';
 import 'HomeScreen.dart';
 import 'package:image_picker/image_picker.dart';
+import '../reusable_components/roundButton.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -213,23 +214,64 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 height: MediaQuery.of(context).size.height * 0.01,
               ),
               if (_isServiceProvider)
-                CustomTextFormField(
-                  labelText: 'NIC Number',
-                  errorText: 'Please enter a valid NIC number',
-                  onSaved: (value) {
-                    value = _nicNumber;
-                  },
+                Column(
+                  children: [
+                    CustomTextFormField(
+                      labelText: 'NIC Number',
+                      errorText: 'Please enter a valid NIC number',
+                      onSaved: (value) {
+                        value = _nicNumber;
+                      },
+                    ),
+                    Text('Upload Copy of Your NIC',
+                        style: Theme.of(context).textTheme.subtitle1),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                    Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RoundButton(
+                              labelText: 'Front Side',
+                              icon: Icons.upload_file,
+                              onPressed: () async {
+                                final pickedFile = await ImagePicker()
+                                    .pickImage(source: ImageSource.gallery);
+                                if (pickedFile != null) {
+                                  // TODO: Upload the image to your server
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.01,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RoundButton(
+                              labelText: 'Back Side',
+                              icon: Icons.upload_file,
+                              onPressed: () async {
+                                final pickedFile = await ImagePicker()
+                                    .pickImage(source: ImageSource.gallery);
+                                if (pickedFile != null) {
+                                  // TODO: Upload the image to your server
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                  ],
                 ),
-              ElevatedButton(
-                child: const Text('Pick Image'),
-                onPressed: () async {
-                  final pickedFile =
-                      await ImagePicker().getImage(source: ImageSource.gallery);
-                  if (pickedFile != null) {
-                    // TODO: Upload the image to your server
-                  }
-                },
-              ),
               ElevatedButton(
                 child: const Text(
                   'Register',
