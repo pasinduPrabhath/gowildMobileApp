@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gowild/routes/routes.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import '/reusable_components/inputFieldRegistration.dart';
+import 'HomeScreen.dart';
+import 'package:image_picker/image_picker.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -14,14 +17,16 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  bool _isServiceProvider = false;
   late String _firstName;
   late String _lastName;
   late DateTime _birthday;
   late String _country;
   late String _town;
   late String _mobileNumber;
-  late String _gender;
+  late String _gender = '';
   late String _email;
+  late String _nicNumber;
 
   @override
   void initState() {
@@ -143,17 +148,86 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 },
               ),
               CustomTextFormField(
-                labelText: 'Moile Number',
+                labelText: 'Mobile Number',
                 errorText: 'Please enter a valid email address',
                 onSaved: (value) {
                   value = _mobileNumber;
                 },
               ),
-              CustomTextFormField(
-                labelText: 'Gender',
-                errorText: 'Please select the Gender',
-                onSaved: (value) {
-                  value = _gender;
+              Text('Gender', style: Theme.of(context).textTheme.subtitle1),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Radio(
+                    value: 'male',
+                    groupValue: _gender,
+                    onChanged: (value) {
+                      setState(() {
+                        _gender = value as String;
+                      });
+                    },
+                  ),
+                  const Text('Male'),
+                  Radio(
+                    value: 'female',
+                    groupValue: _gender,
+                    onChanged: (value) {
+                      setState(() {
+                        _gender = value as String;
+                      });
+                    },
+                  ),
+                  const Text('Female'),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.01,
+              ),
+              Text('Are you a service provider?',
+                  style: Theme.of(context).textTheme.subtitle1),
+              Row(
+                children: <Widget>[
+                  Radio(
+                    value: true,
+                    groupValue: _isServiceProvider,
+                    onChanged: (value) {
+                      setState(() {
+                        _isServiceProvider = value as bool;
+                      });
+                    },
+                  ),
+                  const Text('Yes'),
+                  Radio(
+                    value: false,
+                    groupValue: _isServiceProvider,
+                    onChanged: (value) {
+                      setState(() {
+                        _isServiceProvider = value as bool;
+                      });
+                    },
+                  ),
+                  const Text('No'),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.01,
+              ),
+              if (_isServiceProvider)
+                CustomTextFormField(
+                  labelText: 'NIC Number',
+                  errorText: 'Please enter a valid NIC number',
+                  onSaved: (value) {
+                    value = _nicNumber;
+                  },
+                ),
+              ElevatedButton(
+                child: const Text('Pick Image'),
+                onPressed: () async {
+                  final pickedFile =
+                      await ImagePicker().getImage(source: ImageSource.gallery);
+                  if (pickedFile != null) {
+                    // TODO: Upload the image to your server
+                  }
                 },
               ),
               ElevatedButton(
@@ -162,11 +236,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    // TODO: Save registration data to database
-                    // You can access the form data using the variables declared above
-                  }
+                  Navigator.pushNamed(context, AppRoutes.homeScreen);
+                  // if (_formKey.currentState!.validate()) {
+                  //   _formKey.currentState!.save();
+                  //   // TODO: Save registration data to database
+                  //   // You can access the form data using the variables declared above
+                  // }
                 },
               ),
             ],

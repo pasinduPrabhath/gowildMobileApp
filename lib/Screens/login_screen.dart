@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:gowild/Screens/homeScreen.dart';
+import 'package:gowild/routes/routes.dart';
+import 'package:gowild/screens/homeScreen.dart';
 import 'registration_screen.dart';
 // import 'dashboard_screen.dart';
 
@@ -34,15 +35,15 @@ class LoginScreen extends StatelessWidget {
         return Future(() => null);
       },
       onSignup: (_) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => RegistrationScreen(),
-        ));
-        return Future(() => null);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const RegistrationScreen()));
+        // return Future(() => null);
       },
       onSubmitAnimationCompleted: () {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
       },
       onRecoverPassword: (_) => Future(() => null),
       messages: LoginMessages(
@@ -61,7 +62,4 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-
-  // ignore: non_constant_identifier_names
-  DashboardScreen() {}
 }
