@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../routes/routes.dart';
 import 'login_screen.dart';
-import 'package:gowild/routes/routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
               background: const Color.fromARGB(
                   255, 39, 38, 38)) //background color dont change
           .copyWith(
-              primary: const Color.fromARGB(255, 13, 158, 61)) //primary color
+              primary: const Color.fromARGB(255, 11, 43, 22)) //primary color
           .copyWith(
               onPrimary: const Color.fromARGB(255, 254, 255, 255)) //text color
           .copyWith(onSecondary: const Color.fromARGB(255, 15, 119, 55)),
@@ -54,6 +54,7 @@ class MyApp extends StatelessWidget {
       title: 'GoWild',
       theme: theme,
       home: const LoginScreen(),
+      routes: AppRoutes.routes,
     );
   }
 }

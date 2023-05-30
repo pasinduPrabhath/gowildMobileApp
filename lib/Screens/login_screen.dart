@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:gowild/routes/routes.dart';
-import 'package:gowild/screens/homeScreen.dart';
 import 'registration_screen.dart';
 // import 'dashboard_screen.dart';
 
@@ -24,7 +23,6 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ),
-      // title: 'GoWild',
       logo: const AssetImage('assets/images/logo.png'),
       onLogin: (loginData) {
         // save user entered password in pass variable
@@ -39,12 +37,16 @@ class LoginScreen extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => const RegistrationScreen()));
+        return null;
         // return Future(() => null);
       },
       onSubmitAnimationCompleted: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
+        Navigator.pushNamed(context, AppRoutes.homeScreen);
+        // Navigator.push(context,
+        //     MaterialPageRoute(builder: (context) => const HomeScreen()));
       },
+      // },
+
       onRecoverPassword: (_) => Future(() => null),
       messages: LoginMessages(
         userHint: 'User',

@@ -26,7 +26,7 @@ class RoundButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon),
-          SizedBox(width: 8.0),
+          const SizedBox(width: 8.0),
           Text(labelText),
         ],
       ),

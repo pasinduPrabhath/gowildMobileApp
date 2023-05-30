@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gowild/routes/routes.dart';
 import 'package:gowild/screens/login_screen.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import '/reusable_components/inputFieldRegistration.dart';
-import 'HomeScreen.dart';
 import 'package:image_picker/image_picker.dart';
 import '../reusable_components/roundButton.dart';
 
@@ -156,7 +154,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   value = _mobileNumber;
                 },
               ),
-              Text('Gender', style: Theme.of(context).textTheme.subtitle1),
+              Text('Gender', style: Theme.of(context).textTheme.titleMedium),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -186,7 +184,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 height: MediaQuery.of(context).size.height * 0.01,
               ),
               Text('Are you a service provider?',
-                  style: Theme.of(context).textTheme.subtitle1),
+                  style: Theme.of(context).textTheme.titleMedium),
               Row(
                 children: <Widget>[
                   Radio(
@@ -225,7 +223,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       },
                     ),
                     Text('Upload Copy of Your NIC',
-                        style: Theme.of(context).textTheme.subtitle1),
+                        style: Theme.of(context).textTheme.titleMedium),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.02,
                     ),
