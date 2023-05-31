@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gowild/Screens/homeScreen.dart';
-import '../screens/registration_screen.dart';
+import 'package:gowild/Screens/home_screen/homeScreen.dart';
+import '../screens/registartion_screen/registration_screen.dart';
 
 class AppRoutes {
   static const String home = '/';

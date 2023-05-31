@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:gowild/routes/routes.dart';
-import 'registration_screen.dart';
+// import 'registration_screen.dart';
 // import 'dashboard_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -27,16 +27,17 @@ class LoginScreen extends StatelessWidget {
       onLogin: (loginData) {
         // save user entered password in pass variable
         // pass = loginData.password;
-        print('button pressed');
+        print('pressed');
         print(loginData.name);
         print(pass); // add this line to print the pass variable
         return Future(() => null);
       },
-      onSignup: (_) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const RegistrationScreen()));
+
+      onSignup: (signupData) {
+        Navigator.pushNamed(context, AppRoutes.registration);
+        print(signupData.name);
+        print(signupData.password);
+        // print(signupData.confirmPassword);
         return null;
         // return Future(() => null);
       },
@@ -49,7 +50,7 @@ class LoginScreen extends StatelessWidget {
 
       onRecoverPassword: (_) => Future(() => null),
       messages: LoginMessages(
-        userHint: 'User',
+        userHint: 'Email',
         passwordHint: 'Pass',
         confirmPasswordHint: 'Confirm',
         loginButton: 'LOG IN',

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gowild/screens/login_screen.dart';
+import 'package:gowild/screens/login_screen/login_screen.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import '/reusable_components/inputFieldRegistration.dart';
 import 'package:image_picker/image_picker.dart';
-import '../reusable_components/roundButton.dart';
+import '../../reusable_components/roundButton.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -18,7 +18,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
 
   bool _isServiceProvider = false;
-  late String _firstName;
+  late String _firstName = '';
   late String _lastName;
   late DateTime _birthday;
   late String _country;
@@ -26,12 +26,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String _mobileNumber;
   late String _gender = '';
   late String _email;
-  late String _nicNumber;
+  late String _password;
+  late String _nicNumber = '';
 
   @override
   void initState() {
     super.initState();
     _birthday = DateTime.now();
+    _gender = 'male';
   }
 
   @override
@@ -57,21 +59,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   labelText: 'First Name',
                   errorText: 'Please enter a valid First Name',
                   onSaved: (value) {
-                    value = _firstName;
+                    _firstName = value;
                   }),
               CustomTextFormField(
                   labelText: 'Last Name',
                   errorText: 'Please enter a valid Last Name',
                   onSaved: (value) {
-                    value = _lastName;
+                    _lastName = value;
                   }),
-              CustomTextFormField(
-                labelText: 'Email',
-                errorText: 'Please enter a valid email address',
-                onSaved: (value) {
-                  value = _email;
-                },
-              ),
+              // CustomTextFormField(
+              //   labelText: 'Email',
+              //   errorText: 'Please enter a valid email address',
+              //   onSaved: (value) {
+              //     _email = value;
+              //   },
+              // ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -137,21 +139,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 labelText: 'Country',
                 errorText: 'Please enter a valid Country name',
                 onSaved: (value) {
-                  value = _country;
+                  _country = value;
                 },
               ),
               CustomTextFormField(
                 labelText: 'Town',
                 errorText: 'Please enter a valid Town name',
                 onSaved: (value) {
-                  value = _town;
+                  _town = value;
                 },
               ),
               CustomTextFormField(
                 labelText: 'Mobile Number',
                 errorText: 'Please enter a valid email address',
                 onSaved: (value) {
-                  value = _mobileNumber;
+                  _mobileNumber = value;
                 },
               ),
               Text('Gender', style: Theme.of(context).textTheme.titleMedium),
@@ -277,15 +279,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginScreen()));
-                  // if (_formKey.currentState!.validate()) {
-                  //   _formKey.currentState!.save();
-                  //   // TODO: Save registration data to database
-                  //   // You can access the form data using the variables declared above
-                  // }
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => const LoginScreen()));
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    print('first name is ' + _firstName);
+                    // TODO: Save registration data to database
+                    // You can access the form data using the variables declared above
+                  }
                 },
               ),
             ],

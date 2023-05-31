@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../routes/routes.dart';
-import 'login_screen.dart';
+import './login_screen/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,8 +43,7 @@ class MyApp extends StatelessWidget {
           .copyWith(
               background: const Color.fromARGB(
                   255, 39, 38, 38)) //background color dont change
-          .copyWith(
-              primary: const Color.fromARGB(255, 11, 43, 22)) //primary color
+          .copyWith(primary: Color.fromARGB(255, 52, 136, 80)) //primary color
           .copyWith(
               onPrimary: const Color.fromARGB(255, 254, 255, 255)) //text color
           .copyWith(onSecondary: const Color.fromARGB(255, 15, 119, 55)),
