@@ -34,7 +34,10 @@ class LoginScreen extends StatelessWidget {
       },
 
       onSignup: (signupData) {
-        Navigator.pushNamed(context, AppRoutes.registration);
+        Navigator.pushNamed(context, AppRoutes.registration, arguments: {
+          'name': signupData.name,
+          'password': signupData.password
+        });
         print(signupData.name);
         print(signupData.password);
         // print(signupData.confirmPassword);

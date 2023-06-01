@@ -47,8 +47,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       town: _town,
       mobileNumber: _mobileNumber,
       gender: _gender,
-      email: 'pasi@we.df',
-      password: 'pw123',
+      email: _email,
+      password: _password,
       nicNumber: _nicNumber,
       sp: _isServiceProvider,
     );
@@ -76,6 +76,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, String?>?;
+    _email = args?['name'] ?? '';
+    _password = args?['password'] ?? '';
+    print(_password + '   ' + _email);
     return Scaffold(
       backgroundColor: Colors.grey[900], // set background color to dark
       appBar: AppBar(
