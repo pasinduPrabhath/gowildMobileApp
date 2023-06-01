@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gowild/screens/login_screen/login_screen.dart';
+import 'package:gowild/Screens/registartion_screen/registration_screen_model.dart';
+// import 'package:gowild/Screens/registartion_screen/registration_screen_model.dart';
+import 'package:gowild/Screens/login_screen/login_screen.dart';
+// import 'package:gowild/Screens/registartion_screen/registration_screen_model.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
+import '../../backend/api_requests/registration_screen_api.dart';
 import '/reusable_components/inputFieldRegistration.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../reusable_components/roundButton.dart';
@@ -28,6 +32,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String _email;
   late String _password;
   late String _nicNumber = '';
+
+  void _submitForm() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    _formKey.currentState!.save();
+
+    final user = User(
+      firstName: _firstName,
+      lastName: _lastName,
+      birthday: DateFormat('yyyy-MM-dd').format(_birthday),
+      country: _country,
+      town: _town,
+      mobileNumber: _mobileNumber,
+      gender: _gender,
+      email: 'pasi@we.df',
+      password: 'pw123',
+      nicNumber: _nicNumber,
+      sp: _isServiceProvider,
+    );
+    try {
+      final userId = await Api.createUser(user);
+      print('User created with ID: $userId');
+      // Navigate to the login screen after successful registration
+      Navigator.pushReplacementNamed(context, '/homeScreen');
+    } catch (e) {
+      print('Failed to create user: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to create user'),
+        ),
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -274,22 +312,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ],
                 ),
               ElevatedButton(
+                onPressed: _submitForm,
                 child: const Text(
                   'Register',
                   style: TextStyle(color: Colors.white),
                 ),
-                onPressed: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => const LoginScreen()));
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    print('first name is ' + _firstName);
-                    // TODO: Save registration data to database
-                    // You can access the form data using the variables declared above
-                  }
-                },
+                // TODO: Save registration data to database
+                // You can access the form data using the variables declared above
               ),
             ],
           ),

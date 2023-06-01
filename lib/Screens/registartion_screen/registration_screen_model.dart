@@ -1,18 +1,21 @@
+import 'dart:ffi';
+
 class User {
-  int? id;
+  // int? id;
   String? firstName;
   String? lastName;
+  String? email;
+  String? password;
   String? birthday;
   String? country;
   String? town;
   String? mobileNumber;
   String? gender;
-  String? email;
-  String? password;
+  bool? sp;
   String? nicNumber;
 
   User({
-    this.id,
+    // this.id,
     this.firstName,
     this.lastName,
     this.birthday,
@@ -23,37 +26,39 @@ class User {
     this.email,
     this.password,
     this.nicNumber,
+    this.sp,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'first_name': firstName,
-      'last_name': lastName,
+      // 'id': id,
+      'firstName': firstName,
+      'lastName': lastName,
       'birthday': birthday,
       'country': country,
       'town': town,
-      'mobile_number': mobileNumber,
+      'mobileNumber': mobileNumber,
       'gender': gender,
       'email': email,
       'password': password,
-      'nic_number': nicNumber,
+      'nicNumber': nicNumber,
+      'sp': sp,
     };
   }
 
   static User fromMap(Map<String, dynamic> map) {
     return User(
-      id: map['id'],
-      firstName: map['first_name'],
-      lastName: map['last_name'],
+      // id: map['id'],
+      firstName: map['firstName'],
+      lastName: map['lastName'],
       birthday: map['birthday'],
       country: map['country'],
       town: map['town'],
-      mobileNumber: map['mobile_number'],
+      mobileNumber: map['mobileNumber'],
       gender: map['gender'],
       email: map['email'],
       password: map['password'],
-      nicNumber: map['nic_number'],
+      nicNumber: map['nicNumber'],
     );
   }
 }
