@@ -32,6 +32,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String _email;
   late String _password;
   late String _nicNumber = '';
+  late String _timestamp;
 
   void _submitForm() async {
     if (!_formKey.currentState!.validate()) {
@@ -51,6 +52,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       password: _password,
       nicNumber: _nicNumber,
       sp: _isServiceProvider,
+      timestamp: DateTime.now().toUtc().toString(),
     );
     try {
       final userId = await Api.createUser(user);

@@ -13,6 +13,7 @@ class User {
   String? gender;
   bool? sp;
   String? nicNumber;
+  String? timestamp;
 
   User({
     // this.id,
@@ -27,6 +28,7 @@ class User {
     this.password,
     this.nicNumber,
     this.sp,
+    this.timestamp,
   });
 
   Map<String, dynamic> toMap() {
@@ -43,6 +45,7 @@ class User {
       'password': password,
       'nicNumber': nicNumber,
       'sp': sp,
+      'timestamp': timestamp,
     };
   }
 
@@ -59,6 +62,12 @@ class User {
       email: map['email'],
       password: map['password'],
       nicNumber: map['nicNumber'],
+      sp: map['sp'],
+
+      timestamp: DateTime.parse(map['timestamp'])
+          .toLocal()
+          .add(const Duration(hours: 5, minutes: 30))
+          .toString(),
     );
   }
 }
