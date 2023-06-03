@@ -1,15 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:gowild/Screens/login_screen/login_screen_model.dart';
 import 'package:gowild/routes/routes.dart';
-// import 'registration_screen.dart';
-// import 'dashboard_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+import '../../backend/api_requests/registration_screen_api.dart';
+
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  late String _password;
+  late String _email;
+
+  void _login() async {
+    print('login pressed email' + _email + '.' + _password);
+    final userLogin = UserLogin(
+      email: _email,
+      password: _password,
+    );
+    try {
+      final loginId = await Api.loginUser(userLogin);
+      if (loginId == 1) {
+        Navigator.pushReplacementNamed(context, '/homeScreen');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to log the user'),
+        ),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var pass = '';
     return FlutterLogin(
       theme: LoginTheme(
         primaryColor: Theme.of(context).colorScheme.primary,
@@ -27,9 +55,13 @@ class LoginScreen extends StatelessWidget {
       onLogin: (loginData) {
         // save user entered password in pass variable
         // pass = loginData.password;
-        print('pressed');
+        _email = loginData.name;
+        _password = loginData.password;
+        // print('pressed');
         print(loginData.name);
-        print(pass); // add this line to print the pass variable
+
+        print('pw is ' + _email);
+        // print(pass); // add this line to print the pass variable
         return Future(() => null);
       },
 
@@ -45,7 +77,7 @@ class LoginScreen extends StatelessWidget {
         // return Future(() => null);
       },
       onSubmitAnimationCompleted: () {
-        Navigator.pushNamed(context, AppRoutes.homeScreen);
+        _login();
         // Navigator.push(context,
         //     MaterialPageRoute(builder: (context) => const HomeScreen()));
       },

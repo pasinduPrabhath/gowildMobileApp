@@ -41,6 +41,7 @@ dependencies:
   scroll_date_picker: ^3.7.1
   image_picker: ^0.8.4+4
   sqflite: ^2.2.8+4
+  flutter_feed_reaction: ^0.0.6
 
 dev_dependencies:
   flutter_test:

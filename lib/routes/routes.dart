@@ -8,7 +8,7 @@ class AppRoutes {
   static const String homeScreen = '/homeScreen';
 
   static final Map<String, WidgetBuilder> routes = {
-    AppRoutes.homeScreen: (context) => const HomeScreen(),
+    AppRoutes.homeScreen: (context) => HomeScreen(),
     AppRoutes.registration: (context) => const RegistrationScreen(),
   };
 }

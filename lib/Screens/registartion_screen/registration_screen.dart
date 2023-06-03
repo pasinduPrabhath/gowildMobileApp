@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gowild/Screens/registartion_screen/registration_screen_model.dart';
-// import 'package:gowild/Screens/registartion_screen/registration_screen_model.dart';
 import 'package:gowild/Screens/login_screen/login_screen.dart';
-// import 'package:gowild/Screens/registartion_screen/registration_screen_model.dart';
-// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import '../../backend/api_requests/registration_screen_api.dart';
 import '/reusable_components/inputFieldRegistration.dart';
@@ -56,11 +53,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
     try {
       final userId = await Api.createUser(user);
-      print('User created with ID: $userId');
-      // Navigate to the login screen after successful registration
-      Navigator.pushReplacementNamed(context, '/homeScreen');
+      Navigator.pushReplacementNamed(context, '/');
     } catch (e) {
-      print('Failed to create user: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Failed to create user'),
@@ -82,7 +76,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ModalRoute.of(context)!.settings.arguments as Map<String, String?>?;
     _email = args?['name'] ?? '';
     _password = args?['password'] ?? '';
-    print(_password + '   ' + _email);
     return Scaffold(
       backgroundColor: Colors.grey[900], // set background color to dark
       appBar: AppBar(
