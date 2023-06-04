@@ -30,6 +30,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String _password;
   late String _nicNumber = '';
   late String _timestamp;
+  bool _isLoading = false;
 
   void _submitForm() async {
     if (!_formKey.currentState!.validate()) {
@@ -37,6 +38,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }
     _formKey.currentState!.save();
 
+    setState(() {
+      _isLoading = true;
+    });
     final user = User(
       firstName: _firstName,
       lastName: _lastName,
@@ -53,13 +57,26 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
     try {
       final userId = await Api.createUser(user);
-      Navigator.pushReplacementNamed(context, '/');
+      print('user id is $userId');
+
+      if (userId == 1) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('User created successfully. Please log in.'),
+          ),
+        );
+        Navigator.pushReplacementNamed(context, '/');
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Failed to create user'),
         ),
       );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -76,254 +93,261 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ModalRoute.of(context)!.settings.arguments as Map<String, String?>?;
     _email = args?['name'] ?? '';
     _password = args?['password'] ?? '';
-    return Scaffold(
-      backgroundColor: Colors.grey[900], // set background color to dark
-      appBar: AppBar(
-        title: const Text(
-          'You are closer!',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.03,
-              ),
-              CustomTextFormField(
-                  labelText: 'First Name',
-                  errorText: 'Please enter a valid First Name',
-                  onSaved: (value) {
-                    _firstName = value;
-                  }),
-              CustomTextFormField(
-                  labelText: 'Last Name',
-                  errorText: 'Please enter a valid Last Name',
-                  onSaved: (value) {
-                    _lastName = value;
-                  }),
-              // CustomTextFormField(
-              //   labelText: 'Email',
-              //   errorText: 'Please enter a valid email address',
-              //   onSaved: (value) {
-              //     _email = value;
-              //   },
-              // ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Colors.grey[900], // set background color to dark
+          appBar: AppBar(
+            title: const Text(
+              'You are closer!',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: ListView(
                 children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    height: 50,
-                    child: InkWell(
-                      onTap: () async {
-                        final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: _birthday,
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime.now(),
-                          builder: (BuildContext context, Widget? child) {
-                            return Theme(
-                              data: ThemeData.dark(),
-                              child: child!,
-                            );
-                          },
-                        );
-                        if (picked != null && picked != _birthday) {
-                          setState(() {
-                            _birthday = picked;
-                          });
-                        }
-                      },
-                      child: IgnorePointer(
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            labelText: 'Birthday',
-                            labelStyle: TextStyle(color: Colors.white),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                width: 1.0,
-                              ),
-                            ),
-                          ),
-                          controller: TextEditingController(
-                            text: DateFormat('dd/MM/yyyy').format(_birthday),
-                          ),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your birthday';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _birthday = DateFormat('dd/MM/yyyy').parse(value!);
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.03,
                   ),
-                ],
-              ),
-              CustomTextFormField(
-                labelText: 'Country',
-                errorText: 'Please enter a valid Country name',
-                onSaved: (value) {
-                  _country = value;
-                },
-              ),
-              CustomTextFormField(
-                labelText: 'Town',
-                errorText: 'Please enter a valid Town name',
-                onSaved: (value) {
-                  _town = value;
-                },
-              ),
-              CustomTextFormField(
-                labelText: 'Mobile Number',
-                errorText: 'Please enter a valid email address',
-                onSaved: (value) {
-                  _mobileNumber = value;
-                },
-              ),
-              Text('Gender', style: Theme.of(context).textTheme.titleMedium),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Radio(
-                    value: 'male',
-                    groupValue: _gender,
-                    onChanged: (value) {
-                      setState(() {
-                        _gender = value as String;
-                      });
-                    },
-                  ),
-                  const Text('Male'),
-                  Radio(
-                    value: 'female',
-                    groupValue: _gender,
-                    onChanged: (value) {
-                      setState(() {
-                        _gender = value as String;
-                      });
-                    },
-                  ),
-                  const Text('Female'),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.01,
-              ),
-              Text('Are you a service provider?',
-                  style: Theme.of(context).textTheme.titleMedium),
-              Row(
-                children: <Widget>[
-                  Radio(
-                    value: true,
-                    groupValue: _isServiceProvider,
-                    onChanged: (value) {
-                      setState(() {
-                        _isServiceProvider = value as bool;
-                      });
-                    },
-                  ),
-                  const Text('Yes'),
-                  Radio(
-                    value: false,
-                    groupValue: _isServiceProvider,
-                    onChanged: (value) {
-                      setState(() {
-                        _isServiceProvider = value as bool;
-                      });
-                    },
-                  ),
-                  const Text('No'),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.01,
-              ),
-              if (_isServiceProvider)
-                Column(
-                  children: [
-                    CustomTextFormField(
-                      labelText: 'NIC Number',
-                      errorText: 'Please enter a valid NIC number',
+                  CustomTextFormField(
+                      labelText: 'First Name',
+                      errorText: 'Please enter a valid First Name',
                       onSaved: (value) {
-                        value = _nicNumber;
-                      },
-                    ),
-                    Text('Upload Copy of Your NIC',
-                        style: Theme.of(context).textTheme.titleMedium),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                    ),
+                        _firstName = value;
+                      }),
+                  CustomTextFormField(
+                      labelText: 'Last Name',
+                      errorText: 'Please enter a valid Last Name',
+                      onSaved: (value) {
+                        _lastName = value;
+                      }),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        height: 50,
+                        child: InkWell(
+                          onTap: () async {
+                            final DateTime? picked = await showDatePicker(
+                              context: context,
+                              initialDate: _birthday,
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime.now(),
+                              builder: (BuildContext context, Widget? child) {
+                                return Theme(
+                                  data: ThemeData.dark(),
+                                  child: child!,
+                                );
+                              },
+                            );
+                            if (picked != null && picked != _birthday) {
+                              setState(() {
+                                _birthday = picked;
+                              });
+                            }
+                          },
+                          child: IgnorePointer(
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Birthday',
+                                labelStyle: TextStyle(color: Colors.white),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    width: 1.0,
+                                  ),
+                                ),
+                              ),
+                              controller: TextEditingController(
+                                text:
+                                    DateFormat('dd/MM/yyyy').format(_birthday),
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter your birthday';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _birthday =
+                                    DateFormat('dd/MM/yyyy').parse(value!);
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.03,
+                      ),
+                    ],
+                  ),
+                  CustomTextFormField(
+                    labelText: 'Country',
+                    errorText: 'Please enter a valid Country name',
+                    onSaved: (value) {
+                      _country = value;
+                    },
+                  ),
+                  CustomTextFormField(
+                    labelText: 'Town',
+                    errorText: 'Please enter a valid Town name',
+                    onSaved: (value) {
+                      _town = value;
+                    },
+                  ),
+                  CustomTextFormField(
+                    labelText: 'Mobile Number',
+                    errorText: 'Please enter a valid email address',
+                    onSaved: (value) {
+                      _mobileNumber = value;
+                    },
+                  ),
+                  Text('Gender',
+                      style: Theme.of(context).textTheme.titleMedium),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Radio(
+                        value: 'male',
+                        groupValue: _gender,
+                        onChanged: (value) {
+                          setState(() {
+                            _gender = value as String;
+                          });
+                        },
+                      ),
+                      const Text('Male'),
+                      Radio(
+                        value: 'female',
+                        groupValue: _gender,
+                        onChanged: (value) {
+                          setState(() {
+                            _gender = value as String;
+                          });
+                        },
+                      ),
+                      const Text('Female'),
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  Text('Are you a service provider?',
+                      style: Theme.of(context).textTheme.titleMedium),
+                  Row(
+                    children: <Widget>[
+                      Radio(
+                        value: true,
+                        groupValue: _isServiceProvider,
+                        onChanged: (value) {
+                          setState(() {
+                            _isServiceProvider = value as bool;
+                          });
+                        },
+                      ),
+                      const Text('Yes'),
+                      Radio(
+                        value: false,
+                        groupValue: _isServiceProvider,
+                        onChanged: (value) {
+                          setState(() {
+                            _isServiceProvider = value as bool;
+                          });
+                        },
+                      ),
+                      const Text('No'),
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  if (_isServiceProvider)
                     Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        CustomTextFormField(
+                          labelText: 'NIC Number',
+                          errorText: 'Please enter a valid NIC number',
+                          onSaved: (value) {
+                            value = _nicNumber;
+                          },
+                        ),
+                        Text('Upload Copy of Your NIC',
+                            style: Theme.of(context).textTheme.titleMedium),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        Column(
                           children: [
-                            RoundButton(
-                              labelText: 'Front Side',
-                              icon: Icons.upload_file,
-                              onPressed: () async {
-                                final pickedFile = await ImagePicker()
-                                    .pickImage(source: ImageSource.gallery);
-                                if (pickedFile != null) {
-                                  // TODO: Upload the image to your server
-                                }
-                              },
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                RoundButton(
+                                  labelText: 'Front Side',
+                                  icon: Icons.upload_file,
+                                  onPressed: () async {
+                                    final pickedFile = await ImagePicker()
+                                        .pickImage(source: ImageSource.gallery);
+                                    if (pickedFile != null) {
+                                      // TODO: Upload the image to your server
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.01,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                RoundButton(
+                                  labelText: 'Back Side',
+                                  icon: Icons.upload_file,
+                                  onPressed: () async {
+                                    final pickedFile = await ImagePicker()
+                                        .pickImage(source: ImageSource.gallery);
+                                    if (pickedFile != null) {
+                                      // TODO: Upload the image to your server
+                                    }
+                                  },
+                                ),
+                              ],
                             ),
                           ],
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            RoundButton(
-                              labelText: 'Back Side',
-                              icon: Icons.upload_file,
-                              onPressed: () async {
-                                final pickedFile = await ImagePicker()
-                                    .pickImage(source: ImageSource.gallery);
-                                if (pickedFile != null) {
-                                  // TODO: Upload the image to your server
-                                }
-                              },
-                            ),
-                          ],
+                          height: MediaQuery.of(context).size.height * 0.02,
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
+                  ElevatedButton(
+                    onPressed: _submitForm,
+                    child: const Text(
+                      'Register',
+                      style: TextStyle(color: Colors.white),
                     ),
-                  ],
-                ),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: const Text(
-                  'Register',
-                  style: TextStyle(color: Colors.white),
-                ),
-                // TODO: Save registration data to database
-                // You can access the form data using the variables declared above
+                    // TODO: Save registration data to database
+                    // You can access the form data using the variables declared above
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
+        if (_isLoading)
+          Container(
+            color: Colors.black.withOpacity(0.5),
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+      ],
     );
   }
 }

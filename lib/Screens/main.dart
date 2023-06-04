@@ -13,7 +13,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = ThemeData(
       unselectedWidgetColor: const Color.fromARGB(255, 165, 160, 160),
-      // brightness: Brightness.dark,
       textTheme: const TextTheme(
         displaySmall: TextStyle(
           fontFamily: 'OpenSans',
