@@ -1,6 +1,8 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:gowild/Screens/registartion_screen/registration_screen_model.dart';
-import 'package:gowild/Screens/login_screen/login_screen.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import '../../backend/api_requests/registration_screen_api.dart';
 import '/reusable_components/inputFieldRegistration.dart';
@@ -28,8 +30,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String _gender = '';
   late String _email;
   late String _password;
-  late String _nicNumber = '';
-  late String _timestamp;
+  late String _nicNumber;
+  // late String _timestamp;
   bool _isLoading = false;
 
   void _submitForm() async {
@@ -60,11 +62,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       print('user id is $userId');
 
       if (userId == 1) {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('User created successfully. Please log in.'),
           ),
         );
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, '/');
       }
     } catch (e) {
@@ -113,17 +117,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     height: MediaQuery.of(context).size.height * 0.03,
                   ),
                   CustomTextFormField(
-                      labelText: 'First Name',
-                      errorText: 'Please enter a valid First Name',
-                      onSaved: (value) {
-                        _firstName = value;
-                      }),
+                    labelText: 'First Name',
+                    errorText: 'Please enter a valid First Name',
+                    onSaved: (value) {
+                      _firstName = value;
+                    },
+                    keyboardType: TextInputType.name,
+                  ),
                   CustomTextFormField(
-                      labelText: 'Last Name',
-                      errorText: 'Please enter a valid Last Name',
-                      onSaved: (value) {
-                        _lastName = value;
-                      }),
+                    labelText: 'Last Name',
+                    errorText: 'Please enter a valid Last Name',
+                    onSaved: (value) {
+                      _lastName = value;
+                    },
+                    keyboardType: TextInputType.name,
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -193,6 +201,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     onSaved: (value) {
                       _country = value;
                     },
+                    keyboardType: TextInputType.name,
                   ),
                   CustomTextFormField(
                     labelText: 'Town',
@@ -200,13 +209,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     onSaved: (value) {
                       _town = value;
                     },
+                    keyboardType: TextInputType.name,
                   ),
                   CustomTextFormField(
                     labelText: 'Mobile Number',
-                    errorText: 'Please enter a valid email address',
+                    errorText: 'Please enter a valid Mobile Number',
                     onSaved: (value) {
                       _mobileNumber = value;
                     },
+                    keyboardType: TextInputType.number,
                   ),
                   Text('Gender',
                       style: Theme.of(context).textTheme.titleMedium),
@@ -276,6 +287,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           onSaved: (value) {
                             value = _nicNumber;
                           },
+                          keyboardType: TextInputType.name,
                         ),
                         Text('Upload Copy of Your NIC',
                             style: Theme.of(context).textTheme.titleMedium),

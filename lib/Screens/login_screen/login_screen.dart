@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings, avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:gowild/Screens/login_screen/login_screen_model.dart';
@@ -29,9 +31,12 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final loginId = await Api.loginUser(userLogin);
       if (loginId == 1) {
-        Navigator.pushReplacementNamed(context, '/homeScreen');
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacementNamed(context, '/feed');
       } else {
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, '/');
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Invalid Username or Password'),

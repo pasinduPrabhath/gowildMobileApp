@@ -5,12 +5,14 @@ class CustomTextFormField extends StatelessWidget {
   final String labelText;
   final String errorText;
   final Function(String)? onSaved;
+  final TextInputType keyboardType;
 
   const CustomTextFormField({
     Key? key,
     required this.labelText,
     required this.errorText,
     required this.onSaved,
+    required this.keyboardType,
   }) : super(key: key);
 
   @override
@@ -18,6 +20,7 @@ class CustomTextFormField extends StatelessWidget {
     return Column(
       children: [
         TextFormField(
+          keyboardType: keyboardType,
           decoration: InputDecoration(
             labelText: labelText,
             labelStyle: const TextStyle(color: Colors.white),
