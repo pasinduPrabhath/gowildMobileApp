@@ -80,10 +80,11 @@ class _LoginScreenState extends State<LoginScreen> {
             return Future(() => null);
           },
           onSignup: (signupData) {
-            Navigator.pushNamed(context, AppRoutes.registration, arguments: {
-              'name': signupData.name,
-              'password': signupData.password
-            });
+            Navigator.pushReplacementNamed(context, AppRoutes.registration,
+                arguments: {
+                  'name': signupData.name,
+                  'password': signupData.password
+                });
             return null;
           },
           onSubmitAnimationCompleted: () {
