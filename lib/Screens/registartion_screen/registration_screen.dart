@@ -30,7 +30,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String _gender = '';
   late String _email;
   late String _password;
-  late String _nicNumber;
+  late String _nicNumber = '';
   // late String _timestamp;
   bool _isLoading = false;
 
@@ -62,13 +62,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       print('user id is $userId');
 
       if (userId == 1) {
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('User created successfully. Please log in.'),
           ),
         );
-        // ignore: use_build_context_synchronously
+
         Navigator.pushReplacementNamed(context, '/');
       }
     } catch (e) {
@@ -352,7 +351,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         'Register',
                         style: TextStyle(color: Colors.white),
                       ),
-                      // TODO: Save registration data to database
                       // You can access the form data using the variables declared above
                     ),
                   ],
@@ -363,9 +361,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
         if (_isLoading)
           Container(
-            color: Colors.black.withOpacity(0.5),
-            child: const Center(
-              child: CircularProgressIndicator(),
+            color: const Color.fromARGB(255, 3, 3, 3).withOpacity(0.9),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Registering in Progress!',
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ],
+              ),
             ),
           ),
       ],

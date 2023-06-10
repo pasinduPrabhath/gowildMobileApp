@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final loginId = await Api.loginUser(userLogin);
       if (loginId == 1) {
         // ignore: use_build_context_synchronously
-        Navigator.pushReplacementNamed(context, '/feed');
+        Navigator.pushReplacementNamed(context, '/dashboard');
       } else {
         // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, '/');
@@ -107,9 +107,22 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         if (_isLoading)
           Container(
-            color: Colors.black.withOpacity(0.5),
-            child: const Center(
-              child: CircularProgressIndicator(),
+            color: Color.fromARGB(255, 3, 3, 3).withOpacity(0.9),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Signin You in!',
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ],
+              ),
             ),
           ),
       ],
