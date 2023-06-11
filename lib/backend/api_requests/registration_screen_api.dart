@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../Screens/registartion_screen/registration_screen_model.dart';
 import '../../Screens/login_screen/login_screen_model.dart';
+import '../../Screens/admin/dashboard_screen.dart';
 
 class Api {
   static const baseUrl = 'https://gowild.herokuapp.com/api';
@@ -29,6 +30,16 @@ class Api {
       return {'success': data['success'], 'role': data['role']};
     } else {
       throw Exception('Failed to login user');
+    }
+  }
+
+  static Future<int> numberOfRegisteredUsers() async {
+    final url = Uri.parse('$baseUrl/user/totalUsers');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['userCount'];
+    } else {
+      throw Exception('Failed to get number of registered users');
     }
   }
 }

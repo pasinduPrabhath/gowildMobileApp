@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:side_navigation/side_navigation.dart';
-import '../../reusable_components/side_nav_bar.dart';
+import 'package:flutter/material.dart';
 import '../../reusable_components/sideDrawer.dart';
+import '../../backend/api_requests/registration_screen_api.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({super.key});
@@ -22,6 +22,7 @@ List<Widget> views = const [
   ),
 ];
 int selectedIndex = 0;
+final numberOfUsers = 0;
 
 class _DashBoardState extends State<DashBoard> {
   @override
@@ -37,23 +38,25 @@ class _DashBoardState extends State<DashBoard> {
         currentAccountPicture:
             const AssetImage('assets/images/adminProfPic.png'),
       ),
-      body: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'hello',
-                style: TextStyle(color: Colors.black),
-              ),
-              ElevatedButton(
-                onPressed: null,
-                child: Text('click me'),
-              ),
-            ],
-          ),
-        ],
+      body: Center(
+        child: FutureBuilder<int>(
+          future: Api.numberOfRegisteredUsers(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Text(
+                'Number of registered users: ${snapshot.data}',
+                style: TextStyle(fontSize: 24),
+              );
+            } else if (snapshot.hasError) {
+              return Text(
+                'Error: ${snapshot.error}',
+                style: TextStyle(fontSize: 24),
+              );
+            } else {
+              return CircularProgressIndicator();
+            }
+          },
+        ),
       ),
     );
   }
