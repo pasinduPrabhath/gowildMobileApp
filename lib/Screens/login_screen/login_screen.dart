@@ -29,10 +29,21 @@ class _LoginScreenState extends State<LoginScreen> {
       password: _password,
     );
     try {
-      final loginId = await Api.loginUser(userLogin);
-      if (loginId == 1) {
+      final loginData = await Api.loginUser(userLogin);
+      if (loginData['success'] == 1) {
         // ignore: use_build_context_synchronously
-        Navigator.pushReplacementNamed(context, '/dashboard');
+        if (loginData['role'] == 'admin') {
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacementNamed(context, '/admin_dashboard');
+        }
+        if (loginData['role'] == 'user') {
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacementNamed(context, '/feed');
+        }
+        if (loginData['role'] == 'serviceProvider') {
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacementNamed(context, '/feed');
+        }
       } else {
         // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, '/');

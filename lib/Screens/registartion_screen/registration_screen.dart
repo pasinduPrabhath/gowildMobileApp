@@ -64,7 +64,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       userRole: _role,
       timestamp: DateTime.now().toUtc().toString(),
     );
-    print('user role is $_role');
     try {
       final userId = await Api.createUser(user);
       print('user id is $userId');

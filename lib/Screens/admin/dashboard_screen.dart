@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:side_navigation/side_navigation.dart';
 import '../../reusable_components/side_nav_bar.dart';
+import '../../reusable_components/sideDrawer.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({super.key});
@@ -26,48 +27,15 @@ class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const UserAccountsDrawerHeader(
-              accountName: Text('John Doe'),
-              accountEmail: Text('johndoe@example.com'),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('assets/images/profile.png'),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-            ),
-            ListTile(
-              title: const Text('Item 1'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-            ListTile(
-              title: const Text('Item 2'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-            const Divider(),
-            ListTile(
-              title: const Text('Logout'),
-              leading: const Icon(Icons.logout),
-              onTap: () {
-                // Logout the user.
-                // ...
-              },
-            ),
-          ],
-        ),
+      drawer: SideDrawer(
+        accountName: 'Pasindu Prabhath',
+        accountEmail: 'pasinduprabhath@gmail.com',
+        currentAccountPicture:
+            const AssetImage('assets/images/adminProfPic.png'),
       ),
       body: const Row(
         mainAxisAlignment: MainAxisAlignment.center,

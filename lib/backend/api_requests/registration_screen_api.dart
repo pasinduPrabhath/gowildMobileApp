@@ -19,13 +19,14 @@ class Api {
     }
   }
 
-  static Future<int> loginUser(UserLogin user) async {
+  static Future<Map<String, dynamic>> loginUser(UserLogin user) async {
     final url = Uri.parse('$baseUrl/user/login');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(user.toMap());
     final response = await http.post(url, headers: headers, body: body);
     if (response.statusCode == 200) {
-      return json.decode(response.body)['success'];
+      final data = json.decode(response.body);
+      return {'success': data['success'], 'role': data['role']};
     } else {
       throw Exception('Failed to login user');
     }
