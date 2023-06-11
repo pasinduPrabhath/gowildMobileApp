@@ -61,9 +61,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       password: _password,
       nicNumber: _nicNumber,
       sp: _isServiceProvider,
-      role: _role,
+      userRole: _role,
       timestamp: DateTime.now().toUtc().toString(),
     );
+    print('user role is $_role');
     try {
       final userId = await Api.createUser(user);
       print('user id is $userId');
@@ -75,6 +76,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ),
         );
 
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, '/');
       }
     } catch (e) {
