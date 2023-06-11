@@ -13,6 +13,7 @@ class User {
   String? gender;
   bool? sp;
   String? nicNumber;
+  String? role;
   String? timestamp;
 
   User({
@@ -28,6 +29,7 @@ class User {
     this.password,
     this.nicNumber,
     this.sp,
+    this.role,
     this.timestamp,
   });
 
@@ -45,6 +47,7 @@ class User {
       'password': password,
       'nicNumber': nicNumber,
       'sp': sp,
+      'role': role,
       'timestamp': timestamp,
     };
   }
@@ -63,7 +66,7 @@ class User {
       password: map['password'],
       nicNumber: map['nicNumber'],
       sp: map['sp'],
-
+      role: map['role'],
       timestamp: DateTime.parse(map['timestamp'])
           .toLocal()
           .add(const Duration(hours: 5, minutes: 30))

@@ -31,6 +31,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String _email;
   late String _password;
   late String _nicNumber = '';
+  late String _role;
   // late String _timestamp;
   bool _isLoading = false;
 
@@ -39,6 +40,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       return;
     }
     _formKey.currentState!.save();
+    if (_isServiceProvider) {
+      _role = 'serviceProvider';
+    } else {
+      _role = 'user';
+    }
 
     setState(() {
       _isLoading = true;
@@ -55,6 +61,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       password: _password,
       nicNumber: _nicNumber,
       sp: _isServiceProvider,
+      role: _role,
       timestamp: DateTime.now().toUtc().toString(),
     );
     try {
