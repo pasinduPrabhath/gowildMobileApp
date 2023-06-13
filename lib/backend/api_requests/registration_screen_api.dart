@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import '../../Screens/registartion_screen/registration_screen_model.dart';
 import '../../Screens/login_screen/login_screen_model.dart';
 import '../../Screens/admin/dashboard_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Api {
   static const baseUrl = 'https://gowild.herokuapp.com/api';
@@ -27,9 +28,26 @@ class Api {
     final response = await http.post(url, headers: headers, body: body);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      return {'success': data['success'], 'role': data['role']};
+      final token = data['token'];
+      print('Login successful: $data');
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      // if (prefs != null) {
+      //   await prefs.setString('token', token);
+      //   print('Token saved: $token');
+      // } else {
+      //   print('Failed to get SharedPreferences instance');
+      // }
+      return {
+        'success': data['success'],
+        'role': data['role'],
+        'token': token,
+      };
+    } else if (response.statusCode == 401) {
+      throw Exception('Invalid email or password');
     } else {
-      throw Exception('Failed to login user');
+      throw Exception('Failed to login user: ${response.statusCode}');
     }
   }
 

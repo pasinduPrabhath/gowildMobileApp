@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import '../../reusable_components/sideDrawer.dart';
 import '../../backend/api_requests/registration_screen_api.dart';
 

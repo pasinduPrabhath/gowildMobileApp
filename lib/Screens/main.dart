@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../routes/routes.dart';
 import './login_screen/login_screen.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 

@@ -77,7 +77,7 @@ class SideDrawer extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.of(context).pop();
+                            Navigator.pushReplacementNamed(context, '/');
                           },
                           child: const Text('Logout'),
                         ),

@@ -6,6 +6,7 @@ import 'package:gowild/Screens/login_screen/login_screen_model.dart';
 import 'package:gowild/routes/routes.dart';
 
 import '../../backend/api_requests/registration_screen_api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -97,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
             });
             return null;
           },
-          onSubmitAnimationCompleted: () {
+          onSubmitAnimationCompleted: () async {
             _login();
           },
           onRecoverPassword: (_) => Future(() => null),
