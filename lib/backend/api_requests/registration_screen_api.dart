@@ -31,14 +31,8 @@ class Api {
       final token = data['token'];
       print('Login successful: $data');
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      // if (prefs != null) {
-      //   await prefs.setString('token', token);
-      //   print('Token saved: $token');
-      // } else {
-      //   print('Failed to get SharedPreferences instance');
-      // }
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', token);
       return {
         'success': data['success'],
         'role': data['role'],
@@ -53,7 +47,13 @@ class Api {
 
   static Future<int> numberOfRegisteredUsers() async {
     final url = Uri.parse('$baseUrl/user/totalUsers');
-    final response = await http.get(url);
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       return json.decode(response.body)['userCount'];
     } else {
