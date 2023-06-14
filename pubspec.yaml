@@ -44,6 +44,9 @@ dependencies:
   flutter_feed_reaction: ^0.0.6
   side_navigation: ^1.0.4
   shared_preferences: ^2.1.2
+  azstore: ^1.0.3
+  azure_storage: ^1.0.0
+  
 
 dev_dependencies:
   flutter_test:

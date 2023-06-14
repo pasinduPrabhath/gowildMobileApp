@@ -8,6 +8,8 @@ import '../../backend/api_requests/registration_screen_api.dart';
 import '/reusable_components/inputFieldRegistration.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../reusable_components/roundButton.dart';
+import 'package:azstore/azstore.dart';
+import 'dart:io';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -319,7 +321,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                           .pickImage(
                                               source: ImageSource.gallery);
                                       if (pickedFile != null) {
-                                        // TODO: Upload the image to your server
+                                        final bytes =
+                                            await pickedFile.readAsBytes();
+
+                                        final accountName = 'your_account_name';
+                                        final accountKey = 'your_account_key';
+                                        final containerName =
+                                            'your_container_name';
+                                        final blobName =
+                                            '${DateTime.now().millisecondsSinceEpoch}.jpg';
+                                        // final blob = Blob(
+                                        //   accountName: accountName,
+                                        //   accountKey: accountKey,
+                                        //   containerName: containerName,
+                                        //   blobName: blobName,
+                                        // );
+
+                                        // await blob.uploadData(bytes);
+                                        // final photoUrl = blob.getUrl();
                                       }
                                     },
                                   ),
