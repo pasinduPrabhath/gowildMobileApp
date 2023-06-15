@@ -1,4 +1,4 @@
-package com.example.gowild
+package com.codepicasso.gowild
 
 import io.flutter.embedding.android.FlutterActivity
 

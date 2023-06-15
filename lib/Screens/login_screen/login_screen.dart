@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:gowild/Screens/login_screen/login_screen_model.dart';
+import 'package:gowild/Screens/registartion_screen/test_upload.dart';
 import 'package:gowild/routes/routes.dart';
-
 import '../../backend/api_requests/registration_screen_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

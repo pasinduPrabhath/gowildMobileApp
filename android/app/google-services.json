@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "999823549540",
+    "project_id": "gowild-4e72d",
+    "storage_bucket": "gowild-4e72d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999823549540:android:35069580b48d965f41eb71",
+        "android_client_info": {
+          "package_name": "com.codepicasso.gowild"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999823549540-grfu6u1me09rqpt37n5phig4ealk0r4m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGcWJkGK3qLNA6LkiEZpuJey_oj50_V0Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999823549540-grfu6u1me09rqpt37n5phig4ealk0r4m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
