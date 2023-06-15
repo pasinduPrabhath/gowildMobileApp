@@ -64,6 +64,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       nicNumber: _nicNumber,
       sp: _isServiceProvider,
       userRole: _role,
+      userImage: imageUrl,
       timestamp: DateTime.now().toUtc().toString(),
     );
     try {
