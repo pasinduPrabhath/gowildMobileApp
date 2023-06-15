@@ -35,6 +35,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String _nicNumber = '';
   late String _role;
   bool _isLoading = false;
+  late String imageUrl;
 
   void _submitForm() async {
     if (!_formKey.currentState!.validate()) {
@@ -94,6 +95,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   void initState() {
+    // Firebase.initializeApp();
     super.initState();
     _birthday = DateTime.now();
     _gender = 'male';
@@ -101,8 +103,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String imageUrl = '';
-
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, String?>?;
     _email = args?['name'] ?? '';
@@ -293,58 +293,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.01,
                     ),
-                    Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            RoundButton(
-                              labelText: 'Front Side',
-                              icon: Icons.upload_file,
-                              onPressed: () async {
-                                ImagePicker imagePicker = ImagePicker();
-                                XFile? file = await imagePicker.pickImage(
-                                    source: ImageSource.gallery);
-                                String uniqueFileName = DateTime.now()
-                                    .millisecondsSinceEpoch
-                                    .toString();
-                                print('${file!.path}');
-
-                                // if (file != null) return;
-                                Reference referenceRoot =
-                                    FirebaseStorage.instance.ref();
-                                Reference fileReference = referenceRoot
-                                    .child('images/$uniqueFileName');
-                                try {
-                                  await fileReference.putFile(File(file!.path));
-                                  imageUrl =
-                                      await fileReference.getDownloadURL();
-                                  print('added + $imageUrl');
-                                } catch (e) {
-                                  print('error');
-                                }
-                              },
-                            ),
-                            // Text('picked' + pickedFile!.name + 'name'),
-                          ],
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            RoundButton(
-                              labelText: 'Back Side',
-                              icon: Icons.upload_file,
-                              onPressed: () {
-                                uploadImage();
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
                     if (_isServiceProvider)
                       Column(
                         children: [
@@ -360,6 +308,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               style: Theme.of(context).textTheme.titleMedium),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              String suffix = 'front';
+                              uploadImage(suffix);
+                            },
+                            child: const Text('Front Side'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              String suffix = 'back';
+                              uploadImage(suffix);
+                            },
+                            child: const Text('Back Side'),
                           ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.02,
@@ -404,35 +366,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  uploadImage() async {
-    final _firebaseStorage = FirebaseStorage.instance;
-    final _imagePicker = ImagePicker();
-    PickedFile? image;
-    await Permission.photos.request();
-
-    var permissionStatus = await Permission.photos.status;
-    if (permissionStatus.isGranted) {
-      //Select Image
-      image = await _imagePicker.getImage(source: ImageSource.gallery);
-      var file = File(image!.path);
-
-      if (image != null) {
-        //Upload to Firebase
-        var snapshot = await _firebaseStorage
-            .ref()
-            .child('images/imageName')
-            .putFile(file)
-            .whenComplete(() => null);
-        var downloadUrl = await snapshot.ref.getDownloadURL();
-        setState(() {
-          var imageUrl = downloadUrl;
-          print('url is ' + imageUrl);
-        });
-      } else {
-        print('No Image Path Received');
-      }
-    } else {
-      print('Permission not granted. Try Again with permission access');
+  uploadImage(String suffix) async {
+    ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+    String uniqueFileName =
+        suffix + DateTime.now().millisecondsSinceEpoch.toString();
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference fileReference = referenceRoot.child('images/$uniqueFileName');
+    try {
+      await fileReference.putFile(File(file!.path));
+      imageUrl = await fileReference.getDownloadURL();
+    } catch (e) {
+      print(e);
     }
   }
 }
