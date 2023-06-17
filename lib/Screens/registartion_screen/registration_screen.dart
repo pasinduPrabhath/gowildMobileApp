@@ -43,7 +43,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String _nicNumber = '';
   late String _role;
   bool _isLoading = false;
-  late String frontimageUrl;
+  late String frontimageUrl = '';
   late String rearimageUrl = '';
   File _imageFront = File('');
   File _imageRear = File('');
@@ -64,8 +64,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     });
 
     try {
-      frontimageUrl = await uploadImage(_imageFront, 'front');
-      rearimageUrl = await uploadImage(_imageRear, 'rear');
+      if (_isServiceProvider) {
+        frontimageUrl = await uploadImage(_imageFront, 'front');
+        rearimageUrl = await uploadImage(_imageRear, 'rear');
+      }
+      print('meka run wenne');
       final user = User(
         firstName: _firstName,
         lastName: _lastName,
