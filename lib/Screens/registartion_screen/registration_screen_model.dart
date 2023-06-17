@@ -14,7 +14,8 @@ class User {
   bool? sp;
   String? nicNumber;
   String? userRole;
-  String? userImage;
+  String? userImageFront;
+  String? userImageRear;
   String? timestamp;
 
   User({
@@ -31,7 +32,8 @@ class User {
     this.nicNumber,
     this.sp,
     this.userRole,
-    this.userImage,
+    this.userImageFront,
+    this.userImageRear,
     this.timestamp,
   });
 
@@ -50,7 +52,8 @@ class User {
       'nicNumber': nicNumber,
       'sp': sp,
       'userRole': userRole,
-      'userImage': userImage,
+      'userImageFront': userImageFront,
+      'userImageRear': userImageRear,
       'timestamp': timestamp,
     };
   }
@@ -70,7 +73,8 @@ class User {
       nicNumber: map['nicNumber'],
       sp: map['sp'],
       userRole: map['userRole'],
-      userImage: map['userImage'],
+      userImageFront: map['userImageFront'],
+      userImageRear: map['userImageRear'],
       timestamp: DateTime.parse(map['timestamp'])
           .toLocal()
           .add(const Duration(hours: 5, minutes: 30))

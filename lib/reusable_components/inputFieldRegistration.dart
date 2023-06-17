@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 class CustomTextFormField extends StatelessWidget {
   final String labelText;
   final String errorText;
+  final TextEditingController? controller;
   final Function(String)? onSaved;
   final TextInputType keyboardType;
 
   const CustomTextFormField({
     Key? key,
     required this.labelText,
+    required this.controller,
     required this.errorText,
     required this.onSaved,
     required this.keyboardType,
@@ -21,6 +23,7 @@ class CustomTextFormField extends StatelessWidget {
       children: [
         TextFormField(
           keyboardType: keyboardType,
+          controller: controller,
           decoration: InputDecoration(
             labelText: labelText,
             labelStyle: const TextStyle(color: Colors.white),

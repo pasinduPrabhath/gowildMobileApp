@@ -16,8 +16,30 @@ class Api {
     final response = await http.post(url, headers: headers, body: body);
     if (response.statusCode == 200) {
       return json.decode(response.body)['success'];
+    }
+    if (response.statusCode == 400) {
+      final message = json.decode(response.body)['message'];
+      if (message == 'Email already exists') {
+        throw Exception('Email already registered');
+      }
     } else {
       throw Exception('Failed to create user');
+    }
+    throw Exception('Failed to create user');
+  }
+
+  static Future<String> checkEmailAvaialability(String? email) async {
+    final url = Uri.parse('$baseUrl/user/checkExistingEmail');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({'email': email});
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['message'];
+    }
+    if (response.statusCode == 400) {
+      return json.decode(response.body)['message'];
+    } else {
+      throw Exception('Failed to check email');
     }
   }
 

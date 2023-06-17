@@ -20,22 +20,33 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _birthdayController = TextEditingController();
+  final _countryController = TextEditingController();
+  final _townController = TextEditingController();
+  final _mobileNumberController = TextEditingController();
+  final _nicNumberController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
   bool _isServiceProvider = false;
   late String _firstName = '';
-  late String _lastName;
+  late String _lastName = '';
   late DateTime _birthday;
-  late String _country;
-  late String _town;
-  late String _mobileNumber;
+  late String _country = '';
+  late String _town = '';
+  late String _mobileNumber = '';
   late String _gender = '';
   late String _email;
   late String _password;
   late String _nicNumber = '';
   late String _role;
   bool _isLoading = false;
-  late String imageUrl;
+  late String frontimageUrl;
+  late String rearimageUrl = '';
+  File _imageFront = File('');
+  File _imageRear = File('');
 
   void _submitForm() async {
     if (!_formKey.currentState!.validate()) {
@@ -51,23 +62,27 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     setState(() {
       _isLoading = true;
     });
-    final user = User(
-      firstName: _firstName,
-      lastName: _lastName,
-      birthday: DateFormat('yyyy-MM-dd').format(_birthday),
-      country: _country,
-      town: _town,
-      mobileNumber: _mobileNumber,
-      gender: _gender,
-      email: _email,
-      password: _password,
-      nicNumber: _nicNumber,
-      sp: _isServiceProvider,
-      userRole: _role,
-      userImage: imageUrl,
-      timestamp: DateTime.now().toUtc().toString(),
-    );
+
     try {
+      frontimageUrl = await uploadImage(_imageFront, 'front');
+      rearimageUrl = await uploadImage(_imageRear, 'rear');
+      final user = User(
+        firstName: _firstName,
+        lastName: _lastName,
+        birthday: DateFormat('yyyy-MM-dd').format(_birthday),
+        country: _country,
+        town: _town,
+        mobileNumber: _mobileNumber,
+        gender: _gender,
+        email: _email,
+        password: _password,
+        nicNumber: _nicNumber,
+        sp: _isServiceProvider,
+        userRole: _role,
+        userImageFront: frontimageUrl,
+        userImageRear: rearimageUrl,
+        timestamp: DateTime.now().toUtc().toString(),
+      );
       final userId = await Api.createUser(user);
       print('user id is $userId');
 
@@ -82,9 +97,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         Navigator.pushReplacementNamed(context, '/');
       }
     } catch (e) {
+      String errorMessage = 'Failed to create user';
+      if (e.toString() == 'Email already registered') {
+        errorMessage = 'Email already registered';
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to create user'),
+        SnackBar(
+          content: Text(errorMessage),
         ),
       );
     } finally {
@@ -95,11 +115,30 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _birthdayController.dispose();
+    _countryController.dispose();
+    _townController.dispose();
+    _mobileNumberController.dispose();
+    _nicNumberController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     // Firebase.initializeApp();
     super.initState();
     _birthday = DateTime.now();
     _gender = 'male';
+    _firstNameController.text = _firstName;
+    _lastNameController.text = _lastName;
+    _birthdayController.text = DateFormat('dd/MM/yyyy').format(_birthday);
+    _countryController.text = _country;
+    _townController.text = _town;
+    _mobileNumberController.text = _mobileNumber;
+    _nicNumberController.text = _nicNumber;
   }
 
   @override
@@ -135,6 +174,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     CustomTextFormField(
                       labelText: 'First Name',
                       errorText: 'Please enter a valid First Name',
+                      controller: _firstNameController,
                       onSaved: (value) {
                         _firstName = value;
                       },
@@ -142,6 +182,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     CustomTextFormField(
                       labelText: 'Last Name',
+                      controller: _lastNameController,
                       errorText: 'Please enter a valid Last Name',
                       onSaved: (value) {
                         _lastName = value;
@@ -188,10 +229,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     ),
                                   ),
                                 ),
-                                controller: TextEditingController(
-                                  text: DateFormat('dd/MM/yyyy')
-                                      .format(_birthday),
-                                ),
+                                controller: _birthdayController,
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter your birthday';
@@ -213,6 +251,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     CustomTextFormField(
                       labelText: 'Country',
+                      controller: _countryController,
                       errorText: 'Please enter a valid Country name',
                       onSaved: (value) {
                         _country = value;
@@ -221,6 +260,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     CustomTextFormField(
                       labelText: 'Town',
+                      controller: _townController,
                       errorText: 'Please enter a valid Town name',
                       onSaved: (value) {
                         _town = value;
@@ -229,6 +269,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     CustomTextFormField(
                       labelText: 'Mobile Number',
+                      controller: _mobileNumberController,
                       errorText: 'Please enter a valid Mobile Number',
                       onSaved: (value) {
                         _mobileNumber = value;
@@ -299,9 +340,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         children: [
                           CustomTextFormField(
                             labelText: 'NIC Number',
+                            controller: _nicNumberController,
                             errorText: 'Please enter a valid NIC number',
                             onSaved: (value) {
-                              value = _nicNumber;
+                              _nicNumber = value;
                             },
                             keyboardType: TextInputType.name,
                           ),
@@ -312,15 +354,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           ),
                           ElevatedButton(
                             onPressed: () async {
-                              String suffix = 'front';
-                              uploadImage(suffix);
+                              final file = await pickImage();
+                              setState(() {
+                                _imageFront = file!;
+                              });
                             },
                             child: const Text('Front Side'),
                           ),
                           ElevatedButton(
                             onPressed: () async {
-                              String suffix = 'back';
-                              uploadImage(suffix);
+                              final file = await pickImage();
+                              setState(() {
+                                _imageRear = file!;
+                              });
                             },
                             child: const Text('Back Side'),
                           ),
@@ -367,18 +413,33 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  uploadImage(String suffix) async {
+  Future<File?> pickImage() async {
     ImagePicker imagePicker = ImagePicker();
     XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (file == null) {
+      return null;
+    }
+    return File(file.path);
+  }
+
+  Future<String> uploadImage(File imageFile, String suffix) async {
+    // ImagePicker imagePicker = ImagePicker();
+    File? file = imageFile;
+    if (file == null) {
+      throw Exception('No image selected');
+    }
     String uniqueFileName =
         suffix + DateTime.now().millisecondsSinceEpoch.toString();
     Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference fileReference = referenceRoot.child('images/$uniqueFileName');
+    Reference fileReference =
+        referenceRoot.child('images/$_email/$uniqueFileName');
     try {
-      await fileReference.putFile(File(file!.path));
-      imageUrl = await fileReference.getDownloadURL();
+      await fileReference.putFile(File(file.path));
+      final imageUrl = await fileReference.getDownloadURL();
+      return imageUrl;
     } catch (e) {
       print(e);
+      throw Exception('Failed to upload image');
     }
   }
 }

@@ -61,6 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
           content: Text('Failed to log the user'),
         ),
       );
+      Navigator.pushNamed(context, '/');
     } finally {
       setState(() {
         _isLoading = false;
@@ -91,12 +92,26 @@ class _LoginScreenState extends State<LoginScreen> {
             _password = loginData.password;
             return Future(() => null);
           },
-          onSignup: (signupData) {
-            // Navigator.pushNamed(context, '/test');
-            Navigator.pushNamed(context, AppRoutes.registration, arguments: {
-              'name': signupData.name,
-              'password': signupData.password
-            });
+          onSignup: (signupData) async {
+            final emailAvailabilityResponse =
+                await Api.checkEmailAvaialability(signupData.name);
+            if (emailAvailabilityResponse == 'Email already exists') {
+              // ignore: use_build_context_synchronously
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Email already exists'),
+                ),
+              );
+              // ignore: use_build_context_synchronously
+              Navigator.pushNamed(context, '/');
+            }
+            if (emailAvailabilityResponse == 'Email is available') {
+              // ignore: use_build_context_synchronously
+              Navigator.pushNamed(context, AppRoutes.registration, arguments: {
+                'name': signupData.name,
+                'password': signupData.password
+              });
+            }
             return null;
           },
           onSubmitAnimationCompleted: () async {
