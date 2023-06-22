@@ -22,7 +22,8 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  final _birthdayController = TextEditingController();
+  // final _birthdayController = TextEditingController();
+  TextEditingController _birthdayController = TextEditingController();
   final _countryController = TextEditingController();
   final _townController = TextEditingController();
   final _mobileNumberController = TextEditingController();
@@ -68,7 +69,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         frontimageUrl = await uploadImage(_imageFront, 'front');
         rearimageUrl = await uploadImage(_imageRear, 'rear');
       }
-      print('meka run wenne');
       final user = User(
         firstName: _firstName,
         lastName: _lastName,
@@ -121,7 +121,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
-    _birthdayController.dispose();
+    // _birthdayController.dispose();
     _countryController.dispose();
     _townController.dispose();
     _mobileNumberController.dispose();
@@ -137,7 +137,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     _gender = 'male';
     _firstNameController.text = _firstName;
     _lastNameController.text = _lastName;
-    _birthdayController.text = DateFormat('dd/MM/yyyy').format(_birthday);
+    // _birthdayController.text = DateFormat('dd/MM/yyyy').format(_birthday);
     _countryController.text = _country;
     _townController.text = _town;
     _mobileNumberController.text = _mobileNumber;
@@ -217,11 +217,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               if (picked != null && picked != _birthday) {
                                 setState(() {
                                   _birthday = picked;
+                                  _birthdayController.text =
+                                      DateFormat('dd/MM/yyyy')
+                                          .format(_birthday);
                                 });
                               }
                             },
                             child: IgnorePointer(
                               child: TextFormField(
+                                controller: _birthdayController,
                                 decoration: const InputDecoration(
                                   labelText: 'Birthday',
                                   labelStyle: TextStyle(color: Colors.white),
@@ -232,7 +236,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     ),
                                   ),
                                 ),
-                                controller: _birthdayController,
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter your birthday';
@@ -242,6 +245,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 onSaved: (value) {
                                   _birthday =
                                       DateFormat('dd/MM/yyyy').parse(value!);
+                                },
+                                onTap: () {
+                                  print('tapped');
                                 },
                               ),
                             ),
