@@ -1,15 +1,13 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gowild/Screens/registartion_screen/registration_screen_model.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import '../../backend/api_requests/registration_screen_api.dart';
 import '/reusable_components/inputFieldRegistration.dart';
-import '../../reusable_components/roundButton.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
+import 'package:gowild/Screens/registartion_screen/service_provider_model.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -68,6 +66,35 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       if (_isServiceProvider) {
         frontimageUrl = await uploadImage(_imageFront, 'front');
         rearimageUrl = await uploadImage(_imageRear, 'rear');
+
+        final serviceProvider = ServiceProvider(
+          firstName: _firstName,
+          lastName: _lastName,
+          birthday: DateFormat('yyyy-MM-dd').format(_birthday),
+          country: _country,
+          town: _town,
+          mobileNumber: _mobileNumber,
+          gender: _gender,
+          email: _email,
+          password: _password,
+          nicNumber: _nicNumber,
+          isApproved: false,
+          userImageFront: frontimageUrl,
+          userImageRear: rearimageUrl,
+          timestamp: DateTime.now().toUtc().toString(),
+        );
+        final spId = await Api.registerServiceProvider(serviceProvider);
+
+        if (spId == 1) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Await for the Confirmation. Thank you!'),
+            ),
+          );
+        }
+
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacementNamed(context, '/');
       }
       final user = User(
         firstName: _firstName,
@@ -79,24 +106,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         gender: _gender,
         email: _email,
         password: _password,
-        nicNumber: _nicNumber,
-        sp: _isServiceProvider,
-        userRole: _role,
-        userImageFront: frontimageUrl,
-        userImageRear: rearimageUrl,
         timestamp: DateTime.now().toUtc().toString(),
       );
       final userId = await Api.createUser(user);
-      print('user id is $userId');
-
       if (userId == 1) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('User created successfully. Please log in.'),
           ),
         );
-
-        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, '/');
       }
     } catch (e) {

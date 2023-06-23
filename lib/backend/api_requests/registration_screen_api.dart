@@ -5,12 +5,13 @@ import '../../Screens/registartion_screen/registration_screen_model.dart';
 import '../../Screens/login_screen/login_screen_model.dart';
 import '../../Screens/admin/dashboard_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../Screens/registartion_screen/service_provider_model.dart';
 
 class Api {
   static const baseUrl = 'https://gowild.herokuapp.com/api';
 
   static Future<int> createUser(User user) async {
-    final url = Uri.parse('$baseUrl/user/register');
+    final url = Uri.parse('$baseUrl/user/registerClient');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(user.toMap());
     final response = await http.post(url, headers: headers, body: body);
@@ -51,13 +52,13 @@ class Api {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final token = data['token'];
-      print('Login successful: $data');
+      // print('Login successful: $data');
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', token);
       return {
         'success': data['success'],
-        'role': data['role'],
+        // 'role': data['role'],
         'token': token,
       };
     } else if (response.statusCode == 401) {
@@ -81,5 +82,25 @@ class Api {
     } else {
       throw Exception('Failed to get number of registered users');
     }
+  }
+
+  static Future<int> registerServiceProvider(
+      ServiceProvider serviceProvider) async {
+    final url = Uri.parse('$baseUrl/user/registerServiceProvider');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode(serviceProvider.toMap());
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['success'];
+    }
+    if (response.statusCode == 400) {
+      final message = json.decode(response.body)['message'];
+      if (message == 'Email already exists') {
+        throw Exception('Email already registered');
+      }
+    } else {
+      throw Exception('Failed to create user');
+    }
+    throw Exception('Failed to create user');
   }
 }

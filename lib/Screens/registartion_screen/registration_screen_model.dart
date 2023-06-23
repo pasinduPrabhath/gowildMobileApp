@@ -1,5 +1,3 @@
-// import 'dart:ffi';
-
 class User {
   // int? id;
   String? firstName;
@@ -11,11 +9,6 @@ class User {
   String? town;
   String? mobileNumber;
   String? gender;
-  bool? sp;
-  String? nicNumber;
-  String? userRole;
-  String? userImageFront;
-  String? userImageRear;
   String? timestamp;
 
   User({
@@ -29,11 +22,6 @@ class User {
     this.gender,
     this.email,
     this.password,
-    this.nicNumber,
-    this.sp,
-    this.userRole,
-    this.userImageFront,
-    this.userImageRear,
     this.timestamp,
   });
 
@@ -49,11 +37,6 @@ class User {
       'gender': gender,
       'email': email,
       'password': password,
-      'nicNumber': nicNumber,
-      'sp': sp,
-      'userRole': userRole,
-      'userImageFront': userImageFront,
-      'userImageRear': userImageRear,
       'timestamp': timestamp,
     };
   }
@@ -70,11 +53,6 @@ class User {
       gender: map['gender'],
       email: map['email'],
       password: map['password'],
-      nicNumber: map['nicNumber'],
-      sp: map['sp'],
-      userRole: map['userRole'],
-      userImageFront: map['userImageFront'],
-      userImageRear: map['userImageRear'],
       timestamp: DateTime.parse(map['timestamp'])
           .toLocal()
           .add(const Duration(hours: 5, minutes: 30))
