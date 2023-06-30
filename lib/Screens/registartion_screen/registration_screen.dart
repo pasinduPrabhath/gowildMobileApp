@@ -21,7 +21,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   // final _birthdayController = TextEditingController();
-  TextEditingController _birthdayController = TextEditingController();
+  final TextEditingController _birthdayController = TextEditingController();
   final _countryController = TextEditingController();
   final _townController = TextEditingController();
   final _mobileNumberController = TextEditingController();
@@ -40,7 +40,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String _email;
   late String _password;
   late String _nicNumber = '';
-  late String _role;
   bool _isLoading = false;
   late String frontimageUrl = '';
   late String rearimageUrl = '';
@@ -52,12 +51,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       return;
     }
     _formKey.currentState!.save();
-    if (_isServiceProvider) {
-      _role = 'serviceProvider';
-    } else {
-      _role = 'user';
-    }
-
     setState(() {
       _isLoading = true;
     });
@@ -78,7 +71,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           email: _email,
           password: _password,
           nicNumber: _nicNumber,
-          isApproved: false,
+          isApproved: 'pending',
           userImageFront: frontimageUrl,
           userImageRear: rearimageUrl,
           timestamp: DateTime.now().toUtc().toString(),
@@ -445,7 +438,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
     if (file == null) {
       return null;
-    }
+    } //
     return File(file.path);
   }
 

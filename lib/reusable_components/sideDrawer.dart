@@ -1,5 +1,7 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class SideDrawer extends StatelessWidget {
   String? accountName = '';
   String? accountEmail;

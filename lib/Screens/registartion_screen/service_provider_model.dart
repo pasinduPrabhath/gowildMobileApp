@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class ServiceProvider {
   String? firstName;
   String? lastName;
@@ -13,7 +11,7 @@ class ServiceProvider {
   String? nicNumber;
   String? userImageFront;
   String? userImageRear;
-  bool? isApproved;
+  String? isApproved;
   String? timestamp;
 
   ServiceProvider({

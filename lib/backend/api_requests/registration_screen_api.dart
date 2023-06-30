@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../Screens/registartion_screen/registration_screen_model.dart';
 import '../../Screens/login_screen/login_screen_model.dart';
-import '../../Screens/admin/dashboard_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Screens/registartion_screen/service_provider_model.dart';
 
