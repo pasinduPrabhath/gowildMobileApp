@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../reusable_components/post_card.dart';
-import '../../reusable_components/navigationBar.dart';
+import '../../../reusable_components/post_card.dart';
+import '../../../reusable_components/navigationBar.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -17,18 +17,6 @@ class _FeedScreenState extends State<FeedScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       extendBody: true,
-      appBar: AppBar(
-        title: const Text('Feed'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.messenger_outline),
-            onPressed: () {
-              // do something
-            },
-          )
-        ],
-      ),
       body: Stack(
         children: [
           ListView(
@@ -40,11 +28,6 @@ class _FeedScreenState extends State<FeedScreen> {
             ],
           ),
         ],
-      ),
-      bottomNavigationBar: CurvedNavBar(
-        onItemTapped: (int index) {
-          setState(() {});
-        },
       ),
     );
   }

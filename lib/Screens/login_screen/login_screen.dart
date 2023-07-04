@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final loginData = await Api.loginUser(userLogin);
       if (loginData['success'] == 1) {
-        Navigator.pushReplacementNamed(context, '/feed');
+        Navigator.pushReplacementNamed(context, '/screen_controller');
         // ignore: use_build_context_synchronously
         // if (loginData['role'] == 'admin') {
         //   // ignore: use_build_context_synchronously
