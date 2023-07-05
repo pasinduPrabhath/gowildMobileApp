@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import '../Screens/navigationbar_screens/home_screen/feed_screen.dart';
 import 'navigationbar_screens/search_screen/search_screen.dart';
 import 'navigationbar_screens/add_screen/add_screen.dart';
 import 'navigationbar_screens/notification_screen/notification_screen.dart';
@@ -60,7 +59,7 @@ class _ScreenControllerState extends State<ScreenController> {
           child: Text(
             'GoWild',
             style: TextStyle(
-                fontSize: 25, fontWeight: FontWeight.w700, color: Colors.black),
+                fontSize: 20, fontWeight: FontWeight.w700, color: Colors.black),
           ),
         ),
         actions: [

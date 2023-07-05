@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../reusable_components/post_card.dart';
-import '../../../reusable_components/navigationBar.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});

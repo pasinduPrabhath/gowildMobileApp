@@ -28,13 +28,33 @@ class MyApp extends StatelessWidget {
           fontStyle: FontStyle.italic,
           color: Colors.white,
         ),
+        labelMedium: TextStyle(
+          fontFamily: 'OpenSans',
+          fontWeight: FontWeight.bold,
+          // fontStyle: FontStyle.italic,
+          fontSize: 30,
+          color: Color.fromARGB(255, 12, 12, 12),
+        ),
         titleMedium: TextStyle(
           fontFamily: 'NotoSans',
-          color: Colors.white,
+          fontWeight: FontWeight.w800,
+          fontSize: 23,
+          color: Color.fromARGB(255, 14, 13, 13),
         ),
         bodyMedium: TextStyle(
           fontFamily: 'NotoSans',
           color: Colors.white,
+        ),
+        // titleLarge: TextStyle(fontSize: 10.0),
+        // displayLarge: TextStyle(fontSize: 10.0),
+        displayMedium: TextStyle(
+          fontSize: 15.0,
+          color: Color.fromARGB(255, 5, 5, 5),
+        ),
+        titleSmall: TextStyle(
+          fontFamily: 'OpenSans',
+          fontWeight: FontWeight.w300,
+          color: Color.fromARGB(255, 14, 13, 13),
         ),
       ),
       colorScheme: ColorScheme.fromSwatch()
