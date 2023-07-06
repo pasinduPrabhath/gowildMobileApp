@@ -30,36 +30,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
           mainAxisSize: MainAxisSize.max,
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.07,
+              height: MediaQuery.of(context).size.height * 0.06,
             ),
             Stack(
-              alignment: Alignment.center,
               children: [
-                Transform.rotate(
-                  angle: math.pi / 4,
-                  child: Container(
-                    width: 140.0,
-                    height: 140.0,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      // color: Color.fromARGB(255, 0, 0, 0),
-                      border: Border.all(
-                          width: 1.0, color: Color.fromARGB(255, 19, 18, 18)),
-                      borderRadius: BorderRadius.circular(35.0),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 23.0),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.add_a_photo_sharp),
                     ),
                   ),
                 ),
-                ClipPath(
-                  clipper: ProfilePicCliper(),
-                  child: Image.asset(
-                    'assets/images/adminProfPic.png',
-                    width: 180.0,
-                    height: 180.0,
-                    fit: BoxFit.cover,
+                Align(
+                  alignment: Alignment.center,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Transform.rotate(
+                        // alignment: Alignment.center,
+                        angle: math.pi / 4,
+                        child: Container(
+                          width: 140.0,
+                          height: 140.0,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            // color: Color.fromARGB(255, 0, 0, 0),
+                            border: Border.all(
+                                width: 1.0,
+                                color: const Color.fromARGB(255, 19, 18, 18)),
+                            borderRadius: BorderRadius.circular(35.0),
+                          ),
+                        ),
+                      ),
+                      ClipPath(
+                        clipper: ProfilePicCliper(),
+                        child: Image.asset(
+                          'assets/images/adminProfPic.png',
+                          width: 180.0,
+                          height: 180.0,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    ],
                   ),
-                )
+                ),
               ],
             ),
+            //image and border of dp
+
             Text(
               'Pasindu Prabhath',
               style: Theme.of(context).textTheme.titleMedium,

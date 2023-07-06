@@ -66,11 +66,11 @@ class MyApp extends StatelessWidget {
       colorScheme: ColorScheme.fromSwatch()
           // .copyWith(brightness: )
           .copyWith(
-              secondary:
-                  Color.fromARGB(255, 218, 238, 247)) //background widget color
+              secondary: const Color.fromARGB(
+                  255, 218, 238, 247)) //background widget color
           .copyWith(
-              outline:
-                  Color.fromARGB(95, 186, 217, 236)) //background outline color
+              outline: const Color.fromARGB(
+                  95, 186, 217, 236)) //background outline color
           .copyWith(background: const Color.fromARGB(255, 20, 64, 100))
           .copyWith(primary: const Color.fromARGB(209, 151, 210, 224))
           .copyWith(
@@ -79,6 +79,7 @@ class MyApp extends StatelessWidget {
     );
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'GoWild',
       theme: theme,
       home: const LoginScreen(),
@@ -86,15 +87,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// .copyWith(secondary: Colors.orange)
-//           .copyWith(
-//               outline: const Color.fromARGB(255, 13, 158, 61)) //appbar color
-//           .copyWith(
-//               background: const Color.fromARGB(
-//                   255, 39, 38, 38)) //background color dont change
-//           .copyWith(
-//               primary: const Color.fromARGB(255, 52, 136, 80)) //primary color
-//           .copyWith(
-//               onPrimary: const Color.fromARGB(255, 254, 255, 255)) //text color
-//           .copyWith(onSecondary: const Color.fromARGB(255, 15, 119, 55)),
