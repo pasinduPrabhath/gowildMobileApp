@@ -24,14 +24,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return ProfileBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        // appBar: AppBar(
-        //   automaticallyImplyLeading: false,
-        // ),
         body: SingleChildScrollView(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.07,
+            ),
             Stack(
               alignment: Alignment.center,
               children: [

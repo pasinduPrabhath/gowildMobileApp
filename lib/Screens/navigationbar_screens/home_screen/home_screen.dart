@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './widgets/background.dart';
+import '../../../reusable_components/customizedAppBar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,6 +11,10 @@ class HomeScreen extends StatelessWidget {
     return Background(
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: const PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: CustomizedAppBar(),
+        ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,9 +65,11 @@ class HomeScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                     'Pasindu Prabhath',
+                                    style: TextStyle(color: Colors.white),
                                   ),
                                   Text(
                                     '2 hours ago',
+                                    style: TextStyle(color: Colors.white),
                                   ),
                                 ],
                               ),
@@ -82,8 +89,18 @@ class HomeScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          _buildPostStat(context: context, likeCount: '120k'),
-                          _buildPostStat(context: context, likeCount: '20k'),
+                          _buildPostStat(
+                              context: context,
+                              likeCount: '120k',
+                              icon: const Icon(Icons.favorite_border,
+                                  color: Colors.white)),
+                          _buildPostStat(
+                              context: context,
+                              likeCount: '20k',
+                              icon: const Icon(
+                                Icons.bookmark_border_outlined,
+                                color: Colors.white,
+                              )),
                         ],
                       ),
                     ]),
@@ -100,6 +117,7 @@ class HomeScreen extends StatelessWidget {
   Container _buildPostStat({
     required BuildContext context,
     required String likeCount,
+    required Icon icon,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -110,10 +128,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(
-              Icons.favorite_border,
-              color: Color.fromARGB(255, 255, 255, 255),
-            ),
+            icon: icon,
           ),
           Text(
             likeCount,

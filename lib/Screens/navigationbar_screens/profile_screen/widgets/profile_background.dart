@@ -12,7 +12,6 @@ class ProfileBackground extends StatelessWidget {
       body: Stack(
         alignment: Alignment.center,
         children: [
-          child,
           Positioned(
             top: -340,
             left: 40,
@@ -24,7 +23,7 @@ class ProfileBackground extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(
                     width: 1.0,
-                    color: Color.fromARGB(45, 104, 128, 138),
+                    color: Theme.of(context).colorScheme.outline,
                   ),
                   borderRadius: BorderRadius.circular(152.0),
                 ),
@@ -42,7 +41,7 @@ class ProfileBackground extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(
                     width: 1.0,
-                    color: Color.fromARGB(46, 116, 156, 173),
+                    color: Theme.of(context).colorScheme.outline,
                   ),
                   borderRadius: BorderRadius.circular(152.0),
                 ),
@@ -58,12 +57,13 @@ class ProfileBackground extends StatelessWidget {
                 height: size.height * 0.80,
                 width: size.width * 1.2,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(146, 18, 165, 190).withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.secondary,
                   borderRadius: BorderRadius.circular(152.0),
                 ),
               ),
             ),
           ),
+          child,
         ],
       ),
     );

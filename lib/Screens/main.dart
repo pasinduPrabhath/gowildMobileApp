@@ -19,14 +19,14 @@ class MyApp extends StatelessWidget {
       textTheme: const TextTheme(
         displaySmall: TextStyle(
           fontFamily: 'OpenSans',
-          fontSize: 45.0,
-          color: Color.fromARGB(255, 255, 255, 255),
+          fontSize: 20.0,
+          color: Color.fromARGB(148, 12, 12, 12),
         ),
         labelLarge: TextStyle(
           fontFamily: 'OpenSans',
           fontWeight: FontWeight.bold,
           fontStyle: FontStyle.italic,
-          color: Colors.white,
+          color: Color.fromARGB(255, 19, 18, 18),
         ),
         labelMedium: TextStyle(
           fontFamily: 'OpenSans',
@@ -43,10 +43,16 @@ class MyApp extends StatelessWidget {
         ),
         bodyMedium: TextStyle(
           fontFamily: 'NotoSans',
-          color: Colors.white,
+          color: Color.fromARGB(255, 22, 21, 21),
+        ),
+        labelSmall: TextStyle(
+          fontFamily: 'NotoSans',
+          color: Color.fromARGB(255, 22, 21, 21),
+          fontSize: 20,
         ),
         // titleLarge: TextStyle(fontSize: 10.0),
-        // displayLarge: TextStyle(fontSize: 10.0),
+        displayLarge: TextStyle(
+            fontSize: 18.0, color: Colors.black, fontWeight: FontWeight.w500),
         displayMedium: TextStyle(
           fontSize: 15.0,
           color: Color.fromARGB(255, 5, 5, 5),
@@ -59,17 +65,17 @@ class MyApp extends StatelessWidget {
       ),
       colorScheme: ColorScheme.fromSwatch()
           // .copyWith(brightness: )
-          .copyWith(secondary: Colors.orange)
           .copyWith(
-              outline: const Color.fromARGB(255, 13, 158, 61)) //appbar color
+              secondary:
+                  Color.fromARGB(255, 218, 238, 247)) //background widget color
           .copyWith(
-              background: const Color.fromARGB(
-                  255, 39, 38, 38)) //background color dont change
-          .copyWith(
-              primary: const Color.fromARGB(255, 52, 136, 80)) //primary color
+              outline:
+                  Color.fromARGB(95, 186, 217, 236)) //background outline color
+          .copyWith(background: const Color.fromARGB(255, 20, 64, 100))
+          .copyWith(primary: const Color.fromARGB(209, 151, 210, 224))
           .copyWith(
               onPrimary: const Color.fromARGB(255, 254, 255, 255)) //text color
-          .copyWith(onSecondary: const Color.fromARGB(255, 15, 119, 55)),
+          .copyWith(onSecondary: const Color.fromARGB(255, 74, 128, 150)),
     );
 
     return MaterialApp(
@@ -80,3 +86,15 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// .copyWith(secondary: Colors.orange)
+//           .copyWith(
+//               outline: const Color.fromARGB(255, 13, 158, 61)) //appbar color
+//           .copyWith(
+//               background: const Color.fromARGB(
+//                   255, 39, 38, 38)) //background color dont change
+//           .copyWith(
+//               primary: const Color.fromARGB(255, 52, 136, 80)) //primary color
+//           .copyWith(
+//               onPrimary: const Color.fromARGB(255, 254, 255, 255)) //text color
+//           .copyWith(onSecondary: const Color.fromARGB(255, 15, 119, 55)),
