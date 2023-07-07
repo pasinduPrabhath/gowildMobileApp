@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gowild/Screens/navigationbar_screens/profile_screen/widgets/stat.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './widgets/profile_background.dart';
 import 'dart:math' as math;
+import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -12,6 +14,25 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late String? userName;
+  bool isLoading = true;
+  @override
+  void initState() {
+    super.initState();
+    _getProfileDetails();
+  }
+
+  Future<void> _getProfileDetails() async {
+    // Retrieve the email from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    userName = prefs.getString('displayName') ?? '';
+    isLoading = false;
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  late final XFile _image = XFile('assets/images/default_profile_pic.png');
   String _selectedTab = 'photos';
   _changeTab(String tab) {
     setState(() {
@@ -19,8 +40,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  Future<void> _getImageFromGallery(XFile _image) async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = XFile(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  @override
+  // void initState() {
+  //   super.initState();
+  //   _image = XFile('assets/images/default_profile_pic.png');
+  // }
+
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.sizeOf(context);
     return ProfileBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -39,52 +80,98 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(right: 23.0),
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _getImageFromGallery(_image);
+                        // Navigator.pop(context);
+                      },
                       icon: const Icon(Icons.add_a_photo_sharp),
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Stack(
+                GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet(
+                      elevation: 2,
+                      backgroundColor: const Color.fromARGB(155, 10, 10, 10),
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SizedBox(
+                          height: size.height * 0.13,
+                          child: Center(
+                              child: Column(
+                            children: [
+                              SizedBox(
+                                height: size.height * 0.02,
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  //   print('ebuwa ane');
+                                  //   List he =
+                                  //       (await ClientAPI.getUserProfileDetails(
+                                  //           '$_email'));
+                                  //   print(he[0].firstName);
+                                  _getImageFromGallery(_image);
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(
+                                  Icons.add_a_photo_sharp,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const Text(
+                                'Open Gallery',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          )),
+                        );
+                      },
+                    );
+                  },
+                  child: Align(
                     alignment: Alignment.center,
-                    children: [
-                      Transform.rotate(
-                        // alignment: Alignment.center,
-                        angle: math.pi / 4,
-                        child: Container(
-                          width: 140.0,
-                          height: 140.0,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            // color: Color.fromARGB(255, 0, 0, 0),
-                            border: Border.all(
-                                width: 1.0,
-                                color: const Color.fromARGB(255, 19, 18, 18)),
-                            borderRadius: BorderRadius.circular(35.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Transform.rotate(
+                          // alignment: Alignment.center,
+                          angle: math.pi / 4,
+                          child: Container(
+                            width: 140.0,
+                            height: 140.0,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              // color: Color.fromARGB(255, 0, 0, 0),
+                              border: Border.all(
+                                  width: 1.0,
+                                  color: const Color.fromARGB(255, 19, 18, 18)),
+                              borderRadius: BorderRadius.circular(35.0),
+                            ),
                           ),
                         ),
-                      ),
-                      ClipPath(
-                        clipper: ProfilePicCliper(),
-                        child: Image.asset(
-                          'assets/images/adminProfPic.png',
-                          width: 180.0,
-                          height: 180.0,
-                          fit: BoxFit.cover,
+                        ClipPath(
+                          clipper: ProfilePicCliper(),
+                          child: Image.asset(
+                            'assets/images/adminProfPic.png',
+                            width: 180.0,
+                            height: 180.0,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
             //image and border of dp
-
-            Text(
-              'Pasindu Prabhath',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            // IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+            isLoading
+                ? const CircularProgressIndicator()
+                : Text(
+                    '$userName',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
             const SizedBox(
               height: 5.0,
             ),

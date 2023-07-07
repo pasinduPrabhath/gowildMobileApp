@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:gowild/Screens/login_screen/login_screen_model.dart';
-import 'package:gowild/Screens/registartion_screen/test_upload.dart';
 import 'package:gowild/routes/routes.dart';
-import '../../backend/api_requests/registration_screen_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../backend/api_requests/client_api.dart';
+import '../../backend/api_requests/registration_screen_api.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _isLoading = true;
     });
-    print('login pressed email' + _email + '.' + _password);
+    // print('login pressed email' + _email + '.' + _password);
     final userLogin = UserLogin(
       email: _email,
       password: _password,
@@ -33,6 +33,14 @@ class _LoginScreenState extends State<LoginScreen> {
       final loginData = await Api.loginUser(userLogin);
       if (loginData['success'] == 1) {
         Navigator.pushReplacementNamed(context, '/screen_controller');
+        //assigning the username to shared preferences
+        final prefs = await SharedPreferences.getInstance();
+        final userProfileDetails =
+            await ClientAPI.getUserProfileDetails(_email);
+        final displayName = userProfileDetails[0].firstName +
+            ' ' +
+            userProfileDetails[0].lastName;
+        await prefs.setString('displayName', displayName);
         // ignore: use_build_context_synchronously
         // if (loginData['role'] == 'admin') {
         //   // ignore: use_build_context_synchronously
@@ -136,12 +144,12 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         if (_isLoading)
           Container(
-            color: Color.fromARGB(255, 3, 3, 3).withOpacity(0.9),
+            color: const Color.fromARGB(255, 3, 3, 3).withOpacity(0.9),
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(),
+                  const CircularProgressIndicator(),
                   const SizedBox(height: 16),
                   Text(
                     'Signin You in!',

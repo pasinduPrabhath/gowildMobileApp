@@ -57,9 +57,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     try {
       if (_isServiceProvider) {
+        print('trying to register as a service provider');
         frontimageUrl = await uploadImage(_imageFront, 'front');
         rearimageUrl = await uploadImage(_imageRear, 'rear');
-
+        print('uploading images done');
         final serviceProvider = ServiceProvider(
           firstName: _firstName,
           lastName: _lastName,
@@ -76,8 +77,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           userImageRear: rearimageUrl,
           timestamp: DateTime.now().toUtc().toString(),
         );
+        print('going to call api');
         final spId = await Api.registerServiceProvider(serviceProvider);
-
+        print(spId);
         if (spId == 1) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -111,7 +113,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         Navigator.pushReplacementNamed(context, '/');
       }
     } catch (e) {
-      String errorMessage = 'Failed to create user';
+      String errorMessage = 'Failed to create users';
       if (e.toString() == 'Email already registered') {
         errorMessage = 'Email already registered';
       }

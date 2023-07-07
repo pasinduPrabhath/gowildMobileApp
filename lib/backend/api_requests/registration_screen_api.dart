@@ -85,7 +85,7 @@ class Api {
 
   static Future<int> registerServiceProvider(
       ServiceProvider serviceProvider) async {
-    final url = Uri.parse('$baseUrl/user/registerServiceProvider');
+    final url = Uri.parse('$baseUrl/serviceProvider/registerServiceProvider');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(serviceProvider.toMap());
     final response = await http.post(url, headers: headers, body: body);
