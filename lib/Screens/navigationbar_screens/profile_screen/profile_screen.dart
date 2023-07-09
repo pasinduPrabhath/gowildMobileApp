@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gowild/Screens/navigationbar_screens/profile_screen/widgets/stat.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../backend/api_requests/client_api.dart';
 import './widgets/profile_background.dart';
 import 'dart:math' as math;
 import 'package:image_picker/image_picker.dart';
@@ -15,7 +19,11 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late String? userName;
+  late String? email;
+  late String dpUrl =
+      'https://www.pngitem.com/pimgs/m/551-5510463_default-user-image-png-transparent-png.png';
   bool isLoading = true;
+  File _profilePic = File('');
   @override
   void initState() {
     super.initState();
@@ -26,7 +34,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Retrieve the email from SharedPreferences
     final prefs = await SharedPreferences.getInstance();
     userName = prefs.getString('displayName') ?? '';
-    isLoading = false;
+    email = prefs.getString('email') ?? '';
+    dpUrl = prefs.getString('dpUrl') ?? '';
+    // isLoading = false;
     setState(() {
       isLoading = false;
     });
@@ -40,13 +50,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  Future<void> _getImageFromGallery(XFile _image) async {
+  Future<void> _getImageFromGallery(XFile image) async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {
-        _image = XFile(pickedFile.path);
+        image = XFile(pickedFile.path);
       } else {
         print('No image selected.');
       }
@@ -105,13 +115,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               IconButton(
                                 onPressed: () async {
-                                  //   print('ebuwa ane');
-                                  //   List he =
-                                  //       (await ClientAPI.getUserProfileDetails(
-                                  //           '$_email'));
-                                  //   print(he[0].firstName);
-                                  _getImageFromGallery(_image);
+                                  final previousImageUrl = dpUrl;
+                                  final image = await pickImage();
+                                  if (image == null) {
+                                    return;
+                                  }
+                                  setState(() {
+                                    _profilePic = image;
+                                  });
+                                  final imageUrl = await uploadImage(
+                                      _profilePic,
+                                      'profilePic',
+                                      'profilePic',
+                                      previousImageUrl);
+                                  setState(() {
+                                    dpUrl = imageUrl;
+                                  });
+                                  // final prefs =
+                                  //     await SharedPreferences.getInstance();
+                                  // await prefs.setString('dpUrl', dpUrl);
+                                  print(dpUrl);
+                                  final emailid =
+                                      await ClientAPI.updateUserProfilePicture(
+                                          email!, dpUrl);
+
                                   Navigator.pop(context);
+                                  print(emailid);
+                                  print(email);
                                 },
                                 icon: const Icon(
                                   Icons.add_a_photo_sharp,
@@ -151,13 +181,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         ClipPath(
                           clipper: ProfilePicCliper(),
-                          child: Image.asset(
-                            'assets/images/adminProfPic.png',
+                          child: Image.network(
+                            dpUrl,
                             width: 180.0,
                             height: 180.0,
                             fit: BoxFit.cover,
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ),
@@ -274,6 +304,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
         )),
       ),
     );
+  }
+
+  Future<File?> pickImage() async {
+    ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (file == null) {
+      return null;
+    } //
+    return File(file.path);
+  }
+
+  Future<String> uploadImage(
+    File imageFile,
+    String suffix,
+    String imageCategory,
+    String previousImageUrl,
+  ) async {
+    // Check if image file is null
+    if (imageFile == null) {
+      throw Exception('No image selected');
+    }
+
+    String uniqueFileName =
+        suffix + DateTime.now().millisecondsSinceEpoch.toString();
+
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+
+    if (previousImageUrl != null && previousImageUrl.isNotEmpty) {
+      try {
+        Reference previousImageReference =
+            FirebaseStorage.instance.refFromURL(previousImageUrl);
+        await previousImageReference.delete();
+      } catch (e) {
+        print('Error deleting previous image: $e');
+      }
+    }
+
+    Reference fileReference =
+        referenceRoot.child('$imageCategory/$email/$uniqueFileName');
+    try {
+      await fileReference.putFile(imageFile);
+      final imageUrl = await fileReference.getDownloadURL();
+      return imageUrl;
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to upload image');
+    }
   }
 }
 

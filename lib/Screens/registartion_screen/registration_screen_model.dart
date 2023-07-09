@@ -9,6 +9,7 @@ class User {
   String? town;
   String? mobileNumber;
   String? gender;
+  String? profPicUrl;
   String? timestamp;
 
   User({
@@ -22,6 +23,7 @@ class User {
     this.gender,
     this.email,
     this.password,
+    this.profPicUrl,
     this.timestamp,
   });
 
@@ -37,6 +39,7 @@ class User {
       'gender': gender,
       'email': email,
       'password': password,
+      'profPicUrl': profPicUrl,
       'timestamp': timestamp,
     };
   }
@@ -53,6 +56,7 @@ class User {
       gender: map['gender'],
       email: map['email'],
       password: map['password'],
+      profPicUrl: map['profPicUrl'],
       timestamp: DateTime.parse(map['timestamp'])
           .toLocal()
           .add(const Duration(hours: 5, minutes: 30))

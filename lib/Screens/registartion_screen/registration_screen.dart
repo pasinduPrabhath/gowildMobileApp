@@ -45,6 +45,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String rearimageUrl = '';
   File _imageFront = File('');
   File _imageRear = File('');
+  File _profilePic = File('');
+  late String _profilePicUrl = '';
 
   void _submitForm() async {
     if (!_formKey.currentState!.validate()) {
@@ -56,11 +58,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     });
 
     try {
+      _profilePicUrl = await uploadImage(_profilePic, 'profile', 'profilePic');
+      print(_profilePicUrl);
       if (_isServiceProvider) {
-        print('trying to register as a service provider');
-        frontimageUrl = await uploadImage(_imageFront, 'front');
-        rearimageUrl = await uploadImage(_imageRear, 'rear');
-        print('uploading images done');
+        frontimageUrl = await uploadImage(_imageFront, 'front', 'nicImages');
+        rearimageUrl = await uploadImage(_imageRear, 'rear', 'nicImages');
+
         final serviceProvider = ServiceProvider(
           firstName: _firstName,
           lastName: _lastName,
@@ -75,10 +78,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           isApproved: 'pending',
           userImageFront: frontimageUrl,
           userImageRear: rearimageUrl,
+          profPicUrl: _profilePicUrl,
           timestamp: DateTime.now().toUtc().toString(),
         );
-        print('going to call api');
+
         final spId = await Api.registerServiceProvider(serviceProvider);
+        // print(profPicId);
         print(spId);
         if (spId == 1) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -101,9 +106,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         gender: _gender,
         email: _email,
         password: _password,
+        profPicUrl: _profilePicUrl,
         timestamp: DateTime.now().toUtc().toString(),
       );
+      print('going to create user');
       final userId = await Api.createUser(user);
+      print('user created');
       if (userId == 1) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -357,6 +365,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.01,
                     ),
+                    Text('Add a Profile Picture',
+                        style: Theme.of(context).textTheme.titleMedium),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final file = await pickImage();
+                        setState(() {
+                          _profilePic = file!;
+                        });
+                      },
+                      child: const Text('Select an Image!'),
+                    ),
                     if (_isServiceProvider)
                       Column(
                         children: [
@@ -444,7 +466,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return File(file.path);
   }
 
-  Future<String> uploadImage(File imageFile, String suffix) async {
+  Future<String> uploadImage(
+      File imageFile, String suffix, String imageCategory) async {
     // ImagePicker imagePicker = ImagePicker();
     File? file = imageFile;
     if (file == null) {
@@ -454,7 +477,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         suffix + DateTime.now().millisecondsSinceEpoch.toString();
     Reference referenceRoot = FirebaseStorage.instance.ref();
     Reference fileReference =
-        referenceRoot.child('images/$_email/$uniqueFileName');
+        referenceRoot.child('$imageCategory/$_email/$uniqueFileName');
     try {
       await fileReference.putFile(File(file.path));
       final imageUrl = await fileReference.getDownloadURL();

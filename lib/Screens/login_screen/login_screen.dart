@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings, avoid_print
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:gowild/Screens/login_screen/login_screen_model.dart';
@@ -31,29 +33,25 @@ class _LoginScreenState extends State<LoginScreen> {
     );
     try {
       final loginData = await Api.loginUser(userLogin);
+      print('login complete');
+      final prefs = await SharedPreferences.getInstance();
+      final token = loginData['success'];
+      print('login $token');
       if (loginData['success'] == 1) {
         Navigator.pushReplacementNamed(context, '/screen_controller');
         //assigning the username to shared preferences
-        final prefs = await SharedPreferences.getInstance();
+
         final userProfileDetails =
             await ClientAPI.getUserProfileDetails(_email);
+
         final displayName = userProfileDetails[0].firstName +
             ' ' +
             userProfileDetails[0].lastName;
+        final dpUrl = userProfileDetails[0].dpUrl;
+        print('login $displayName');
         await prefs.setString('displayName', displayName);
-        // ignore: use_build_context_synchronously
-        // if (loginData['role'] == 'admin') {
-        //   // ignore: use_build_context_synchronously
-        //   Navigator.pushReplacementNamed(context, '/admin_dashboard');
-        // }
-        // if (loginData['role'] == 'user') {
-        //   // ignore: use_build_context_synchronously
-        //   Navigator.pushReplacementNamed(context, '/feed');
-        // }
-        // if (loginData['role'] == 'serviceProvider') {
-        //   // ignore: use_build_context_synchronously
-        //   Navigator.pushReplacementNamed(context, '/feed');
-        // }
+        await prefs.setString('dpUrl', dpUrl);
+        await prefs.setString('email', _email);
       } else {
         // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, '/');
@@ -72,9 +70,11 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       Navigator.pushNamed(context, '/');
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -166,3 +166,16 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+    // ignore: use_build_context_synchronously
+        // if (loginData['role'] == 'admin') {
+        //   // ignore: use_build_context_synchronously
+        //   Navigator.pushReplacementNamed(context, '/admin_dashboard');
+        // }
+        // if (loginData['role'] == 'user') {
+        //   // ignore: use_build_context_synchronously
+        //   Navigator.pushReplacementNamed(context, '/feed');
+        // }
+        // if (loginData['role'] == 'serviceProvider') {
+        //   // ignore: use_build_context_synchronously
+        //   Navigator.pushReplacementNamed(context, '/feed');
+        // }

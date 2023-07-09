@@ -1,12 +1,14 @@
 class Profile {
   final String firstName;
   final String lastName;
+  final String dpUrl;
 
   // final String? email;
 
   Profile({
     required this.firstName,
     required this.lastName,
+    required this.dpUrl,
   });
 
   // Profile fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class Profile {
     return Profile(
       firstName: json['firstName'],
       lastName: json['lastName'],
+      dpUrl: json['profile_picture_url'],
     );
   }
 }

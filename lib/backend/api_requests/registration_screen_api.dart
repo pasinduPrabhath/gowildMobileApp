@@ -102,4 +102,23 @@ class Api {
     }
     throw Exception('Failed to create user');
   }
+
+  static Future<int> uploadUserProfilePicture(String email, String urls) async {
+    final url = Uri.parse('$baseUrl/user/setClientProfilePicture');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({'email': email, 'profilePicture': urls});
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['success'];
+    }
+    if (response.statusCode == 400) {
+      final message = json.decode(response.body)['message'];
+      if (message == 'Email already exists') {
+        throw Exception('Email already registered');
+      }
+    } else {
+      throw Exception('Failed to create user');
+    }
+    throw Exception('Failed to create user');
+  }
 }

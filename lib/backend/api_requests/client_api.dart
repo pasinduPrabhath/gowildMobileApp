@@ -20,15 +20,32 @@ class ClientAPI {
           .toList();
 
       return result;
-      // final serviceProviderList = jsonResponse['request']
-      //     .map<ServiceProvider>((json) => ServiceProvider.fromJson(json))
-      //     .toList();
-      // return serviceProviderList;
     }
     if (response.statusCode == 400) {
       return json.decode(response.body)['username'];
     } else {
       throw Exception('Failed to check username');
     }
+  }
+
+  static Future<int> updateUserProfilePicture(
+      String email, String profilePicture) async {
+    final url = Uri.parse('$baseUrl/user/updateProfilePicture');
+    final headers = {'Content-Type': 'application/json'};
+    final body =
+        json.encode({'email': email, 'profilePicture': profilePicture});
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['success'];
+    }
+    if (response.statusCode == 500) {
+      final message = json.decode(response.body)['message'];
+      if (message == 'Database connection error') {
+        throw Exception('Server error, Please try again later');
+      }
+    } else {
+      throw Exception('Failed to create user');
+    }
+    throw Exception('Failed to create user');
   }
 }

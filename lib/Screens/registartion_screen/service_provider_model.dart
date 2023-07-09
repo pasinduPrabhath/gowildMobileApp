@@ -12,6 +12,7 @@ class ServiceProvider {
   String? userImageFront;
   String? userImageRear;
   String? isApproved;
+  String? profPicUrl;
   String? timestamp;
 
   ServiceProvider({
@@ -28,6 +29,7 @@ class ServiceProvider {
     this.userImageFront,
     this.userImageRear,
     this.isApproved,
+    this.profPicUrl,
     this.timestamp,
   });
 
@@ -46,6 +48,7 @@ class ServiceProvider {
       'userImageFront': userImageFront,
       'userImageRear': userImageRear,
       'isApproved': isApproved,
+      'profPicUrl': profPicUrl,
       'timestamp': timestamp,
     };
   }
