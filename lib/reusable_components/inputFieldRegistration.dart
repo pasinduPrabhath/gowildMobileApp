@@ -21,26 +21,30 @@ class CustomTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextFormField(
-          keyboardType: keyboardType,
-          controller: controller,
-          decoration: InputDecoration(
-            labelText: labelText,
-            labelStyle: const TextStyle(color: Colors.white),
-            enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Color.fromARGB(255, 255, 255, 255),
-                width: 1.0,
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.055,
+          child: TextFormField(
+            keyboardType: keyboardType,
+            controller: controller,
+            decoration: InputDecoration(
+              labelText: labelText,
+              labelStyle: const TextStyle(
+                  color: Color.fromARGB(255, 12, 12, 12), fontSize: 18),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 19, 18, 18),
+                  width: 1.0,
+                ),
               ),
             ),
+            validator: (value) {
+              if (value!.isEmpty) {
+                return errorText;
+              }
+              return null;
+            },
+            onSaved: (String? value) => onSaved!(value!),
           ),
-          validator: (value) {
-            if (value!.isEmpty) {
-              return errorText;
-            }
-            return null;
-          },
-          onSaved: (String? value) => onSaved!(value!),
         ),
         SizedBox(
             height:

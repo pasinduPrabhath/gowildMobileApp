@@ -84,6 +84,7 @@ flutter:
   assets:
     - assets/images/logo.png
     - assets/images/adminProfPic.png
+    - assets/images/login/login_bg.jpg
     - assets/videos/
     - assets/images/bird/
   #   - images/a_dot_ham.jpeg

@@ -11,22 +11,20 @@ class HomeScreen extends StatelessWidget {
     return Background(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: const PreferredSize(
+        appBar: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),
-          child: CustomizedAppBar(),
+          child: CustomizedAppBar(
+            key: UniqueKey(),
+          ),
         ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Text(
-                  'Search',
-                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                      fontWeight: FontWeight.w700, color: Colors.black),
-                ),
-              ),
+              // const Padding(
+              //   padding: EdgeInsets.symmetric(horizontal: 24.0),
+              //   child: SearchWidget(),
+              // ),
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: 2,
@@ -139,6 +137,37 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(width: 15.0),
         ],
       ),
+    );
+  }
+}
+
+class SearchWidget extends StatelessWidget {
+  const SearchWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      decoration: InputDecoration(
+        hintText: 'Search',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide.none,
+        ),
+        filled: true,
+        fillColor: Color.fromARGB(139, 231, 230, 230),
+        prefixIcon: Icon(Icons.search),
+        suffixIcon: IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: () {
+            // Clear the search text
+          },
+        ),
+      ),
+      onChanged: (value) {
+        // Update the search text
+      },
     );
   }
 }

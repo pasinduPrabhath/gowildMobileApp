@@ -174,7 +174,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Stack(
       children: [
         Scaffold(
-          backgroundColor: Colors.grey[900], // set background color to dark
+          backgroundColor:
+              Color.fromRGBO(225, 241, 241, 1), // set background color to dark
           appBar: AppBar(
             title: const Text(
               'You are closer!',
@@ -216,11 +217,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        // const SizedBox(
+                        //   height: 6,
+                        // ),
                         SizedBox(
-                          height: 50,
+                          height: 45,
                           child: InkWell(
                             onTap: () async {
                               final DateTime? picked = await showDatePicker(
@@ -249,10 +250,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 controller: _birthdayController,
                                 decoration: const InputDecoration(
                                   labelText: 'Birthday',
-                                  labelStyle: TextStyle(color: Colors.white),
+                                  labelStyle: TextStyle(
+                                      fontSize: 18,
+                                      color: Color.fromARGB(255, 10, 10, 10)),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      color: Color.fromARGB(255, 0, 0, 0),
                                       width: 1.0,
                                     ),
                                   ),
@@ -312,6 +315,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Radio(
+                          fillColor: MaterialStateProperty.resolveWith<Color?>(
+                            (states) => Colors.black,
+                          ),
                           value: 'male',
                           groupValue: _gender,
                           onChanged: (value) {
@@ -322,6 +328,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                         const Text('Male'),
                         Radio(
+                          fillColor: MaterialStateProperty.resolveWith<Color?>(
+                            (states) => Colors.black,
+                          ),
                           value: 'female',
                           groupValue: _gender,
                           onChanged: (value) {
@@ -341,6 +350,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     Row(
                       children: <Widget>[
                         Radio(
+                          fillColor: MaterialStateProperty.resolveWith<Color?>(
+                            (states) => Colors.black,
+                          ),
                           value: true,
                           groupValue: _isServiceProvider,
                           onChanged: (value) {
@@ -351,6 +363,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                         const Text('Yes'),
                         Radio(
+                          fillColor: MaterialStateProperty.resolveWith<Color?>(
+                            (states) => Colors.black,
+                          ),
                           value: false,
                           groupValue: _isServiceProvider,
                           onChanged: (value) {
@@ -370,14 +385,32 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.02,
                     ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final file = await pickImage();
-                        setState(() {
-                          _profilePic = file!;
-                        });
-                      },
-                      child: const Text('Select an Image!'),
+                    Column(
+                      children: [
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              const Color.fromARGB(255, 22, 65, 102),
+                            ),
+                            minimumSize: MaterialStateProperty.all<Size>(
+                              Size(MediaQuery.of(context).size.width * 0.3, 45),
+                            ),
+                          ),
+                          onPressed: () async {
+                            final file = await pickImage();
+                            setState(() {
+                              _profilePic = file!;
+                            });
+                          },
+                          child: const Text(
+                            'Select an Image',
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
                     ),
                     if (_isServiceProvider)
                       Column(
@@ -397,22 +430,51 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             height: MediaQuery.of(context).size.height * 0.02,
                           ),
                           ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color.fromARGB(255, 22, 65, 102),
+                              ),
+                              minimumSize: MaterialStateProperty.all<Size>(
+                                Size(MediaQuery.of(context).size.width * 0.3,
+                                    45),
+                              ),
+                            ),
                             onPressed: () async {
                               final file = await pickImage();
                               setState(() {
                                 _imageFront = file!;
                               });
                             },
-                            child: const Text('Front Side'),
+                            child: const Text(
+                              'Front Side',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.006,
                           ),
                           ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color.fromARGB(255, 22, 65, 102),
+                              ),
+                              minimumSize: MaterialStateProperty.all<Size>(
+                                Size(MediaQuery.of(context).size.width * 0.3,
+                                    45),
+                              ),
+                            ),
                             onPressed: () async {
                               final file = await pickImage();
                               setState(() {
                                 _imageRear = file!;
                               });
                             },
-                            child: const Text('Back Side'),
+                            child: const Text(
+                              'Back Side',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
                           ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.02,
@@ -420,6 +482,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ],
                       ),
                     ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Color.fromARGB(255, 22, 65, 102)),
+                      ),
                       onPressed: _submitForm,
                       child: const Text(
                         'Register',

@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         titleMedium: TextStyle(
           fontFamily: 'NotoSans',
           fontWeight: FontWeight.w800,
-          fontSize: 23,
+          fontSize: 20,
           color: Color.fromARGB(255, 14, 13, 13),
         ),
         bodyMedium: TextStyle(
@@ -62,6 +62,12 @@ class MyApp extends StatelessWidget {
           fontWeight: FontWeight.w300,
           color: Color.fromARGB(255, 14, 13, 13),
         ),
+        bodySmall: TextStyle(
+          fontFamily: 'OpenSans',
+          fontWeight: FontWeight.w400,
+          color: Color.fromARGB(255, 14, 13, 13),
+          fontSize: 17,
+        ),
       ),
       colorScheme: ColorScheme.fromSwatch()
           // .copyWith(brightness: )
@@ -75,7 +81,8 @@ class MyApp extends StatelessWidget {
           .copyWith(primary: const Color.fromARGB(209, 151, 210, 224))
           .copyWith(
               onPrimary: const Color.fromARGB(255, 254, 255, 255)) //text color
-          .copyWith(onSecondary: const Color.fromARGB(255, 74, 128, 150)),
+          .copyWith(onSecondary: const Color.fromARGB(255, 74, 128, 150))
+          .copyWith(onBackground: Color.fromARGB(255, 71, 170, 201)),
     );
 
     return MaterialApp(

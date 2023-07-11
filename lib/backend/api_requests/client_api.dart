@@ -48,4 +48,45 @@ class ClientAPI {
     }
     throw Exception('Failed to create user');
   }
+
+  static Future<int> updateUserPostPicture(
+      String email, String postPicture) async {
+    final url = Uri.parse('$baseUrl/user/uploadPicture');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({'email': email, 'postPicture': postPicture});
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['success'];
+    }
+    if (response.statusCode == 500) {
+      final message = json.decode(response.body)['message'];
+      if (message == 'Database connection error') {
+        throw Exception('Server error, Please try again later');
+      }
+    } else {
+      throw Exception('Failed to create user');
+    }
+    throw Exception('Failed to create user');
+  }
+
+  static Future<List<String>> getImages(String email) async {
+    final url = Uri.parse('$baseUrl/user/getUploadedPictures');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({'email': email});
+
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final result = jsonResponse['data']
+          .map((item) => item['url'])
+          .cast<String>()
+          .toList();
+      return result;
+    }
+    if (response.statusCode == 400) {
+      return json.decode(response.body)['username'];
+    } else {
+      throw Exception('Failed to check username');
+    }
+  }
 }

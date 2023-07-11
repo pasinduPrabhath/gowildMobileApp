@@ -48,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ' ' +
             userProfileDetails[0].lastName;
         final dpUrl = userProfileDetails[0].dpUrl;
+        print('dpUrl $dpUrl');
         print('login $displayName');
         await prefs.setString('displayName', displayName);
         await prefs.setString('dpUrl', dpUrl);
@@ -84,8 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         FlutterLogin(
           theme: LoginTheme(
-            primaryColor: Theme.of(context).colorScheme.primary,
-            // pageColorDark: Theme.of(context).colorScheme.background,
+            primaryColor: Theme.of(context).colorScheme.onBackground,
             cardTheme: CardTheme(
               color: const Color.fromARGB(255, 255, 255, 255),
               elevation: 15,
@@ -95,7 +95,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          logo: const AssetImage('assets/images/logo.png'),
           onLogin: (loginData) {
             _email = loginData.name;
             _password = loginData.password;
@@ -141,6 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
             recoverPasswordSuccess: 'Password rescued successfully',
           ),
+          logo: const AssetImage('assets/images/logo.png'),
         ),
         if (_isLoading)
           Container(
@@ -166,16 +166,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-    // ignore: use_build_context_synchronously
-        // if (loginData['role'] == 'admin') {
-        //   // ignore: use_build_context_synchronously
-        //   Navigator.pushReplacementNamed(context, '/admin_dashboard');
-        // }
-        // if (loginData['role'] == 'user') {
-        //   // ignore: use_build_context_synchronously
-        //   Navigator.pushReplacementNamed(context, '/feed');
-        // }
-        // if (loginData['role'] == 'serviceProvider') {
-        //   // ignore: use_build_context_synchronously
-        //   Navigator.pushReplacementNamed(context, '/feed');
-        // }
