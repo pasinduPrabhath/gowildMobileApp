@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gowild/backend/api_requests/client_api.dart';
+import 'package:gowild/reusable_components/searchWidget.dart';
 
 class CustomizedAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomizedAppBar({
@@ -77,86 +78,13 @@ class _CustomizedAppBarState extends State<CustomizedAppBar> {
                 color: Colors.black,
               ),
               onPressed: () async {
-                final result = await ClientAPI.searchUsers('ser');
-                print(result[0]['firstName']);
+                // final result = await ClientAPI.searchUsers('ser');
+                // print(result[0]['firstName']);
               },
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class CustomSearchDelegate extends SearchDelegate {
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        onPressed: () {
-          query = '';
-          showSuggestions(context);
-        },
-        icon: const Icon(Icons.clear),
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        Navigator.pop(context);
-      },
-      icon: const Icon(Icons.arrow_back),
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return FutureBuilder(
-      future: ClientAPI.searchUsers(query),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-            itemCount: snapshot.data?.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(snapshot.data?[index]['firstName']),
-                subtitle: Text(snapshot.data?[index]['lastName']),
-              );
-            },
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return FutureBuilder(
-      future: ClientAPI.searchUsers(query),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-            itemCount: snapshot.data?.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(snapshot.data?[index]['firstName']),
-                subtitle: Text(snapshot.data?[index]['lastName']),
-              );
-            },
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
     );
   }
 }

@@ -10,6 +10,7 @@ import './widgets/profile_background.dart';
 import 'dart:math' as math;
 import 'package:image_picker/image_picker.dart';
 import '../profile_screen/thirdPersonView/thirdPersonProfileView.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -22,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late String? userName;
   late String? email;
   late String dpUrl =
-      'https://firebasestorage.googleapis.com/v0/b/gowild-4e72d.appspot.com/o/Pasindu%20Dp%20(1).png?alt=media&token=1be71bdb-bf79-4a98-8551-971f13e44574';
+      'https://firebasestorage.googleapis.com/v0/b/gowild-4e72d.appspot.com/o/Default_Image_Thumbnail.png?alt=media&token=626ff3a4-afae-4de4-ab1e-783a2f9808c9';
   bool isLoading = true;
   bool issloading = false;
   File _profilePic = File('');
@@ -40,8 +41,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     userName = prefs.getString('displayName') ?? '';
     email = prefs.getString('email') ?? '';
     dpUrl = prefs.getString('dpUrl') ?? '';
+    print('dpurl' + dpUrl);
     final response = await ClientAPI.getImages(email!);
-    print(response[0]);
+    // print(response[0]);
 
     // isLoading = false;
     setState(() {
@@ -355,6 +357,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Image.network(
               url,
               fit: BoxFit.cover,
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
             ),
           ),
         ),
@@ -363,12 +374,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<File?> pickImage() async {
-    ImagePicker imagePicker = ImagePicker();
-    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+    Future<XFile?> file =
+        ImagePicker().pickImage(imageQuality: 55, source: ImageSource.gallery);
+    // XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
     if (file == null) {
       return null;
     } //
-    return File(file.path);
+    XFile? pickedFile = await file;
+    return File(pickedFile!.path);
   }
 
   Future<String> uploadProfileImage(
@@ -435,6 +448,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
       throw Exception('Failed to upload image');
     }
   }
+
+// Future<File> compressImage(XFile file) async {
+//   final filePath = file.path;
+//   final image = await ImagePicker().getImage(
+//     source: ImageSource.gallery,
+//     maxHeight: 500,
+//     maxWidth: 500,
+//     imageQuality: 50,
+//   );
+//   final compressedFile = await image!.compress(
+//     quality: 50,
+//   );
+//   final result = File(filePath)..writeAsBytesSync(compressedFile.bytes!);
+//   return result;
+// }
 }
 
 class ProfilePicCliper extends CustomClipper<Path> {

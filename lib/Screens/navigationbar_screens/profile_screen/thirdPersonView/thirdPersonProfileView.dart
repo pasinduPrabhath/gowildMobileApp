@@ -33,7 +33,7 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
   // late String? userName;
   // late String? email;
   late String dpUrl =
-      'https://firebasestorage.googleapis.com/v0/b/gowild-4e72d.appspot.com/o/Pasindu%20Dp%20(1).png?alt=media&token=1be71bdb-bf79-4a98-8551-971f13e44574';
+      'https://firebasestorage.googleapis.com/v0/b/gowild-4e72d.appspot.com/o/Default_Image_Thumbnail.png?alt=media&token=626ff3a4-afae-4de4-ab1e-783a2f9808c9';
   bool isLoading = true;
   bool issloading = false;
   File _profilePic = File('');
@@ -42,15 +42,27 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
   @override
   void initState() {
     super.initState();
+    getDetails();
     _getProfileDetails();
+  }
+
+  void getDetails() async {
+    print('getting details');
+    final userProfileDetails =
+        await ClientAPI.getUserProfileDetails(widget.email);
+    final _dpUrl = userProfileDetails[0].dpUrl;
+    setState(() {
+      dpUrl = _dpUrl;
+    });
+    print('dpUrl $dpUrl');
   }
 
   Future<void> _getProfileDetails() async {
     // Retrieve the email from SharedPreferences
-    final prefs = await SharedPreferences.getInstance();
+    // final prefs = await SharedPreferences.getInstance();
     // userName = prefs.getString('displayName') ?? '';
     // email = prefs.getString('email') ?? '';
-    dpUrl = prefs.getString('dpUrl') ?? '';
+    // dpUrl = prefs.getString('dpUrl') ?? '';
     final response = await ClientAPI.getImages(widget.email);
     print(response[0]);
 
@@ -90,6 +102,18 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
                       child: IconButton(
                         onPressed: () async {},
                         icon: const Icon(Icons.person_add_alt_1),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 23.0),
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.arrow_back_rounded),
                       ),
                     ),
                   ),
@@ -246,6 +270,15 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
             child: Image.network(
               url,
               fit: BoxFit.cover,
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
             ),
           ),
         ),
@@ -299,38 +332,6 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
       throw Exception('Failed to upload image');
     }
   }
-
-  // Future<String> uploadPostImage(
-  //   File imageFile,
-  //   String suffix,
-  //   String imageCategory,
-  // ) async {
-  //   // Check if image file is null
-  //   if (imageFile == null) {
-  //     throw Exception('No image selected');
-  //   }
-
-  //   String uniqueFileName =
-  //       suffix + DateTime.now().millisecondsSinceEpoch.toString();
-
-  //   Reference referenceRoot = FirebaseStorage.instance.ref();
-
-  //   Reference fileReference =
-  //       referenceRoot.child('$imageCategory/$email/$uniqueFileName');
-  //   try {
-  //     await fileReference.putFile(imageFile);
-  //     final imageUrl = await fileReference.getDownloadURL();
-  //     return imageUrl;
-  //   } catch (e) {
-  //     print(e);
-  //     throw Exception('Failed to upload image');
-  //   }
-  // }
-
-  // Future<void> _getImageFromGallery(String email) async {
-  //   final response = await ClientAPI.getImages(email);
-  //   print(response);
-  // }
 }
 
 class ProfilePicCliper extends CustomClipper<Path> {
