@@ -89,4 +89,22 @@ class ClientAPI {
       throw Exception('Failed to check username');
     }
   }
+
+  static Future<List> searchUsers(String query) async {
+    final url = Uri.parse('$baseUrl/user/getSearchResult');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({'search': query});
+
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final result = jsonResponse['data'] as List<dynamic>;
+      return result;
+    }
+    if (response.statusCode == 400) {
+      return json.decode(response.body)['username'];
+    } else {
+      throw Exception('Failed to check username');
+    }
+  }
 }

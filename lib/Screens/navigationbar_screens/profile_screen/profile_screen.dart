@@ -58,25 +58,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  // Future<void> _getImageFromGallery(XFile image) async {
-  //   final pickedFile =
-  //       await ImagePicker().pickImage(source: ImageSource.gallery);
-
-  //   setState(() {
-  //     if (pickedFile != null) {
-  //       image = XFile(pickedFile.path);
-  //     } else {
-  //       print('No image selected.');
-  //     }
-  //   });
-  // }
-
-  @override
-  // void initState() {
-  //   super.initState();
-  //   _image = XFile('assets/images/default_profile_pic.png');
-  // }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
@@ -85,8 +66,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            // height: size.height,
-            // mainAxisSize: MainAxisSize.max,
             children: [
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.06,
@@ -97,6 +76,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     alignment: Alignment.topRight,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 23.0),
+                      child: IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Confirm Logout'),
+                                content: const Text(
+                                  'Are you sure you want to logout?',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Cancel',
+                                        style: TextStyle(color: Colors.black)),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pushReplacementNamed(
+                                          context, '/');
+                                    },
+                                    child: const Text('Logout',
+                                        style: TextStyle(color: Colors.black)),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        icon: const Icon(Icons.logout_rounded),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 23.0),
                       child: IconButton(
                         onPressed: () async {
                           final image = await pickImage();
@@ -215,8 +234,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ],
               ),
-              //image and border of dp
-              // IconButton(onPressed: () {}, icon: Icon(Icons.add)),
               isLoading
                   ? const CircularProgressIndicator()
                   : Text(
@@ -316,30 +333,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-
-  // StaggeredGridView pictureTile(double cellcount, String url) {
-  //   return StaggeredGridView.extent(
-  //     maxCrossAxisExtent: 200,
-  //     crossAxisCellCount: 1,
-  //     mainAxisCellCount: cellcount,
-  //     child: ClipRRect(
-  //       borderRadius: BorderRadius.circular(19.0),
-  //       child: Image.network(url, fit: BoxFit.cover),
-  //     ),
-  //   );
-  // }
-  // Widget pictureTile(double cellcount, String url) {
-  //   return Padding(
-  //     padding: const EdgeInsets.all(8.0),
-  //     child: ClipRRect(
-  //       borderRadius: BorderRadius.circular(10.0),
-  //       child: Image.network(
-  //         url,
-  //         fit: BoxFit.cover,
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget pictureTile(double cellcount, String url, int index) {
     return Hero(
@@ -442,11 +435,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       throw Exception('Failed to upload image');
     }
   }
-
-  // Future<void> _getImageFromGallery(String email) async {
-  //   final response = await ClientAPI.getImages(email);
-  //   print(response);
-  // }
 }
 
 class ProfilePicCliper extends CustomClipper<Path> {
@@ -521,48 +509,3 @@ class PhotoPreviewScreen extends StatelessWidget {
     );
   }
 }
-
-
-  // Widget build(BuildContext context) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       showDialog(
-  //         context: context,
-  //         builder: (_) => Dialog(
-  //           child: Image.network(widget.imageUrl),
-  //         ),
-  //       );
-  //     },
-  //     child: FutureBuilder(
-  //       future: _imageFuture,
-  //       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-  //         if (snapshot.connectionState == ConnectionState.done) {
-  //           return Container(
-  //             width: 100,
-  //             height: 100,
-  //             margin: const EdgeInsets.only(right: 8),
-  //             decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(8),
-  //               image: DecorationImage(
-  //                 image: NetworkImage(widget.imageUrl),
-  //                 fit: BoxFit.cover,
-  //               ),
-  //             ),
-  //           );
-  //         } else if (response == 404) {
-  //           return widget.errorBuilder(
-  //             context,
-  //             Exception('Failed to load image'),
-  //             null,
-  //           );
-  //         } else {
-  //           return const SizedBox(
-  //             width: 100,
-  //             height: 100,
-  //             child: Center(child: CircularProgressIndicator()),
-  //           );
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }
