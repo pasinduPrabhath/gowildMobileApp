@@ -7,16 +7,32 @@ class Stat extends StatelessWidget {
     super.key,
     required this.title,
     required this.value,
+    this.isLoading = false,
   });
 
   final String title;
   final int value;
+  final bool isLoading;
+
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Text(title, style: Theme.of(context).textTheme.displayMedium),
-      Text(NumberFormat.decimalPattern().format(value),
-          style: Theme.of(context).textTheme.labelMedium)
-    ]);
+    if (isLoading) {
+      return Column(
+        children: [
+          Text(title, style: Theme.of(context).textTheme.displayMedium),
+          CircularProgressIndicator(),
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          Text(title, style: Theme.of(context).textTheme.displayMedium),
+          Text(
+            NumberFormat.decimalPattern().format(value),
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
+        ],
+      );
+    }
   }
 }

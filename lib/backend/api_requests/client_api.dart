@@ -161,4 +161,36 @@ class ClientAPI {
       throw Exception('Failed to check username');
     }
   }
+
+  static Future<int> getFollowerCount(String followerEmail) async {
+    final url = Uri.parse('$baseUrl/user/getFollowerCount');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({'email': followerEmail});
+
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['data'][0]['count'];
+    }
+    if (response.statusCode == 500) {
+      return json.decode(response.body)['message'];
+    } else {
+      throw Exception('Failed to check username');
+    }
+  }
+
+  static Future<int> getFollowingCount(String followerEmail) async {
+    final url = Uri.parse('$baseUrl/user/getFollowingCount');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({'email': followerEmail});
+
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['data'][0]['count'];
+    }
+    if (response.statusCode == 500) {
+      return json.decode(response.body)['message'];
+    } else {
+      throw Exception('Failed to check username');
+    }
+  }
 }

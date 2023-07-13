@@ -25,10 +25,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late String dpUrl =
       'https://firebasestorage.googleapis.com/v0/b/gowild-4e72d.appspot.com/o/Default_Image_Thumbnail.png?alt=media&token=626ff3a4-afae-4de4-ab1e-783a2f9808c9';
   bool isLoading = true;
+  bool isFollowStatLoading = true;
   bool issloading = false;
   File _profilePic = File('');
   File _postPic = File('');
   List<String> _imageUrls = [];
+  late int followerCount = 0;
+  late int followingCount = 0;
   @override
   void initState() {
     super.initState();
@@ -43,6 +46,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     dpUrl = prefs.getString('dpUrl') ?? '';
     print('dpurl' + dpUrl);
     final response = await ClientAPI.getImages(email!);
+    followerCount = await ClientAPI.getFollowerCount(email!);
+    followingCount = await ClientAPI.getFollowingCount(email!);
+    isFollowStatLoading = false;
     // print(response[0]);
 
     // isLoading = false;
@@ -120,20 +126,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: const EdgeInsets.only(left: 23.0),
                       child: IconButton(
                         onPressed: () async {
-                          final image = await pickImage();
-                          setState(() {
-                            _postPic = image!;
-                          });
-                          issloading = true;
-                          final imageUrl = await uploadPostImage(
-                              _postPic, 'post', 'postPic');
-                          final result = await ClientAPI.updateUserPostPicture(
-                              email!, imageUrl);
-                          print(result);
-                          setState(() {
-                            _getProfileDetails();
-                            issloading = false;
-                          });
+                          final res = await ClientAPI.getFollowingCount(email!);
+                          print('cout is $res');
+                          // final image = await pickImage();
+                          // setState(() {
+                          //   _postPic = image!;
+                          // });
+                          // issloading = true;
+                          // final imageUrl = await uploadPostImage(
+                          //     _postPic, 'post', 'postPic');
+                          // final result = await ClientAPI.updateUserPostPicture(
+                          //     email!, imageUrl);
+                          // print(result);
+                          // setState(() {
+                          //   _getProfileDetails();
+                          //   issloading = false;
+                          // });
                         },
                         icon: const Icon(Icons.add_a_photo_sharp),
                       ),
@@ -250,53 +258,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               const SizedBox(
-                height: 30.0,
+                height: 20.0,
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Stat(title: 'Posts', value: 45),
-                      Stat(title: 'Followers', value: 1552),
-                      Stat(title: 'Following', value: 128),
+                      const Stat(title: 'Posts', value: 45),
+                      Stat(
+                          title: 'Followers',
+                          value: followerCount,
+                          isLoading: isFollowStatLoading),
+                      Stat(
+                          title: 'Following',
+                          value: followingCount,
+                          isLoading: isFollowStatLoading),
                     ]),
               ),
               const SizedBox(
-                height: 20.0,
+                height: 10.0,
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-                GestureDetector(
-                  onTap: () => _changeTab('photos'),
-                  child: Icon(
-                    Icons.photo_outlined,
-                    size: 35,
-                    color: _selectedTab == 'photos'
-                        ? const Color.fromARGB(255, 54, 164, 168)
-                        : null,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    _changeTab('saved');
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const ThirdPersonProfileScreen(
-                                  email: 'manaharabibu123@gmail.com',
-                                  userName: 'Manahara Bibulewela',
-                                )));
-                  },
-                  child: Icon(
-                    Icons.bookmark_outline_outlined,
-                    size: 35,
-                    color: _selectedTab == 'saved'
-                        ? const Color.fromARGB(255, 54, 164, 168)
-                        : null,
-                  ),
-                ),
-              ]),
+              Container(
+                height: 1.0,
+                color: const Color.fromARGB(
+                    45, 3, 16, 27), // Replace with your desired color
+              ),
               // staggered grid view
               Expanded(
                 child: GridView.custom(
@@ -448,21 +435,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       throw Exception('Failed to upload image');
     }
   }
-
-// Future<File> compressImage(XFile file) async {
-//   final filePath = file.path;
-//   final image = await ImagePicker().getImage(
-//     source: ImageSource.gallery,
-//     maxHeight: 500,
-//     maxWidth: 500,
-//     imageQuality: 50,
-//   );
-//   final compressedFile = await image!.compress(
-//     quality: 50,
-//   );
-//   final result = File(filePath)..writeAsBytesSync(compressedFile.bytes!);
-//   return result;
-// }
 }
 
 class ProfilePicCliper extends CustomClipper<Path> {

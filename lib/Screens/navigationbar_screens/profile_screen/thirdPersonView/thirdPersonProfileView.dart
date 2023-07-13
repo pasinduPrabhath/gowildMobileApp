@@ -42,6 +42,9 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
   String followerEmail = '';
   List<String> _imageUrls = [];
   bool _isLoading = false;
+  late int followerCount = 0;
+  late int followingCount = 0;
+  bool isFollowStatLoading = true;
   @override
   void initState() {
     super.initState();
@@ -73,6 +76,9 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
   }
 
   Future<void> _getProfileDetails() async {
+    followerCount = await ClientAPI.getFollowerCount(widget.email);
+    followingCount = await ClientAPI.getFollowingCount(widget.email);
+    isFollowStatLoading = false;
     if (_imageUrls.isEmpty) {
       final response = await ClientAPI.getImages(widget.email);
       print(response[0]);
@@ -235,52 +241,33 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               const SizedBox(
-                height: 30.0,
+                height: 20.0,
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Stat(title: 'Posts', value: 45),
-                      Stat(title: 'Followers', value: 1552),
-                      Stat(title: 'Following', value: 128),
+                      const Stat(title: 'Posts', value: 45),
+                      Stat(
+                          title: 'Followers',
+                          value: followerCount,
+                          isLoading: isFollowStatLoading),
+                      Stat(
+                        title: 'Following',
+                        value: followingCount,
+                        isLoading: isFollowStatLoading,
+                      ),
                     ]),
               ),
               const SizedBox(
-                height: 20.0,
+                height: 10.0,
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ScreenController()));
-                  },
-                  child: Icon(
-                    Icons.photo_outlined,
-                    size: 35,
-                    color: _selectedTab == 'photos'
-                        ? const Color.fromARGB(255, 54, 164, 168)
-                        : null,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    // final res = await ClientAPI.getFollowerStatus(
-                    //     followerEmail, widget.email);
-                    // print('res $res');
-                  },
-                  child: Icon(
-                    Icons.bookmark_outline_outlined,
-                    size: 35,
-                    color: _selectedTab == 'saved'
-                        ? const Color.fromARGB(255, 54, 164, 168)
-                        : null,
-                  ),
-                ),
-              ]),
+              Container(
+                height: 1.0,
+                color: const Color.fromARGB(
+                    45, 3, 16, 27), // Replace with your desired color
+              ),
               // staggered grid view
               Expanded(
                 child: GridView.custom(
