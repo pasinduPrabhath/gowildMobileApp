@@ -32,18 +32,22 @@ class ThirdPersonProfileScreen extends StatefulWidget {
 class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
   // late String? userName;
   // late String? email;
+  bool isFollowing = false;
   late String dpUrl =
       'https://firebasestorage.googleapis.com/v0/b/gowild-4e72d.appspot.com/o/Default_Image_Thumbnail.png?alt=media&token=626ff3a4-afae-4de4-ab1e-783a2f9808c9';
   bool isLoading = true;
   bool issloading = false;
   File _profilePic = File('');
   File _postPic = File('');
+  String followerEmail = '';
   List<String> _imageUrls = [];
+  bool _isLoading = false;
   @override
   void initState() {
     super.initState();
     getDetails();
     _getProfileDetails();
+    // _checkFollowStatus();
   }
 
   void getDetails() async {
@@ -51,25 +55,64 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
     final userProfileDetails =
         await ClientAPI.getUserProfileDetails(widget.email);
     final _dpUrl = userProfileDetails[0].dpUrl;
+    final _followingId = userProfileDetails[0].userId;
+    print('following id $_followingId');
     setState(() {
       dpUrl = _dpUrl;
     });
     print('dpUrl $dpUrl');
+    final prefs = await SharedPreferences.getInstance();
+    followerEmail = prefs.getString('email') ?? '';
+    print('follower email $followerEmail');
+    final response =
+        await ClientAPI.getFollowerStatus(followerEmail, widget.email);
+    print('response $response');
+    setState(() {
+      isFollowing = response;
+    });
   }
 
   Future<void> _getProfileDetails() async {
-    // Retrieve the email from SharedPreferences
-    // final prefs = await SharedPreferences.getInstance();
-    // userName = prefs.getString('displayName') ?? '';
-    // email = prefs.getString('email') ?? '';
-    // dpUrl = prefs.getString('dpUrl') ?? '';
-    final response = await ClientAPI.getImages(widget.email);
-    print(response[0]);
+    if (_imageUrls.isEmpty) {
+      final response = await ClientAPI.getImages(widget.email);
+      print(response[0]);
 
-    // isLoading = false;
+      setState(() {
+        _imageUrls = response;
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _checkFollowStatus() async {
     setState(() {
-      _imageUrls = response;
-      isLoading = false;
+      isFollowing = !isFollowing;
+    });
+    final response =
+        await ClientAPI.getFollowerStatus(followerEmail, widget.email);
+    print('response $response');
+    setState(() {
+      isFollowing = response;
+    });
+  }
+
+  Future<void> _toggleFollowStatus() async {
+    setState(() {
+      _isLoading = true;
+    });
+    if (isFollowing) {
+      await ClientAPI.unfollowUser(followerEmail, widget.email);
+      // isFollowing = false;
+    } else {
+      await ClientAPI.followUser(followerEmail, widget.email);
+    }
+    setState(() {
+      isFollowing = !isFollowing;
+      _isLoading = false;
     });
   }
 
@@ -100,11 +143,35 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 23.0),
                       child: IconButton(
-                        onPressed: () async {},
-                        icon: const Icon(Icons.person_add_alt_1),
+                        onPressed: _toggleFollowStatus,
+                        icon: Icon(
+                          isFollowing
+                              ? Icons.person_remove_alt_1
+                              : Icons.person_add_alt_1,
+                          color: isFollowing
+                              ? const Color.fromARGB(255, 7, 7, 7)
+                              : null,
+                        ),
                       ),
                     ),
                   ),
+                  if (_isLoading)
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 38.0, top: 15.0),
+                        child: Container(
+                          width: size.width * 0.04,
+                          height: size.width * 0.04,
+                          color: Colors.transparent,
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: Color.fromARGB(255, 14, 131, 131),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
@@ -200,7 +267,11 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => _changeTab('saved'),
+                  onTap: () async {
+                    // final res = await ClientAPI.getFollowerStatus(
+                    //     followerEmail, widget.email);
+                    // print('res $res');
+                  },
                   child: Icon(
                     Icons.bookmark_outline_outlined,
                     size: 35,

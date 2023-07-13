@@ -107,4 +107,58 @@ class ClientAPI {
       throw Exception('Failed to check username');
     }
   }
+
+  static Future<bool> followUser(
+      String followerEmail, String followingEmail) async {
+    final url = Uri.parse('$baseUrl/user/followUser');
+    final headers = {'Content-Type': 'application/json'};
+    final body =
+        json.encode({'email': followerEmail, 'followingEmail': followingEmail});
+
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['isFollowing'];
+    }
+    if (response.statusCode == 400) {
+      return json.decode(response.body)['username'];
+    } else {
+      throw Exception('Failed to check username');
+    }
+  }
+
+  static Future<bool> unfollowUser(
+      String followerEmail, String followingEmail) async {
+    final url = Uri.parse('$baseUrl/user/unfollowUser');
+    final headers = {'Content-Type': 'application/json'};
+    final body =
+        json.encode({'email': followerEmail, 'followingEmail': followingEmail});
+
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['isFollowing'];
+    }
+    if (response.statusCode == 400) {
+      return json.decode(response.body)['username'];
+    } else {
+      throw Exception('Failed to check username');
+    }
+  }
+
+  static Future<bool> getFollowerStatus(
+      String followerEmail, String followingEmail) async {
+    final url = Uri.parse('$baseUrl/user/getFollowerStatus');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode(
+        {'followerEmail': followerEmail, 'followingEmail': followingEmail});
+
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['followStatus'];
+    }
+    if (response.statusCode == 500) {
+      return json.decode(response.body)['message'];
+    } else {
+      throw Exception('Failed to check username');
+    }
+  }
 }

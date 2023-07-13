@@ -21,10 +21,6 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // const Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: 24.0),
-              //   child: SearchWidget(),
-              // ),
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: 2,
