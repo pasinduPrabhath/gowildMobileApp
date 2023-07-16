@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gowild/Screens/navigationbar_screens/profile_screen/widgets/stat.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../backend/api_requests/client_api.dart';
-import './widgets/profile_background.dart';
+
+import '../../../../../backend/api_requests/client_api.dart';
+import '../../widgets/profile_background.dart';
 import 'dart:math' as math;
 import 'package:image_picker/image_picker.dart';
-import '../profile_screen/thirdPersonView/thirdPersonProfileView.dart';
+import '../thirdPersonView/thirdPersonProfileView.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -32,6 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<String> _imageUrls = [];
   late int followerCount = 0;
   late int followingCount = 0;
+  late int postsCount = 0;
   @override
   void initState() {
     super.initState();
@@ -46,8 +48,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     dpUrl = prefs.getString('dpUrl') ?? '';
     print('dpurl' + dpUrl);
     final response = await ClientAPI.getImages(email!);
-    followerCount = await ClientAPI.getFollowerCount(email!);
-    followingCount = await ClientAPI.getFollowingCount(email!);
+    final profileStat = await ClientAPI.getUserDetails(email!);
+    final data = profileStat['data'];
+    followerCount = data['followerCount'][0]['count'];
+    followingCount = data['followingCount'][0]['count'];
+    postsCount = data['postCount'][0]['count'];
     isFollowStatLoading = false;
     // print(response[0]);
 
@@ -126,8 +131,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: const EdgeInsets.only(left: 23.0),
                       child: IconButton(
                         onPressed: () async {
-                          final res = await ClientAPI.getFollowingCount(email!);
-                          print('cout is $res');
+                          final response =
+                              await ClientAPI.getUserDetails(email!);
+                          final data = response['data'];
+                          followerCount = data['followerCount'][0]['count'];
+                          followingCount = data['followingCount'][0]['count'];
+                          postsCount = data['postCount'][0]['count'];
+                          print('followerCount $followerCount, '
+                              'followingCount $followingCount, '
+                              'postsCount $postsCount');
                           // final image = await pickImage();
                           // setState(() {
                           //   _postPic = image!;
@@ -265,7 +277,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Stat(title: 'Posts', value: 45),
+                      Stat(
+                          title: 'Posts',
+                          value: postsCount,
+                          isLoading: isFollowStatLoading),
                       Stat(
                           title: 'Followers',
                           value: followerCount,

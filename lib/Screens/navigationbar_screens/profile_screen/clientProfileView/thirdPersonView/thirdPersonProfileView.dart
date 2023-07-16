@@ -5,12 +5,12 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gowild/Screens/navigationbar_screens/profile_screen/widgets/stat.dart';
 import 'package:gowild/Screens/screen_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../backend/api_requests/client_api.dart';
-import '.././widgets/profile_background.dart';
+import '../../../../../backend/api_requests/client_api.dart';
+import '../../widgets/profile_background.dart';
 import 'dart:math' as math;
 import 'package:image_picker/image_picker.dart';
 
-import '../profile_screen.dart';
+import '../firstPersonView/profile_screen.dart';
 
 class ThirdPersonProfileScreen extends StatefulWidget {
   final String email;
@@ -44,6 +44,7 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
   bool _isLoading = false;
   late int followerCount = 0;
   late int followingCount = 0;
+  late int postsCount = 0;
   bool isFollowStatLoading = true;
   @override
   void initState() {
@@ -76,8 +77,11 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
   }
 
   Future<void> _getProfileDetails() async {
-    followerCount = await ClientAPI.getFollowerCount(widget.email);
-    followingCount = await ClientAPI.getFollowingCount(widget.email);
+    final profileStat = await ClientAPI.getUserDetails(widget.email);
+    final data = profileStat['data'];
+    followerCount = data['followerCount'][0]['count'];
+    followingCount = data['followingCount'][0]['count'];
+    postsCount = data['postCount'][0]['count'];
     isFollowStatLoading = false;
     if (_imageUrls.isEmpty) {
       final response = await ClientAPI.getImages(widget.email);
@@ -248,7 +252,10 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Stat(title: 'Posts', value: 45),
+                      Stat(
+                          title: 'Posts',
+                          value: postsCount,
+                          isLoading: isFollowStatLoading),
                       Stat(
                           title: 'Followers',
                           value: followerCount,

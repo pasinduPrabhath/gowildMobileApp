@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import '../../Screens/navigationbar_screens/profile_screen/profile_screen_model.dart';
+import '../../Screens/navigationbar_screens/profile_screen/clientProfileView/firstPersonView/profile_screen_model.dart';
 
 class ClientAPI {
   static const baseUrl = 'https://gowild.herokuapp.com/api';
@@ -162,35 +162,17 @@ class ClientAPI {
     }
   }
 
-  static Future<int> getFollowerCount(String followerEmail) async {
-    final url = Uri.parse('$baseUrl/user/getFollowerCount');
+  static Future<Map<String, dynamic>> getUserDetails(String email) async {
+    final url = Uri.parse('$baseUrl/user/getUserDetails');
     final headers = {'Content-Type': 'application/json'};
-    final body = json.encode({'email': followerEmail});
+    final body = json.encode({'email': email});
 
     final response = await http.post(url, headers: headers, body: body);
     if (response.statusCode == 200) {
-      return json.decode(response.body)['data'][0]['count'];
-    }
-    if (response.statusCode == 500) {
-      return json.decode(response.body)['message'];
+      final data = json.decode(response.body);
+      return data;
     } else {
-      throw Exception('Failed to check username');
-    }
-  }
-
-  static Future<int> getFollowingCount(String followerEmail) async {
-    final url = Uri.parse('$baseUrl/user/getFollowingCount');
-    final headers = {'Content-Type': 'application/json'};
-    final body = json.encode({'email': followerEmail});
-
-    final response = await http.post(url, headers: headers, body: body);
-    if (response.statusCode == 200) {
-      return json.decode(response.body)['data'][0]['count'];
-    }
-    if (response.statusCode == 500) {
-      return json.decode(response.body)['message'];
-    } else {
-      throw Exception('Failed to check username');
+      throw Exception('Failed to load profile details');
     }
   }
 }
