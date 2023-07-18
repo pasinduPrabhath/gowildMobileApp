@@ -54,9 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     followingCount = data['followingCount'][0]['count'];
     postsCount = data['postCount'][0]['count'];
     isFollowStatLoading = false;
-    // print(response[0]);
 
-    // isLoading = false;
     setState(() {
       _imageUrls = response;
       isLoading = false;

@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'navigationbar_screens/search_screen/search_screen.dart';
-import 'navigationbar_screens/add_screen/add_screen.dart';
-import 'navigationbar_screens/message_screen/message_screen.dart';
-import 'navigationbar_screens/profile_screen/clientProfileView/firstPersonView/profile_screen.dart';
-import './navigationbar_screens/home_screen/home_screen.dart';
+import '../navigationbar_screens/profile_screen/serviceProviderProfileView/firstPersonSPView/service_provider_profile_screen.dart';
+import '../navigationbar_screens/search_screen/search_screen.dart';
+import '../navigationbar_screens/add_screen/add_screen.dart';
+import '../navigationbar_screens/message_screen/message_screen.dart';
+// import '../navigationbar_screens/profile_screen/clientProfileView/firstPersonView/profile_screen.dart';
+import '../navigationbar_screens/home_screen/home_screen.dart';
 
-class ScreenController extends StatefulWidget {
-  const ScreenController({super.key});
+class SpScreenController extends StatefulWidget {
+  const SpScreenController({super.key});
 
   @override
-  State<ScreenController> createState() => _ScreenControllerState();
+  State<SpScreenController> createState() => _SpScreenControllerState();
 }
 
-class _ScreenControllerState extends State<ScreenController> {
+class _SpScreenControllerState extends State<SpScreenController> {
   final String imageUrl =
       'https://cdn.creatureandcoagency.com/uploads/2014/09/leopard-facts-10-1.jpg';
   final screens = [
@@ -21,7 +22,7 @@ class _ScreenControllerState extends State<ScreenController> {
     const SearchScreen(),
     const AddScreen(),
     const MessageScreen(),
-    const ProfileScreen(),
+    const ServiceProviderProfileScreen(),
   ];
   int index = 0;
   @override

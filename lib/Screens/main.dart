@@ -82,7 +82,7 @@ class MyApp extends StatelessWidget {
           .copyWith(
               onPrimary: const Color.fromARGB(255, 254, 255, 255)) //text color
           .copyWith(onSecondary: const Color.fromARGB(255, 74, 128, 150))
-          .copyWith(onBackground: Color.fromARGB(255, 71, 170, 201)),
+          .copyWith(onBackground: const Color.fromARGB(255, 71, 170, 201)),
     );
 
     return MaterialApp(

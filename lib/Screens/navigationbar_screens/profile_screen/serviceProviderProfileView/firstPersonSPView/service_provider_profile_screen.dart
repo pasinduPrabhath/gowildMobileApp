@@ -1,128 +1,69 @@
 import 'dart:io';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gowild/Screens/navigationbar_screens/profile_screen/widgets/stat.dart';
-import 'package:gowild/Screens/ScreenController/client_screen_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../../../backend/api_requests/client_api.dart';
 import '../../widgets/profile_background.dart';
 import 'dart:math' as math;
 import 'package:image_picker/image_picker.dart';
 
-import '../firstPersonView/profile_screen.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 
-class ThirdPersonProfileScreen extends StatefulWidget {
-  final String email;
-  final String userName;
-  const ThirdPersonProfileScreen(
-      {required this.email, Key? key, required this.userName})
-      : super(key: key);
+import '../calendar.dart';
+
+class ServiceProviderProfileScreen extends StatefulWidget {
+  const ServiceProviderProfileScreen({super.key});
 
   @override
-  State<ThirdPersonProfileScreen> createState() =>
-      _ThirdPersonProfileScreenState();
+  State<ServiceProviderProfileScreen> createState() =>
+      _ServiceProviderProfileScreenState();
 }
 
-// Add email parameter to the constructor
-
-// const ThirdPersonProfileScreen({required this.email, Key? key})
-//     : super(key: key);
-
-class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
-  // late String? userName;
-  // late String? email;
-  bool isFollowing = false;
+class _ServiceProviderProfileScreenState
+    extends State<ServiceProviderProfileScreen> {
+  late String? userName;
+  late String? email;
   late String dpUrl =
       'https://firebasestorage.googleapis.com/v0/b/gowild-4e72d.appspot.com/o/Default_Image_Thumbnail.png?alt=media&token=626ff3a4-afae-4de4-ab1e-783a2f9808c9';
   bool isLoading = true;
+  bool isFollowStatLoading = true;
   bool issloading = false;
   File _profilePic = File('');
   File _postPic = File('');
-  String followerEmail = '';
   List<String> _imageUrls = [];
-  bool _isLoading = false;
   late int followerCount = 0;
   late int followingCount = 0;
   late int postsCount = 0;
-  bool isFollowStatLoading = true;
   @override
   void initState() {
     super.initState();
-    getDetails();
     _getProfileDetails();
-    // _checkFollowStatus();
-  }
-
-  void getDetails() async {
-    print('getting details');
-    final userProfileDetails =
-        await ClientAPI.getUserProfileDetails(widget.email);
-    final _dpUrl = userProfileDetails[0].dpUrl;
-    final _followingId = userProfileDetails[0].userId;
-    print('following id $_followingId');
-    setState(() {
-      dpUrl = _dpUrl;
-    });
-    print('dpUrl $dpUrl');
-    final prefs = await SharedPreferences.getInstance();
-    followerEmail = prefs.getString('email') ?? '';
-    print('follower email $followerEmail');
-    final response =
-        await ClientAPI.getFollowerStatus(followerEmail, widget.email);
-    print('response $response');
-    setState(() {
-      isFollowing = response;
-    });
   }
 
   Future<void> _getProfileDetails() async {
-    final profileStat = await ClientAPI.getUserDetails(widget.email);
+    // Retrieve the email from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    userName = prefs.getString('displayName') ?? '';
+    email = prefs.getString('email') ?? '';
+    dpUrl = prefs.getString('dpUrl') ?? '';
+    print('dpurl' + dpUrl);
+    final response = await ClientAPI.getImages(email!);
+    final profileStat = await ClientAPI.getUserDetails(email!);
     final data = profileStat['data'];
     followerCount = data['followerCount'][0]['count'];
     followingCount = data['followingCount'][0]['count'];
     postsCount = data['postCount'][0]['count'];
     isFollowStatLoading = false;
-    if (_imageUrls.isEmpty) {
-      final response = await ClientAPI.getImages(widget.email);
-      print(response[0]);
+    // print(response[0]);
 
-      setState(() {
-        _imageUrls = response;
-        isLoading = false;
-      });
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _checkFollowStatus() async {
+    // isLoading = false;
     setState(() {
-      isFollowing = !isFollowing;
-    });
-    final response =
-        await ClientAPI.getFollowerStatus(followerEmail, widget.email);
-    print('response $response');
-    setState(() {
-      isFollowing = response;
-    });
-  }
-
-  Future<void> _toggleFollowStatus() async {
-    setState(() {
-      _isLoading = true;
-    });
-    if (isFollowing) {
-      await ClientAPI.unfollowUser(followerEmail, widget.email);
-      // isFollowing = false;
-    } else {
-      await ClientAPI.followUser(followerEmail, widget.email);
-    }
-    setState(() {
-      isFollowing = !isFollowing;
-      _isLoading = false;
+      _imageUrls = response;
+      isLoading = false;
     });
   }
 
@@ -153,95 +94,177 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 23.0),
                       child: IconButton(
-                        onPressed: _toggleFollowStatus,
-                        icon: Icon(
-                          isFollowing
-                              ? Icons.person_remove_alt_1
-                              : Icons.person_add_alt_1,
-                          color: isFollowing
-                              ? const Color.fromARGB(255, 7, 7, 7)
-                              : null,
-                        ),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Confirm Logout'),
+                                content: const Text(
+                                  'Are you sure you want to logout?',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Cancel',
+                                        style: TextStyle(color: Colors.black)),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pushReplacementNamed(
+                                          context, '/');
+                                    },
+                                    child: const Text('Logout',
+                                        style: TextStyle(color: Colors.black)),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        icon: const Icon(Icons.logout_rounded),
                       ),
                     ),
                   ),
-                  if (_isLoading)
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 38.0, top: 15.0),
-                        child: Container(
-                          width: size.width * 0.04,
-                          height: size.width * 0.04,
-                          color: Colors.transparent,
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                              color: Color.fromARGB(255, 14, 131, 131),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 23.0),
                       child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
+                        onPressed: () async {
+                          print('pressed');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CustomCalender(),
+                            ),
+                          );
+                          // CustomCalender();
+                          // final response =
+                          //     await ClientAPI.getUserDetails(email!);
+                          // final data = response['data'];
+                          // followerCount = data['followerCount'][0]['count'];
+                          // followingCount = data['followingCount'][0]['count'];
+                          // postsCount = data['postCount'][0]['count'];
+                          // print('followerCount $followerCount, '
+                          //     'followingCount $followingCount, '
+                          //     'postsCount $postsCount');
                         },
-                        icon: const Icon(Icons.arrow_back_rounded),
+                        icon: const Icon(Icons.add_a_photo_sharp),
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Stack(
+                  GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                        elevation: 2,
+                        backgroundColor: const Color.fromARGB(155, 10, 10, 10),
+                        context: context,
+                        builder: (BuildContext context) {
+                          return SizedBox(
+                            height: size.height * 0.13,
+                            child: Center(
+                                child: Column(
+                              children: [
+                                SizedBox(
+                                  height: size.height * 0.02,
+                                ),
+                                IconButton(
+                                  onPressed: () async {
+                                    final previousImageUrl = dpUrl;
+                                    final image = await pickImage();
+                                    if (image == null) {
+                                      return;
+                                    }
+                                    setState(() {
+                                      _profilePic = image;
+                                      issloading = true;
+                                    });
+                                    final imageUrl = await uploadProfileImage(
+                                        _profilePic,
+                                        'profilePic',
+                                        'profilePic',
+                                        previousImageUrl);
+                                    setState(() {
+                                      dpUrl = imageUrl;
+                                    });
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    await prefs.setString('dpUrl', dpUrl);
+                                    await ClientAPI.updateUserProfilePicture(
+                                        email!, dpUrl);
+                                    setState(() {
+                                      issloading = false;
+                                    });
+
+                                    Navigator.pop(context);
+                                  },
+                                  icon: const Icon(
+                                    Icons.add_a_photo_sharp,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const Text(
+                                  'Open Gallery',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            )),
+                          );
+                        },
+                      );
+                    },
+                    child: Align(
                       alignment: Alignment.center,
-                      children: [
-                        Transform.rotate(
-                          // alignment: Alignment.center,
-                          angle: math.pi / 4,
-                          child: Container(
-                            width: 140.0,
-                            height: 140.0,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              // color: Color.fromARGB(255, 0, 0, 0),
-                              border: Border.all(
-                                  width: 1.0,
-                                  color: const Color.fromARGB(255, 19, 18, 18)),
-                              borderRadius: BorderRadius.circular(35.0),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Transform.rotate(
+                            // alignment: Alignment.center,
+                            angle: math.pi / 4,
+                            child: Container(
+                              width: 140.0,
+                              height: 140.0,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                // color: Color.fromARGB(255, 0, 0, 0),
+                                border: Border.all(
+                                    width: 1.0,
+                                    color:
+                                        const Color.fromARGB(255, 19, 18, 18)),
+                                borderRadius: BorderRadius.circular(35.0),
+                              ),
                             ),
                           ),
-                        ),
-                        ClipPath(
-                          clipper: ProfilePicCliper(),
-                          child: Image.network(
-                            dpUrl,
-                            width: 180.0,
-                            height: 180.0,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      ],
+                          ClipPath(
+                            clipper: ProfilePicCliper(),
+                            child: Image.network(
+                              dpUrl,
+                              width: 180.0,
+                              height: 180.0,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
-              //image and border of dp
-              // IconButton(onPressed: () {}, icon: Icon(Icons.add)),
               isLoading
                   ? const CircularProgressIndicator()
                   : Text(
-                      '${widget.userName}',
+                      '$userName',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
               const SizedBox(
                 height: 5.0,
               ),
               Text(
-                '@pasindu_prabhath',
+                '@testSeller',
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               const SizedBox(
@@ -261,10 +284,9 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
                           value: followerCount,
                           isLoading: isFollowStatLoading),
                       Stat(
-                        title: 'Following',
-                        value: followingCount,
-                        isLoading: isFollowStatLoading,
-                      ),
+                          title: 'Following',
+                          value: followingCount,
+                          isLoading: isFollowStatLoading),
                     ]),
               ),
               const SizedBox(
@@ -352,12 +374,14 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
   }
 
   Future<File?> pickImage() async {
-    ImagePicker imagePicker = ImagePicker();
-    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+    Future<XFile?> file =
+        ImagePicker().pickImage(imageQuality: 55, source: ImageSource.gallery);
+    // XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
     if (file == null) {
       return null;
     } //
-    return File(file.path);
+    XFile? pickedFile = await file;
+    return File(pickedFile!.path);
   }
 
   Future<String> uploadProfileImage(
@@ -387,7 +411,34 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
     }
 
     Reference fileReference =
-        referenceRoot.child('$imageCategory/${widget.email}/$uniqueFileName');
+        referenceRoot.child('$imageCategory/$email/$uniqueFileName');
+    try {
+      await fileReference.putFile(imageFile);
+      final imageUrl = await fileReference.getDownloadURL();
+      return imageUrl;
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to upload image');
+    }
+  }
+
+  Future<String> uploadPostImage(
+    File imageFile,
+    String suffix,
+    String imageCategory,
+  ) async {
+    // Check if image file is null
+    if (imageFile == null) {
+      throw Exception('No image selected');
+    }
+
+    String uniqueFileName =
+        suffix + DateTime.now().millisecondsSinceEpoch.toString();
+
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+
+    Reference fileReference =
+        referenceRoot.child('$imageCategory/$email/$uniqueFileName');
     try {
       await fileReference.putFile(imageFile);
       final imageUrl = await fileReference.getDownloadURL();
@@ -471,48 +522,3 @@ class PhotoPreviewScreen extends StatelessWidget {
     );
   }
 }
-
-
-  // Widget build(BuildContext context) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       showDialog(
-  //         context: context,
-  //         builder: (_) => Dialog(
-  //           child: Image.network(widget.imageUrl),
-  //         ),
-  //       );
-  //     },
-  //     child: FutureBuilder(
-  //       future: _imageFuture,
-  //       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-  //         if (snapshot.connectionState == ConnectionState.done) {
-  //           return Container(
-  //             width: 100,
-  //             height: 100,
-  //             margin: const EdgeInsets.only(right: 8),
-  //             decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(8),
-  //               image: DecorationImage(
-  //                 image: NetworkImage(widget.imageUrl),
-  //                 fit: BoxFit.cover,
-  //               ),
-  //             ),
-  //           );
-  //         } else if (response == 404) {
-  //           return widget.errorBuilder(
-  //             context,
-  //             Exception('Failed to load image'),
-  //             null,
-  //           );
-  //         } else {
-  //           return const SizedBox(
-  //             width: 100,
-  //             height: 100,
-  //             child: Center(child: CircularProgressIndicator()),
-  //           );
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }

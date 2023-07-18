@@ -51,13 +51,14 @@ class Api {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final token = data['token'];
+      // final role = data['role'];
       // print('Login successful: $data');
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', token);
       return {
         'success': data['success'],
-        // 'role': data['role'],
+        'role': data['role'],
         'token': token,
       };
     } else if (response.statusCode == 401) {

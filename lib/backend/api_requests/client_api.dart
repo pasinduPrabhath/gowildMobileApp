@@ -1,11 +1,12 @@
 import 'dart:convert';
+// import 'dart:html';
 
 import 'package:http/http.dart' as http;
 import '../../Screens/navigationbar_screens/profile_screen/clientProfileView/firstPersonView/profile_screen_model.dart';
 
 class ClientAPI {
   static const baseUrl = 'https://gowild.herokuapp.com/api';
-  List<String> name = [];
+  // List<String> name = [];
 
   static Future<List<Profile>> getUserProfileDetails(String email) async {
     final url = Uri.parse('$baseUrl/user/getUserDetailsForProfile');

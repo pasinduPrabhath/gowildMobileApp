@@ -57,6 +57,8 @@ dependencies:
   google_fonts: ^5.1.0
   flutter_image_compress: ^2.0.3
   flutter_native_image: ^0.0.6+1
+  table_calendar: ^3.0.9
+
 
   
 

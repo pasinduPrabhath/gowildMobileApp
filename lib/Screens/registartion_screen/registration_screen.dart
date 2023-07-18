@@ -147,6 +147,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     _townController.dispose();
     _mobileNumberController.dispose();
     _nicNumberController.dispose();
+    // _submitFormSubscription?.cancel();
     super.dispose();
   }
 
