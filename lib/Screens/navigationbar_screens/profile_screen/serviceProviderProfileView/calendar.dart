@@ -16,6 +16,7 @@ class _CustomCalenderState extends State<CustomCalender> {
   Map<DateTime, List<Event>> selectedEvents = {};
   late String? email;
   bool isLoading = true;
+  String eventDetails = '';
   @override
   void initState() {
     _getEvents();
@@ -204,9 +205,11 @@ class _CustomCalenderState extends State<CustomCalender> {
                   if (_eventController.text.isEmpty) {
                   } else {
                     if (selectedEvents[selectedDay] != null) {
+                      eventDetails = _eventController.text;
                       selectedEvents[selectedDay]!.add(Event(
                           title: _eventController.text, date: selectedDay));
                     } else {
+                      eventDetails = _eventController.text;
                       selectedEvents[selectedDay] = [
                         Event(title: _eventController.text, date: selectedDay)
                       ];
@@ -219,7 +222,7 @@ class _CustomCalenderState extends State<CustomCalender> {
                       email,
                       DateFormat('yyyy-MM-dd')
                           .format(selectedEvents[selectedDay]![0].date),
-                      selectedEvents[selectedDay]?[0].title);
+                      eventDetails);
                   return;
                 },
                 child: const Text('Ok'),
