@@ -20,7 +20,10 @@ class Stat extends StatelessWidget {
       return Column(
         children: [
           Text(title, style: Theme.of(context).textTheme.displayMedium),
-          CircularProgressIndicator(),
+          SizedBox(
+              height: MediaQuery.of(context).size.height * 0.03,
+              width: MediaQuery.of(context).size.height * 0.03,
+              child: CircularProgressIndicator()),
         ],
       );
     } else {

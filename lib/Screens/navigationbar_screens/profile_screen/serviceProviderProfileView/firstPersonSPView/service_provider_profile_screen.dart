@@ -253,13 +253,16 @@ class _ServiceProviderProfileScreenState
                 ],
               ),
               isLoading
-                  ? const CircularProgressIndicator()
+                  ? SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.03,
+                      width: MediaQuery.of(context).size.height * 0.03,
+                      child: const CircularProgressIndicator())
                   : Text(
                       '$userName',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
               const SizedBox(
-                height: 5.0,
+                height: 6.0,
               ),
               ElevatedButton(
                 onPressed: () {
@@ -295,7 +298,7 @@ class _ServiceProviderProfileScreenState
                 ),
               ),
               const SizedBox(
-                height: 20.0,
+                height: 6.0,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50.0),
@@ -354,8 +357,11 @@ class _ServiceProviderProfileScreenState
             Container(
               color: Colors.black
                   .withOpacity(0.85), // Set the color to transparent black
-              child: const Center(
-                child: CircularProgressIndicator(),
+              child: Center(
+                child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    width: MediaQuery.of(context).size.height * 0.03,
+                    child: const CircularProgressIndicator()),
               ),
             ),
         ],
@@ -389,8 +395,12 @@ class _ServiceProviderProfileScreenState
                 if (loadingProgress == null) {
                   return child;
                 }
-                return const Center(
-                  child: CircularProgressIndicator(),
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.03,
+                  width: MediaQuery.of(context).size.height * 0.03,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 );
               },
             ),
