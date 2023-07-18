@@ -48,7 +48,8 @@ class _CustomCalenderState extends State<CustomCalender> {
   DateTime focusedDay = DateTime.now();
   final TextEditingController _eventController = TextEditingController();
   List<Event> _getEventsfromDay(DateTime date) {
-    return selectedEvents[date] ?? [];
+    final events = selectedEvents[date] ?? [];
+    return events;
   }
 
   @override
@@ -130,15 +131,34 @@ class _CustomCalenderState extends State<CustomCalender> {
                   ),
                   ..._getEventsfromDay(selectedDay).map(
                     (Event event) => ListTile(
-                        title: Text(event.title),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            setState(() {
-                              selectedEvents[selectedDay]!.remove(event);
-                            });
-                          },
-                        )),
+                      title: Text(event.title),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () async {
+                          final selectedEvent = _getEventsfromDay(selectedDay)
+                              .firstWhere(
+                                  (event) => event.title == event.title);
+                          setState(() {
+                            selectedEvents[selectedDay]?.remove(selectedEvent);
+                          });
+                          final success = await SpAPI.deleteCalender(
+                              email,
+                              DateFormat('yyyy-MM-dd').format(selectedDay),
+                              selectedEvent.title);
+                          if (success) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('Event deleted'),
+                              duration: const Duration(seconds: 2),
+                            ));
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('Failed to delete event'),
+                              duration: const Duration(seconds: 2),
+                            ));
+                          }
+                        },
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -205,5 +225,18 @@ class _CustomCalenderState extends State<CustomCalender> {
         ),
       ),
     );
+  }
+
+  Future<void> _deleteEvent(
+      String email, DateTime selectedDay, String event) async {
+    if (selectedEvents[selectedDay] != null &&
+        selectedEvents[selectedDay]!.isNotEmpty) {
+      final res = await SpAPI.deleteCalender(
+          email,
+          DateFormat('yyyy-MM-dd').format(selectedEvents[selectedDay]![0].date),
+          event);
+      print('res is $res');
+    }
+    return;
   }
 }
