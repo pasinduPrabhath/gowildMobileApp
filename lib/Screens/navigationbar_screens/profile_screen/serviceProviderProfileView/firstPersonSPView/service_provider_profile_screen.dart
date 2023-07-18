@@ -136,22 +136,20 @@ class _ServiceProviderProfileScreenState
                       child: IconButton(
                         onPressed: () async {
                           print('pressed');
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CustomCalender(),
-                            ),
-                          );
-                          // CustomCalender();
-                          // final response =
-                          //     await ClientAPI.getUserDetails(email!);
-                          // final data = response['data'];
-                          // followerCount = data['followerCount'][0]['count'];
-                          // followingCount = data['followingCount'][0]['count'];
-                          // postsCount = data['postCount'][0]['count'];
-                          // print('followerCount $followerCount, '
-                          //     'followingCount $followingCount, '
-                          //     'postsCount $postsCount');
+                          final image = await pickImage();
+                          setState(() {
+                            _postPic = image!;
+                          });
+                          issloading = true;
+                          final imageUrl = await uploadPostImage(
+                              _postPic, 'post', 'postPic');
+                          final result = await ClientAPI.updateUserPostPicture(
+                              email!, imageUrl);
+                          print(result);
+                          setState(() {
+                            _getProfileDetails();
+                            issloading = false;
+                          });
                         },
                         icon: const Icon(Icons.add_a_photo_sharp),
                       ),
@@ -263,9 +261,38 @@ class _ServiceProviderProfileScreenState
               const SizedBox(
                 height: 5.0,
               ),
-              Text(
-                '@testSeller',
-                style: Theme.of(context).textTheme.titleSmall,
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CustomCalender(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Color.fromARGB(104, 55, 170, 199),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  minimumSize: const Size(100, 40),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Calendar',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    SizedBox(width: 3),
+                    Icon(
+                      Icons.calendar_month_rounded,
+                      size: 20,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 20.0,

@@ -129,29 +129,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: const EdgeInsets.only(left: 23.0),
                       child: IconButton(
                         onPressed: () async {
-                          final response =
-                              await ClientAPI.getUserDetails(email!);
-                          final data = response['data'];
-                          followerCount = data['followerCount'][0]['count'];
-                          followingCount = data['followingCount'][0]['count'];
-                          postsCount = data['postCount'][0]['count'];
-                          print('followerCount $followerCount, '
-                              'followingCount $followingCount, '
-                              'postsCount $postsCount');
-                          // final image = await pickImage();
-                          // setState(() {
-                          //   _postPic = image!;
-                          // });
-                          // issloading = true;
-                          // final imageUrl = await uploadPostImage(
-                          //     _postPic, 'post', 'postPic');
-                          // final result = await ClientAPI.updateUserPostPicture(
-                          //     email!, imageUrl);
-                          // print(result);
-                          // setState(() {
-                          //   _getProfileDetails();
-                          //   issloading = false;
-                          // });
+                          // final response =
+                          //     await ClientAPI.getUserDetails(email!);
+                          // final data = response['data'];
+                          // followerCount = data['followerCount'][0]['count'];
+                          // followingCount = data['followingCount'][0]['count'];
+                          // postsCount = data['postCount'][0]['count'];
+                          // print('followerCount $followerCount, '
+                          //     'followingCount $followingCount, '
+                          //     'postsCount $postsCount');
+                          final image = await pickImage();
+                          setState(() {
+                            _postPic = image!;
+                          });
+                          issloading = true;
+                          final imageUrl = await uploadPostImage(
+                              _postPic, 'post', 'postPic');
+                          final result = await ClientAPI.updateUserPostPicture(
+                              email!, imageUrl);
+                          print(result);
+                          setState(() {
+                            _getProfileDetails();
+                            issloading = false;
+                          });
                         },
                         icon: const Icon(Icons.add_a_photo_sharp),
                       ),

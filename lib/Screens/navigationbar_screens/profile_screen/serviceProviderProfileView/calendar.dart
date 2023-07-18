@@ -146,14 +146,18 @@ class _CustomCalenderState extends State<CustomCalender> {
                               DateFormat('yyyy-MM-dd').format(selectedDay),
                               selectedEvent.title);
                           if (success) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            // ignore: use_build_context_synchronously
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
                               content: Text('Event deleted'),
-                              duration: const Duration(seconds: 2),
+                              duration: Duration(seconds: 2),
                             ));
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            // ignore: use_build_context_synchronously
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
                               content: Text('Failed to delete event'),
-                              duration: const Duration(seconds: 2),
+                              duration: Duration(seconds: 2),
                             ));
                           }
                         },
@@ -225,18 +229,5 @@ class _CustomCalenderState extends State<CustomCalender> {
         ),
       ),
     );
-  }
-
-  Future<void> _deleteEvent(
-      String email, DateTime selectedDay, String event) async {
-    if (selectedEvents[selectedDay] != null &&
-        selectedEvents[selectedDay]!.isNotEmpty) {
-      final res = await SpAPI.deleteCalender(
-          email,
-          DateFormat('yyyy-MM-dd').format(selectedEvents[selectedDay]![0].date),
-          event);
-      print('res is $res');
-    }
-    return;
   }
 }
