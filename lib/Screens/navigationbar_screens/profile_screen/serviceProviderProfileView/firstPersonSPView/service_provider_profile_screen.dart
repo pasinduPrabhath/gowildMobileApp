@@ -14,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 
 import '../calendar.dart';
+import '../thirdPersonSellerView/third_person_sp_view.dart';
 
 class ServiceProviderProfileScreen extends StatefulWidget {
   const ServiceProviderProfileScreen({super.key});
@@ -135,7 +136,16 @@ class _ServiceProviderProfileScreenState
                       padding: const EdgeInsets.only(left: 23.0),
                       child: IconButton(
                         onPressed: () async {
-                          print('pressed');
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => ThirdPersomSpProfileScreen(
+                          //       email: email!,
+                          //       userName: userName!,
+                          //     ),
+                          //   ),
+                          // );
+                          // print('pressed');
                           final image = await pickImage();
                           setState(() {
                             _postPic = image!;

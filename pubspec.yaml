@@ -91,6 +91,7 @@ flutter:
     - assets/images/login/login_bg.jpg
     - assets/videos/
     - assets/images/bird/
+    - assets/images/market/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

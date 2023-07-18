@@ -1,94 +1,69 @@
 import 'dart:io';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gowild/Screens/navigationbar_screens/profile_screen/widgets/stat.dart';
-import 'package:gowild/Screens/ScreenController/client_screen_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../backend/api_requests/client_api.dart';
 import '../../widgets/profile_background.dart';
 import 'dart:math' as math;
 import 'package:image_picker/image_picker.dart';
+import '../thirdPersonViewcalendar.dart';
 
-import '../firstPersonView/profile_screen.dart';
-
-class ThirdPersonProfileScreen extends StatefulWidget {
+class ThirdPersomSpProfileScreen extends StatefulWidget {
   final String email;
   final String userName;
-  const ThirdPersonProfileScreen(
+  const ThirdPersomSpProfileScreen(
       {required this.email, Key? key, required this.userName})
       : super(key: key);
 
   @override
-  State<ThirdPersonProfileScreen> createState() =>
-      _ThirdPersonProfileScreenState();
+  State<ThirdPersomSpProfileScreen> createState() =>
+      _ThirdPersomSpProfileScreenState();
 }
 
-class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
-  bool isFollowing = false;
+class _ThirdPersomSpProfileScreenState
+    extends State<ThirdPersomSpProfileScreen> {
   late String dpUrl =
       'https://firebasestorage.googleapis.com/v0/b/gowild-4e72d.appspot.com/o/Default_Image_Thumbnail.png?alt=media&token=626ff3a4-afae-4de4-ab1e-783a2f9808c9';
   bool isLoading = true;
+  bool _isLoading = false;
+  bool isFollowStatLoading = true;
+  bool isFollowing = false;
   bool issloading = false;
+  String followerEmail = '';
   File _profilePic = File('');
   File _postPic = File('');
-  String followerEmail = '';
   List<String> _imageUrls = [];
-  bool _isLoading = false;
   late int followerCount = 0;
   late int followingCount = 0;
   late int postsCount = 0;
-  bool isFollowStatLoading = true;
   @override
   void initState() {
     super.initState();
-    getDetails();
     _getProfileDetails();
-    // _checkFollowStatus();
-  }
-
-  void getDetails() async {
-    print('getting details');
-    final userProfileDetails =
-        await ClientAPI.getUserProfileDetails(widget.email);
-    final _dpUrl = userProfileDetails[0].dpUrl;
-    final _followingId = userProfileDetails[0].userId;
-    print('following id $_followingId');
-    setState(() {
-      dpUrl = _dpUrl;
-    });
-    print('dpUrl $dpUrl');
-    final prefs = await SharedPreferences.getInstance();
-    followerEmail = prefs.getString('email') ?? '';
-    print('follower email $followerEmail');
-    final response =
-        await ClientAPI.getFollowerStatus(followerEmail, widget.email);
-    print('response $response');
-    setState(() {
-      isFollowing = response;
-    });
   }
 
   Future<void> _getProfileDetails() async {
+    final response = await ClientAPI.getImages(widget.email);
     final profileStat = await ClientAPI.getUserDetails(widget.email);
+    final prefs = await SharedPreferences.getInstance();
+    followerEmail = prefs.getString('email') ?? '';
+    final userProfileDetails =
+        await ClientAPI.getUserProfileDetails(widget.email);
+    final _dpUrl = userProfileDetails[0].dpUrl;
+    _checkFollowStatus();
     final data = profileStat['data'];
     followerCount = data['followerCount'][0]['count'];
     followingCount = data['followingCount'][0]['count'];
     postsCount = data['postCount'][0]['count'];
     isFollowStatLoading = false;
-    if (_imageUrls.isEmpty) {
-      final response = await ClientAPI.getImages(widget.email);
-      print(response[0]);
-
-      setState(() {
-        _imageUrls = response;
-        isLoading = false;
-      });
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    setState(() {
+      _imageUrls = response;
+      isLoading = false;
+      dpUrl = _dpUrl;
+    });
   }
 
   Future<void> _checkFollowStatus() async {
@@ -222,23 +197,55 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
                   ),
                 ],
               ),
-              //image and border of dp
-              // IconButton(onPressed: () {}, icon: Icon(Icons.add)),
               isLoading
-                  ? const CircularProgressIndicator()
+                  ? SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.03,
+                      width: MediaQuery.of(context).size.height * 0.03,
+                      child: const CircularProgressIndicator())
                   : Text(
-                      '${widget.userName}',
+                      widget.userName,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
               const SizedBox(
-                height: 5.0,
+                height: 6.0,
               ),
-              Text(
-                '@pasindu_prabhath',
-                style: Theme.of(context).textTheme.titleSmall,
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ThirdPersonViewCalendar(
+                        email: widget.email,
+                      ),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Color.fromARGB(104, 55, 170, 199),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  minimumSize: const Size(100, 40),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Calendar',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    SizedBox(width: 3),
+                    Icon(
+                      Icons.calendar_month_rounded,
+                      size: 20,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
-                height: 20.0,
+                height: 6.0,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50.0),
@@ -254,10 +261,9 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
                           value: followerCount,
                           isLoading: isFollowStatLoading),
                       Stat(
-                        title: 'Following',
-                        value: followingCount,
-                        isLoading: isFollowStatLoading,
-                      ),
+                          title: 'Following',
+                          value: followingCount,
+                          isLoading: isFollowStatLoading),
                     ]),
               ),
               const SizedBox(
@@ -298,8 +304,11 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
             Container(
               color: Colors.black
                   .withOpacity(0.85), // Set the color to transparent black
-              child: const Center(
-                child: CircularProgressIndicator(),
+              child: Center(
+                child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    width: MediaQuery.of(context).size.height * 0.03,
+                    child: const CircularProgressIndicator()),
               ),
             ),
         ],
@@ -333,8 +342,12 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
                 if (loadingProgress == null) {
                   return child;
                 }
-                return const Center(
-                  child: CircularProgressIndicator(),
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.03,
+                  width: MediaQuery.of(context).size.height * 0.03,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 );
               },
             ),
@@ -345,12 +358,14 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
   }
 
   Future<File?> pickImage() async {
-    ImagePicker imagePicker = ImagePicker();
-    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+    Future<XFile?> file =
+        ImagePicker().pickImage(imageQuality: 55, source: ImageSource.gallery);
+    // XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
     if (file == null) {
       return null;
     } //
-    return File(file.path);
+    XFile? pickedFile = await file;
+    return File(pickedFile!.path);
   }
 
   Future<String> uploadProfileImage(
@@ -380,7 +395,34 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
     }
 
     Reference fileReference =
-        referenceRoot.child('$imageCategory/${widget.email}/$uniqueFileName');
+        referenceRoot.child('$imageCategory/$widget.email/$uniqueFileName');
+    try {
+      await fileReference.putFile(imageFile);
+      final imageUrl = await fileReference.getDownloadURL();
+      return imageUrl;
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to upload image');
+    }
+  }
+
+  Future<String> uploadPostImage(
+    File imageFile,
+    String suffix,
+    String imageCategory,
+  ) async {
+    // Check if image file is null
+    if (imageFile == null) {
+      throw Exception('No image selected');
+    }
+
+    String uniqueFileName =
+        suffix + DateTime.now().millisecondsSinceEpoch.toString();
+
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+
+    Reference fileReference =
+        referenceRoot.child('$imageCategory/$widget.email/$uniqueFileName');
     try {
       await fileReference.putFile(imageFile);
       final imageUrl = await fileReference.getDownloadURL();
@@ -464,48 +506,3 @@ class PhotoPreviewScreen extends StatelessWidget {
     );
   }
 }
-
-
-  // Widget build(BuildContext context) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       showDialog(
-  //         context: context,
-  //         builder: (_) => Dialog(
-  //           child: Image.network(widget.imageUrl),
-  //         ),
-  //       );
-  //     },
-  //     child: FutureBuilder(
-  //       future: _imageFuture,
-  //       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-  //         if (snapshot.connectionState == ConnectionState.done) {
-  //           return Container(
-  //             width: 100,
-  //             height: 100,
-  //             margin: const EdgeInsets.only(right: 8),
-  //             decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(8),
-  //               image: DecorationImage(
-  //                 image: NetworkImage(widget.imageUrl),
-  //                 fit: BoxFit.cover,
-  //               ),
-  //             ),
-  //           );
-  //         } else if (response == 404) {
-  //           return widget.errorBuilder(
-  //             context,
-  //             Exception('Failed to load image'),
-  //             null,
-  //           );
-  //         } else {
-  //           return const SizedBox(
-  //             width: 100,
-  //             height: 100,
-  //             child: Center(child: CircularProgressIndicator()),
-  //           );
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }

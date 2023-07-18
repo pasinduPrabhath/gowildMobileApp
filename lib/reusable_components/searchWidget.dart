@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../Screens/navigationbar_screens/profile_screen/clientProfileView/thirdPersonView/thirdPersonProfileView.dart';
+import '../Screens/navigationbar_screens/profile_screen/serviceProviderProfileView/thirdPersonSellerView/third_person_sp_view.dart';
 import '../backend/api_requests/client_api.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
@@ -42,6 +43,7 @@ class CustomSearchDelegate extends SearchDelegate {
                 town: snapshot.data?[index]['town'],
                 country: snapshot.data?[index]['country'],
                 email: snapshot.data?[index]['email'],
+                accountType: snapshot.data?[index]['accountType'],
                 key: ValueKey(index),
               );
             },
@@ -70,6 +72,7 @@ class CustomSearchDelegate extends SearchDelegate {
                 town: snapshot.data?[index]['town'],
                 country: snapshot.data?[index]['country'],
                 email: snapshot.data?[index]['email'],
+                accountType: snapshot.data?[index]['accountType'],
                 key: ValueKey(index),
               );
             },
@@ -92,6 +95,7 @@ class SearchListItem extends StatelessWidget {
     required this.town,
     required this.country,
     required this.email,
+    required this.accountType,
   }) : super(key: key);
 
   final String firstName;
@@ -99,18 +103,29 @@ class SearchListItem extends StatelessWidget {
   final String town;
   final String country;
   final String email;
+  final String accountType;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ThirdPersonProfileScreen(
-                      email: email,
-                      userName: '$firstName $lastName',
-                    )));
+        if (accountType == 'client') {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ThirdPersonProfileScreen(
+                        email: email,
+                        userName: '$firstName $lastName',
+                      )));
+        } else if (accountType == 'sp') {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ThirdPersomSpProfileScreen(
+                        email: email,
+                        userName: '$firstName $lastName',
+                      )));
+        }
       },
       child: ListTile(
         title: Text('$firstName $lastName'),

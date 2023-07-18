@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gowild/backend/api_requests/client_api.dart';
 import 'package:gowild/reusable_components/searchWidget.dart';
 
 class CustomizedAppBar extends StatefulWidget implements PreferredSizeWidget {

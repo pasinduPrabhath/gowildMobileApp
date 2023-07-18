@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:gowild/Screens/navigationbar_screens/profile_screen/serviceProviderProfileView/firstPersonSPView/event.dart';
 import 'package:gowild/backend/api_requests/serviceProvider_api.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class CustomCalender extends StatefulWidget {
-  const CustomCalender({super.key});
+class ThirdPersonViewCalendar extends StatefulWidget {
+  final String email;
+  const ThirdPersonViewCalendar({
+    super.key,
+    required this.email,
+  });
 
   @override
-  State<CustomCalender> createState() => _CustomCalenderState();
+  State<ThirdPersonViewCalendar> createState() =>
+      _ThirdPersonViewCalendarState();
 }
 
-class _CustomCalenderState extends State<CustomCalender> {
+class _ThirdPersonViewCalendarState extends State<ThirdPersonViewCalendar> {
   Map<DateTime, List<Event>> selectedEvents = {};
-  late String? email;
+
   bool isLoading = true;
   String eventDetails = '';
   @override
@@ -24,11 +28,11 @@ class _CustomCalenderState extends State<CustomCalender> {
   }
 
   Future<void> _getEvents() async {
-    final prefs = await SharedPreferences.getInstance();
-    email = prefs.getString('email') ?? '';
+    // final prefs = await SharedPreferences.getInstance();
+    // email = prefs.getString('email') ?? '';
     final res2 =
-        await SpAPI.getCalender(email ?? '', '2020-06-01', '2300-12-31');
-    print(res2);
+        await SpAPI.getCalender(widget.email, '2020-06-01', '2300-12-31');
+
     setState(() {
       isLoading = true;
       selectedEvents = {
@@ -43,7 +47,6 @@ class _CustomCalenderState extends State<CustomCalender> {
     });
   }
 
-  late DateTime selectedDate;
   CalendarFormat formats = CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
@@ -130,41 +133,6 @@ class _CustomCalenderState extends State<CustomCalender> {
                     },
                     eventLoader: _getEventsfromDay,
                   ),
-                  ..._getEventsfromDay(selectedDay).map(
-                    (Event event) => ListTile(
-                      title: Text(event.title),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () async {
-                          final selectedEvent = _getEventsfromDay(selectedDay)
-                              .firstWhere(
-                                  (event) => event.title == event.title);
-                          setState(() {
-                            selectedEvents[selectedDay]?.remove(selectedEvent);
-                          });
-                          final success = await SpAPI.deleteCalender(
-                              email,
-                              DateFormat('yyyy-MM-dd').format(selectedDay),
-                              selectedEvent.title);
-                          if (success) {
-                            // ignore: use_build_context_synchronously
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('Event deleted'),
-                              duration: Duration(seconds: 2),
-                            ));
-                          } else {
-                            // ignore: use_build_context_synchronously
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('Failed to delete event'),
-                              duration: Duration(seconds: 2),
-                            ));
-                          }
-                        },
-                      ),
-                    ),
-                  )
                 ],
               ),
             ],
@@ -178,58 +146,6 @@ class _CustomCalenderState extends State<CustomCalender> {
               ),
             ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: const Text(
-          'Add event',
-          style: TextStyle(fontStyle: FontStyle.normal),
-        ),
-        icon: const Icon(Icons.add),
-        onPressed: () => showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Add Event'),
-            content: TextFormField(
-              controller: _eventController,
-              decoration: const InputDecoration(
-                hintText: 'Add Event',
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () async {
-                  if (_eventController.text.isEmpty) {
-                  } else {
-                    if (selectedEvents[selectedDay] != null) {
-                      eventDetails = _eventController.text;
-                      selectedEvents[selectedDay]!.add(Event(
-                          title: _eventController.text, date: selectedDay));
-                    } else {
-                      eventDetails = _eventController.text;
-                      selectedEvents[selectedDay] = [
-                        Event(title: _eventController.text, date: selectedDay)
-                      ];
-                    }
-                  }
-                  Navigator.pop(context);
-                  _eventController.clear();
-                  setState(() {});
-                  final res = await SpAPI.updateCalender(
-                      email,
-                      DateFormat('yyyy-MM-dd')
-                          .format(selectedEvents[selectedDay]![0].date),
-                      eventDetails);
-                  return;
-                },
-                child: const Text('Ok'),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

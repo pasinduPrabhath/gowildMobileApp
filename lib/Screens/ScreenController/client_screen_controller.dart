@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import '../navigationbar_screens/search_screen/search_screen.dart';
-import '../navigationbar_screens/add_screen/add_screen.dart';
+import '../navigationbar_screens/marketplace_screen/marketplace_screen.dart';
 import '../navigationbar_screens/message_screen/message_screen.dart';
 import '../navigationbar_screens/profile_screen/clientProfileView/firstPersonView/profile_screen.dart';
 import '../navigationbar_screens/home_screen/home_screen.dart';
@@ -19,7 +19,7 @@ class _ClientScreenControllerState extends State<ClientScreenController> {
   final screens = [
     const HomeScreen(),
     const SearchScreen(),
-    const AddScreen(),
+    const MarketPlaceScreen(),
     const MessageScreen(),
     const ProfileScreen(),
   ];
@@ -49,7 +49,7 @@ class _ClientScreenControllerState extends State<ClientScreenController> {
               size: 30, color: Theme.of(context).colorScheme.background),
           Icon(Icons.search,
               size: 30, color: Theme.of(context).colorScheme.background),
-          Icon(Icons.add,
+          Icon(Icons.shopping_bag,
               size: 30, color: Theme.of(context).colorScheme.background),
           Icon(Icons.message_rounded,
               size: 30, color: Theme.of(context).colorScheme.background),
