@@ -341,6 +341,76 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           );
         },
+        onLongPress: () {
+          showModalBottomSheet(
+            elevation: 2,
+            backgroundColor: const Color.fromARGB(155, 10, 10, 10),
+            context: context,
+            builder: (BuildContext context) {
+              return SizedBox(
+                height: MediaQuery.of(context).size.height * 0.13,
+                child: Center(
+                    child: Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        Navigator.of(context).pop(); // Close the bottom sheet
+                        final confirmed = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Confirm Deletion'),
+                            content: const Text(
+                                'Are you sure you want to delete this photo?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text(
+                                  'No',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: const Text(
+                                  'Yes',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirmed == true) {
+                          issloading = true;
+                          await FirebaseStorage.instance
+                              .refFromURL(url)
+                              .delete();
+                          print('url is' + url);
+                          print('email is' + email!);
+                          await ClientAPI.deletePost(email!, url);
+                          issloading = false;
+                          setState(() {
+                            _getProfileDetails();
+                          });
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const Text(
+                      'Delete photo',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                )),
+              );
+            },
+          );
+        },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ClipRRect(
@@ -366,7 +436,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<File?> pickImage() async {
     Future<XFile?> file =
-        ImagePicker().pickImage(imageQuality: 55, source: ImageSource.gallery);
+        ImagePicker().pickImage(imageQuality: 35, source: ImageSource.gallery);
     // XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
     if (file == null) {
       return null;

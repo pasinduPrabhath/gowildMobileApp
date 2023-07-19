@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 // import '../Screens/home_screen/feed_screen.dart';
 import '../Screens/ScreenController/client_screen_controller.dart';
 import '../Screens/ScreenController/sp_screen_controller.dart';
+import '../Screens/navigationbar_screens/marketplace_screen/marketProductDescription.dart';
 import '../screens/registartion_screen/registration_screen.dart';
 import '../Screens/registartion_screen/test_upload.dart';
 
@@ -13,6 +14,7 @@ class AppRoutes {
   static const String test = '/test';
   static const String clientScreenController = '/client_screen_controller';
   static const String spScreenController = '/sp_screen_controller';
+  static const String marketProductDescription = '/marketProductDescription';
 
   static final Map<String, WidgetBuilder> routes = {
     AppRoutes.registration: (context) => const RegistrationScreen(),
@@ -21,5 +23,6 @@ class AppRoutes {
     AppRoutes.clientScreenController: (context) =>
         const ClientScreenController(),
     AppRoutes.spScreenController: (context) => const SpScreenController(),
+    AppRoutes.marketProductDescription: (context) => const ProductDescription(),
   };
 }

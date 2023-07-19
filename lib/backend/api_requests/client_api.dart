@@ -176,4 +176,23 @@ class ClientAPI {
       throw Exception('Failed to load profile details');
     }
   }
+
+  static Future<int> deletePost(String email, String picurl) async {
+    final url = Uri.parse('$baseUrl/user/deletePost');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({'email': email, 'url': picurl});
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['success'];
+    }
+    if (response.statusCode == 500) {
+      final message = json.decode(response.body)['message'];
+      if (message == 'Database connection error') {
+        throw Exception('Server error, Please try again later');
+      }
+    } else {
+      throw Exception('Failed to create user');
+    }
+    throw Exception('Failed to create user');
+  }
 }

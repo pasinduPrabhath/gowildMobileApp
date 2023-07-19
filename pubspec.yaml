@@ -58,6 +58,8 @@ dependencies:
   flutter_image_compress: ^2.0.3
   flutter_native_image: ^0.0.6+1
   table_calendar: ^3.0.9
+  flutter_image_slideshow: ^0.1.6
+  font_awesome_flutter: ^10.5.0
 
 
   

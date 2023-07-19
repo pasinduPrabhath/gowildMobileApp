@@ -5,16 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gowild/Screens/navigationbar_screens/profile_screen/widgets/stat.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../../../backend/api_requests/client_api.dart';
 import '../../widgets/profile_background.dart';
 import 'dart:math' as math;
 import 'package:image_picker/image_picker.dart';
-
-import 'package:flutter_native_image/flutter_native_image.dart';
-
 import '../calendar.dart';
-import '../thirdPersonSellerView/third_person_sp_view.dart';
 
 class ServiceProviderProfileScreen extends StatefulWidget {
   const ServiceProviderProfileScreen({super.key});
@@ -136,16 +131,6 @@ class _ServiceProviderProfileScreenState
                       padding: const EdgeInsets.only(left: 23.0),
                       child: IconButton(
                         onPressed: () async {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => ThirdPersomSpProfileScreen(
-                          //       email: email!,
-                          //       userName: userName!,
-                          //     ),
-                          //   ),
-                          // );
-                          // print('pressed');
                           final image = await pickImage();
                           setState(() {
                             _postPic = image!;
@@ -156,9 +141,9 @@ class _ServiceProviderProfileScreenState
                           final result = await ClientAPI.updateUserPostPicture(
                               email!, imageUrl);
                           print(result);
+                          issloading = false;
                           setState(() {
                             _getProfileDetails();
-                            issloading = false;
                           });
                         },
                         icon: const Icon(Icons.add_a_photo_sharp),
@@ -369,7 +354,7 @@ class _ServiceProviderProfileScreenState
                   .withOpacity(0.85), // Set the color to transparent black
               child: Center(
                 child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.3,
+                    height: MediaQuery.of(context).size.height * 0.03,
                     width: MediaQuery.of(context).size.height * 0.03,
                     child: const CircularProgressIndicator()),
               ),
@@ -384,13 +369,82 @@ class _ServiceProviderProfileScreenState
       tag: 'photo_$index', // Provide a unique tag for each photo
       child: GestureDetector(
         onTap: () {
-          // Handle the tap event and navigate to the preview screen
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) =>
                   PhotoPreviewScreen(imageUrl: url, tag: 'photo_$index'),
             ),
+          );
+        },
+        onLongPress: () {
+          showModalBottomSheet(
+            elevation: 2,
+            backgroundColor: const Color.fromARGB(155, 10, 10, 10),
+            context: context,
+            builder: (BuildContext context) {
+              return SizedBox(
+                height: MediaQuery.of(context).size.height * 0.13,
+                child: Center(
+                    child: Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        Navigator.of(context).pop(); // Close the bottom sheet
+                        final confirmed = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Confirm Deletion'),
+                            content: const Text(
+                                'Are you sure you want to delete this photo?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text(
+                                  'No',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: const Text(
+                                  'Yes',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirmed == true) {
+                          issloading = true;
+                          await FirebaseStorage.instance
+                              .refFromURL(url)
+                              .delete();
+                          print('url is' + url);
+                          print('email is' + email!);
+                          await ClientAPI.deletePost(email!, url);
+                          issloading = false;
+                          setState(() {
+                            _getProfileDetails();
+                          });
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const Text(
+                      'Delete photo',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                )),
+              );
+            },
           );
         },
         child: Padding(
@@ -422,7 +476,7 @@ class _ServiceProviderProfileScreenState
 
   Future<File?> pickImage() async {
     Future<XFile?> file =
-        ImagePicker().pickImage(imageQuality: 55, source: ImageSource.gallery);
+        ImagePicker().pickImage(imageQuality: 15, source: ImageSource.gallery);
     // XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
     if (file == null) {
       return null;
