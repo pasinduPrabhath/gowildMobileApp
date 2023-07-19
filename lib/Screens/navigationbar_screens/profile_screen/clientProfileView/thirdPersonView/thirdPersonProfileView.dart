@@ -233,10 +233,10 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
               const SizedBox(
                 height: 5.0,
               ),
-              Text(
-                '@pasindu_prabhath',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
+              // Text(
+              //   '@pasindu_prabhath',
+              //   style: Theme.of(context).textTheme.titleSmall,
+              // ),
               const SizedBox(
                 height: 20.0,
               ),

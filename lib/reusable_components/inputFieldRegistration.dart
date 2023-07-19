@@ -22,14 +22,15 @@ class CustomTextFormField extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.055,
+          height: MediaQuery.of(context).size.height * 0.06,
           child: TextFormField(
             keyboardType: keyboardType,
             controller: controller,
+            // cursorHeight: 22,
             decoration: InputDecoration(
               labelText: labelText,
               labelStyle: const TextStyle(
-                  color: Color.fromARGB(255, 12, 12, 12), fontSize: 18),
+                  color: Color.fromARGB(255, 12, 12, 12), fontSize: 16),
               enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Color.fromARGB(255, 19, 18, 18),

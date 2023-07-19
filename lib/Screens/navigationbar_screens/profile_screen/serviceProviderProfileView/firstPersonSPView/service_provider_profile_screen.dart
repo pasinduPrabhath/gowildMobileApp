@@ -42,21 +42,39 @@ class _ServiceProviderProfileScreenState
 
   Future<void> _getProfileDetails() async {
     // Retrieve the email from SharedPreferences
-    final prefs = await SharedPreferences.getInstance();
-    userName = prefs.getString('displayName') ?? '';
-    email = prefs.getString('email') ?? '';
-    dpUrl = prefs.getString('dpUrl') ?? '';
-    print('dpurl' + dpUrl);
-    final response = await ClientAPI.getImages(email!);
-    final profileStat = await ClientAPI.getUserDetails(email!);
-    final data = profileStat['data'];
-    followerCount = data['followerCount'][0]['count'];
-    followingCount = data['followingCount'][0]['count'];
-    postsCount = data['postCount'][0]['count'];
-    isFollowStatLoading = false;
+    var response;
     // print(response[0]);
 
     // isLoading = false;
+    // setState(() {
+
+    //   isLoading = false;
+    // });
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      userName = prefs.getString('displayName') ?? '';
+      email = prefs.getString('email') ?? '';
+      dpUrl = prefs.getString('dpUrl') ?? '';
+      print('dpurl' + dpUrl);
+      response = await ClientAPI.getImages(email!);
+      final profileStat = await ClientAPI.getUserDetails(email!);
+      final data = profileStat['data'];
+      followerCount = data['followerCount'][0]['count'];
+      followingCount = data['followingCount'][0]['count'];
+      postsCount = data['postCount'][0]['count'];
+      isFollowStatLoading = false;
+    } catch (e) {
+      print('Error getting profile details: $e');
+    }
+    if (!mounted) {
+      return;
+    }
     setState(() {
       _imageUrls = response;
       isLoading = false;
@@ -239,6 +257,12 @@ class _ServiceProviderProfileScreenState
                               width: 180.0,
                               height: 180.0,
                               fit: BoxFit.cover,
+                              errorBuilder: (BuildContext context,
+                                  Object exception, StackTrace? stackTrace) {
+                                // Show a placeholder image or an error message
+                                return Image.asset(
+                                    'assets/images/placeholder.png');
+                              },
                             ),
                           )
                         ],

@@ -40,21 +40,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _getProfileDetails();
   }
 
+  // Future<void> _getProfileDetails() async {
+  //   // Retrieve the email from SharedPreferences
+  //   final prefs = await SharedPreferences.getInstance();
+  //   userName = prefs.getString('displayName') ?? '';
+  //   email = prefs.getString('email') ?? '';
+  //   dpUrl = prefs.getString('dpUrl') ?? '';
+  //   print('dpurl' + dpUrl);
+  //   final response = await ClientAPI.getImages(email!);
+  //   final profileStat = await ClientAPI.getUserDetails(email!);
+  //   final data = profileStat['data'];
+  //   followerCount = data['followerCount'][0]['count'];
+  //   followingCount = data['followingCount'][0]['count'];
+  //   postsCount = data['postCount'][0]['count'];
+  //   isFollowStatLoading = false;
+
+  //   setState(() {
+  //     _imageUrls = response;
+  //     isLoading = false;
+  //   });
+  // }
   Future<void> _getProfileDetails() async {
     // Retrieve the email from SharedPreferences
-    final prefs = await SharedPreferences.getInstance();
-    userName = prefs.getString('displayName') ?? '';
-    email = prefs.getString('email') ?? '';
-    dpUrl = prefs.getString('dpUrl') ?? '';
-    print('dpurl' + dpUrl);
-    final response = await ClientAPI.getImages(email!);
-    final profileStat = await ClientAPI.getUserDetails(email!);
-    final data = profileStat['data'];
-    followerCount = data['followerCount'][0]['count'];
-    followingCount = data['followingCount'][0]['count'];
-    postsCount = data['postCount'][0]['count'];
-    isFollowStatLoading = false;
+    var response;
+    // print(response[0]);
 
+    // isLoading = false;
+    // setState(() {
+
+    //   isLoading = false;
+    // });
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      userName = prefs.getString('displayName') ?? '';
+      email = prefs.getString('email') ?? '';
+      dpUrl = prefs.getString('dpUrl') ?? '';
+      print('dpurl' + dpUrl);
+      response = await ClientAPI.getImages(email!);
+      final profileStat = await ClientAPI.getUserDetails(email!);
+      final data = profileStat['data'];
+      followerCount = data['followerCount'][0]['count'];
+      followingCount = data['followingCount'][0]['count'];
+      postsCount = data['postCount'][0]['count'];
+      isFollowStatLoading = false;
+    } catch (e) {
+      print('Error getting profile details: $e');
+    }
+    if (!mounted) {
+      return;
+    }
     setState(() {
       _imageUrls = response;
       isLoading = false;
@@ -254,10 +294,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 5.0,
               ),
-              Text(
-                '@pasindu_prabhath',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
+              // Text(
+              //   '@pasindu_prabhath',
+              //   style: Theme.of(context).textTheme.titleSmall,
+              // ),
               const SizedBox(
                 height: 20.0,
               ),

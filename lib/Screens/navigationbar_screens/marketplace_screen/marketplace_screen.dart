@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/widgets/grid_items.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'marketPlace_newAd.dart';
 import 'marketplaceBackground.dart';
 
 class MarketPlaceScreen extends StatelessWidget {
@@ -103,11 +104,23 @@ class MarketPlaceScreen extends StatelessWidget {
             ],
           ),
         ),
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {},
-        //   child: const Icon(Icons.add),
-        //   backgroundColor: Theme.of(context).colorScheme.primary,
-        // ),
+        floatingActionButton: Stack(children: [
+          Positioned(
+            bottom: 45.0,
+            right: 0.0,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const AddNewAd()));
+              },
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: const FaIcon(
+                FontAwesomeIcons.plus,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ]),
       ),
     );
   }
