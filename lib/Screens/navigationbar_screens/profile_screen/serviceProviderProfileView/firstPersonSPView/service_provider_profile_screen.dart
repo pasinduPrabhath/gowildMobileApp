@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gowild/Screens/navigationbar_screens/profile_screen/widgets/stat.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../backend/api_requests/client_api.dart';
@@ -276,9 +277,22 @@ class _ServiceProviderProfileScreenState
                       height: MediaQuery.of(context).size.height * 0.03,
                       width: MediaQuery.of(context).size.height * 0.03,
                       child: const CircularProgressIndicator())
-                  : Text(
-                      '$userName',
-                      style: Theme.of(context).textTheme.titleMedium,
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '$userName',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(
+                          width: 5.0,
+                        ),
+                        const Icon(
+                          Icons.verified,
+                          size: 20.0,
+                          color: Color.fromARGB(255, 8, 1, 26),
+                        ),
+                      ],
                     ),
               const SizedBox(
                 height: 6.0,

@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/widgets/grid_items.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gowild/backend/api_requests/client_api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'marketPlace_newAd.dart';
 import 'marketplaceBackground.dart';
+import 'my_ads/my_ads.dart';
 
-class MarketPlaceScreen extends StatelessWidget {
+class MarketPlaceScreen extends StatefulWidget {
   const MarketPlaceScreen({super.key});
+
+  @override
+  State<MarketPlaceScreen> createState() => _MarketPlaceScreenState();
+}
+
+class _MarketPlaceScreenState extends State<MarketPlaceScreen> {
+  @override
+  void initState() {
+    GridItems(
+      apiFunction: () => ClientAPI.getAds(),
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +38,7 @@ class MarketPlaceScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 15.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     const Text('Marketplace',
                         style: TextStyle(
@@ -30,19 +46,30 @@ class MarketPlaceScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             color: Color.fromARGB(255, 14, 14, 14))),
                     Padding(
-                      padding: const EdgeInsets.only(right: 28.0),
+                      padding: const EdgeInsets.only(left: 70.0),
                       child: WidgetStyleContainer(
                         size: size,
                         icon: Icons.search,
                         text: 'Search',
                         width: size.width * 0.07,
+                        onPressed: () {},
                       ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: WidgetStyleContainer(
+                          size: size,
+                          icon: FontAwesomeIcons.rectangleAd,
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyAds()))),
                     ),
                   ],
                 ),
               ),
               SizedBox(
-                height: size.height * 0.03,
+                height: size.height * 0.04,
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -100,7 +127,7 @@ class MarketPlaceScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              GridItems(),
+              const GridItems(apiFunction: ClientAPI.getAds),
             ],
           ),
         ),
@@ -133,8 +160,10 @@ class WidgetStyleContainer extends StatelessWidget {
     required this.icon,
     this.text = '',
     this.width = 0,
+    required this.onPressed,
   });
 
+  final Function() onPressed;
   final Size size;
   final IconData icon;
   String text;
@@ -165,7 +194,7 @@ class WidgetStyleContainer extends StatelessWidget {
             child: IconButton(
               tooltip: 'Search',
               icon: Icon(icon, size: 20),
-              onPressed: () {},
+              onPressed: onPressed,
             ),
           ),
           Text(text),

@@ -23,6 +23,6 @@ class AppRoutes {
     AppRoutes.clientScreenController: (context) =>
         const ClientScreenController(),
     AppRoutes.spScreenController: (context) => const SpScreenController(),
-    AppRoutes.marketProductDescription: (context) => const ProductDescription(),
+    // AppRoutes.marketProductDescription: (context) => const ProductDescription(),
   };
 }

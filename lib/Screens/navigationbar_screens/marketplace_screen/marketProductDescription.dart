@@ -1,11 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/widgets/product_images_slider.dart';
+import 'package:gowild/backend/api_requests/client_api.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
-class ProductDescription extends StatelessWidget {
-  const ProductDescription({super.key});
+class ProductDescription extends StatefulWidget {
+  final Map<String, dynamic>? ad;
+
+  const ProductDescription({Key? key, required this.ad}) : super(key: key);
+
+  @override
+  State<ProductDescription> createState() => _ProductDescriptionState();
+}
+
+class _ProductDescriptionState extends State<ProductDescription> {
+  List<dynamic> userDetails = [];
+  bool isLoading = true;
+  String formattedTime = '';
+  String name = '';
+  // final timestamp = DateTime.parse('2022-01-01 12:00:00');
+
+  @override
+  void initState() {
+    super.initState();
+    getDetails();
+  }
+
+  void getDetails() async {
+    userDetails =
+        await ClientAPI.getSimpleUserDetails(widget.ad?['user_id'] ?? '');
+    setState(() {
+      isLoading = false;
+      name = userDetails[0]['firstName'] + ' ' + userDetails[0]['lastName'];
+    });
+    if (userDetails.isNotEmpty) {
+      final timestamp = widget.ad?['timestamp'];
+      if (timestamp != null) {
+        final formattedTime = timeago.format(DateTime.parse(timestamp));
+        print(formattedTime);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.ad == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text('Ad not found'),
+        ),
+      );
+    }
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -21,15 +66,14 @@ class ProductDescription extends StatelessWidget {
                     bottomLeft: Radius.circular(30),
                     bottomRight: Radius.circular(30),
                   ),
-                  // image: DecorationImage(
-                  //   image: AssetImage('assets/images/earphone.jpg'),
-                  //   fit: BoxFit.cover,
-                  // ),
                 ),
                 child: Stack(
                   children: [
-                    const Center(
-                      child: ProductImagesSlider(),
+                    Center(
+                      child: ProductImagesSlider(
+                        imageUrls: (widget.ad?['imageLinks'] as List<dynamic>)
+                            .cast<String>(),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 20, top: 25),
@@ -50,13 +94,13 @@ class ProductDescription extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.02,
               ),
               Padding(
-                padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Apple watch series 6',
-                      style: TextStyle(
+                    Text(
+                      widget.ad?['title'] ?? '',
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 22,
                       ),
@@ -64,9 +108,9 @@ class ProductDescription extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    const Text(
-                      'Posted few seconds ago',
-                      style: TextStyle(
+                    Text(
+                      'Posted $formattedTime',
+                      style: const TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 13,
                       ),
@@ -74,9 +118,9 @@ class ProductDescription extends StatelessWidget {
                     const SizedBox(
                       height: 3,
                     ),
-                    const Text(
-                      'Kelaniya, Gampaha',
-                      style: TextStyle(
+                    Text(
+                      widget.ad?['location'] ?? '',
+                      style: const TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 13,
                       ),
@@ -92,38 +136,42 @@ class ProductDescription extends StatelessWidget {
                     const SizedBox(
                       height: 15,
                     ),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Rs 45,000',
-                          style: TextStyle(
+                          'Rs ${widget.ad?['price'] ?? ''}',
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
-                        Row(
-                          children: [
-                            Text(
-                              'Seller Name',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                        isLoading
+                            ? const CircularProgressIndicator()
+                            : Row(
+                                children: [
+                                  Text(
+                                    name,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  CircleAvatar(
+                                    radius: 20,
+                                    backgroundImage: userDetails.isNotEmpty
+                                        ? NetworkImage(userDetails[0]
+                                            ['profile_picture_url'])
+                                        : null,
+                                  ),
+                                ],
                               ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundImage:
-                                  AssetImage('assets/images/bird/bird-1.jpg'),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                     const SizedBox(
@@ -147,10 +195,9 @@ class ProductDescription extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    const Text(
-                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ',
-                      style: TextStyle(
-                        // fontWeight: FontWeight.w400,
+                    Text(
+                      widget.ad?['description'] ?? '',
+                      style: const TextStyle(
                         fontSize: 15,
                       ),
                       textAlign: TextAlign.justify,

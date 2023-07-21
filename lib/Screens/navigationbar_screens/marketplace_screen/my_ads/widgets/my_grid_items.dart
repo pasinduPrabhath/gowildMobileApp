@@ -1,21 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../marketProductDescription.dart';
+import 'package:gowild/backend/api_requests/client_api.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class GridItems extends StatefulWidget {
-  final Future<List<dynamic>> Function() apiFunction;
-  const GridItems({Key? key, required this.apiFunction}) : super(key: key);
+import '../../marketProductDescription.dart';
+
+class MyGridItems extends StatefulWidget {
+  const MyGridItems({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<GridItems> createState() => _GridItemsState();
+  State<MyGridItems> createState() => _MyGridItemsState();
 }
 
-class _GridItemsState extends State<GridItems> {
+class _MyGridItemsState extends State<MyGridItems> {
+  String email = '';
+  @override
+  void initState() {
+    getEmail();
+    super.initState();
+  }
+
+  void getEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      email = prefs.getString('email') ?? '';
+    });
+    print(email);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<dynamic>>(
-      future: widget.apiFunction(),
+      future: ClientAPI.getUserAds(email),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final ads = snapshot.data;
@@ -32,9 +51,8 @@ class _GridItemsState extends State<GridItems> {
               final ad = ads[index];
 
               return Container(
-                height: MediaQuery.of(context).size.height * 0.15,
-                margin: const EdgeInsets.only(
-                    left: 15, right: 15, top: 15, bottom: 15),
+                // height: MediaQuery.of(context).size.height * 0.18,
+                margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(136, 147, 211, 241),
                   borderRadius: BorderRadius.circular(15),
@@ -47,7 +65,7 @@ class _GridItemsState extends State<GridItems> {
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(10),
                   child: Column(children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,6 +87,41 @@ class _GridItemsState extends State<GridItems> {
                                   fontSize: 12),
                             ),
                           ],
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Confirm Delete'),
+                                  content: const Text(
+                                      'Are you sure you want to delete this item?'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(true),
+                                      child: const Text('Delete'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ).then((value) async {
+                              if (value == true) {
+                                print('index is $index');
+                                final res = await ClientAPI.deleteMyAd(
+                                    ad['ad_id'] ?? '');
+                                print(res);
+                                setState(() {});
+                              }
+                            });
+                          },
+                          child: const Icon(Icons.delete),
                         ),
                       ],
                     ),
@@ -141,7 +194,7 @@ class _GridItemsState extends State<GridItems> {
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         } else {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );

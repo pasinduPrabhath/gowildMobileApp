@@ -60,6 +60,8 @@ dependencies:
   table_calendar: ^3.0.9
   flutter_image_slideshow: ^0.1.6
   font_awesome_flutter: ^10.5.0
+  image: ^4.0.17
+  timeago: ^3.5.0
 
 
   
