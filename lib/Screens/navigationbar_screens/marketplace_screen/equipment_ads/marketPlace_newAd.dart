@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
-import '../../../backend/api_requests/client_api.dart';
+import '../../../../backend/api_requests/client_api.dart';
 
-import '../../../reusable_components/inputFieldRegistration.dart';
 import 'marketPlaceAddModel.dart';
 
 class AddNewAd extends StatefulWidget {
@@ -58,8 +57,8 @@ class _AddNewAdState extends State<AddNewAd> {
       String uniqueFileName = suffix +
           DateTime.now().millisecondsSinceEpoch.toString() +
           i.toString();
-      Reference fileReference =
-          referenceRoot.child('$imageCategory/$email/$suffix/$uniqueFileName');
+      Reference fileReference = referenceRoot
+          .child('$imageCategory/equimentAds/$email/$suffix/$uniqueFileName');
       try {
         await fileReference.putFile(File(file.path));
         final imageUrl = await fileReference.getDownloadURL();
@@ -75,6 +74,7 @@ class _AddNewAdState extends State<AddNewAd> {
   @override
   void initState() {
     print('intied');
+    _districtController.text = 'Ampara';
     getEmail();
     super.initState();
   }
@@ -107,6 +107,7 @@ class _AddNewAdState extends State<AddNewAd> {
         description: _descriptionController.text,
         phoneNum: int.parse(_phoneNumberController.text),
         imageLinks: imageUrls,
+        adType: 'equipment',
         timestamp: DateTime.now().toUtc().toString(),
       );
       print('image urls: $imageUrls');
@@ -147,7 +148,7 @@ class _AddNewAdState extends State<AddNewAd> {
 
   @override
   Widget build(BuildContext context) {
-    _districtController.text = 'Ampara';
+    // _districtController.text = 'Ampara';
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -241,13 +242,13 @@ class _AddNewAdState extends State<AddNewAd> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 6.0, right: 3),
                         child: DropdownButtonFormField<String>(
-                          value: selectedDistrict,
+                          value:
+                              _districtController.text, // Set the initial value
                           menuMaxHeight: size.height * 0.3,
                           onChanged: (String? newValue) {
-                            // print('Selected district: $newValue');
                             setState(() {
-                              selectedDistrict = newValue;
-                              _districtController.text = newValue ?? '';
+                              _districtController.text = newValue ??
+                                  ''; // Update the controller's text
                             });
                           },
                           items: <String>[
@@ -388,7 +389,7 @@ class _AddNewAdState extends State<AddNewAd> {
                       onChanged: (value) {
                         try {
                           int.parse(value);
-                          errorMessage = 'oksss';
+                          errorMessage = 'Fill all the fields';
                         } catch (e) {
                           errorMessage = 'Enter Correct type of inputs';
                         }

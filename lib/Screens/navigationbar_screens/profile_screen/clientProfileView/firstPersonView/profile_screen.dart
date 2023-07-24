@@ -40,36 +40,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _getProfileDetails();
   }
 
-  // Future<void> _getProfileDetails() async {
-  //   // Retrieve the email from SharedPreferences
-  //   final prefs = await SharedPreferences.getInstance();
-  //   userName = prefs.getString('displayName') ?? '';
-  //   email = prefs.getString('email') ?? '';
-  //   dpUrl = prefs.getString('dpUrl') ?? '';
-  //   print('dpurl' + dpUrl);
-  //   final response = await ClientAPI.getImages(email!);
-  //   final profileStat = await ClientAPI.getUserDetails(email!);
-  //   final data = profileStat['data'];
-  //   followerCount = data['followerCount'][0]['count'];
-  //   followingCount = data['followingCount'][0]['count'];
-  //   postsCount = data['postCount'][0]['count'];
-  //   isFollowStatLoading = false;
-
-  //   setState(() {
-  //     _imageUrls = response;
-  //     isLoading = false;
-  //   });
-  // }
   Future<void> _getProfileDetails() async {
-    // Retrieve the email from SharedPreferences
     var response;
-    // print(response[0]);
-
-    // isLoading = false;
-    // setState(() {
-
-    //   isLoading = false;
-    // });
     if (!mounted) {
       return;
     }

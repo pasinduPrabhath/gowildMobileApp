@@ -7,6 +7,7 @@ class MarketPlaceAdd {
   String? description;
   int? phoneNum;
   List<String>? imageLinks;
+  String? adType;
   String? timestamp;
   MarketPlaceAdd(
       {this.email,
@@ -17,6 +18,7 @@ class MarketPlaceAdd {
       this.description,
       this.phoneNum,
       this.imageLinks,
+      this.adType,
       this.timestamp});
   Map<String, dynamic> toMap() {
     return {
@@ -28,6 +30,7 @@ class MarketPlaceAdd {
       'district': district,
       'phone_num': phoneNum,
       'imageLinks': imageLinks,
+      'adType': adType,
       'timestamp': timestamp,
     };
   }

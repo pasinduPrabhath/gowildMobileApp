@@ -3,6 +3,8 @@ import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/widgets/
 import 'package:gowild/backend/api_requests/client_api.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../../profile_screen/clientProfileView/thirdPersonView/thirdPersonProfileView.dart';
+
 class ProductDescription extends StatefulWidget {
   final Map<String, dynamic>? ad;
 
@@ -17,6 +19,7 @@ class _ProductDescriptionState extends State<ProductDescription> {
   bool isLoading = true;
   String formattedTime = '';
   String name = '';
+  String email = '';
   // final timestamp = DateTime.parse('2022-01-01 12:00:00');
 
   @override
@@ -31,6 +34,7 @@ class _ProductDescriptionState extends State<ProductDescription> {
     setState(() {
       isLoading = false;
       name = userDetails[0]['firstName'] + ' ' + userDetails[0]['lastName'];
+      email = userDetails[0]['email'];
     });
     if (userDetails.isNotEmpty) {
       final timestamp = widget.ad?['timestamp'];
@@ -151,26 +155,39 @@ class _ProductDescriptionState extends State<ProductDescription> {
                         ),
                         isLoading
                             ? const CircularProgressIndicator()
-                            : Row(
-                                children: [
-                                  Text(
-                                    name,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
+                            : GestureDetector(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ThirdPersonProfileScreen(
+                                      email: email,
+                                      userName: name,
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  CircleAvatar(
-                                    radius: 20,
-                                    backgroundImage: userDetails.isNotEmpty
-                                        ? NetworkImage(userDetails[0]
-                                            ['profile_picture_url'])
-                                        : null,
-                                  ),
-                                ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      name,
+                                      style: const TextStyle(
+                                        overflow: TextOverflow.ellipsis,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundImage: userDetails.isNotEmpty
+                                          ? NetworkImage(userDetails[0]
+                                              ['profile_picture_url'])
+                                          : null,
+                                    ),
+                                  ],
+                                ),
                               ),
                       ],
                     ),

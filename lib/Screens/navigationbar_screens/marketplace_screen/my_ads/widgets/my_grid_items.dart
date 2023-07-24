@@ -1,10 +1,11 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gowild/backend/api_requests/client_api.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../marketProductDescription.dart';
+import '../../equipment_ads/marketProductDescription.dart';
 
 class MyGridItems extends StatefulWidget {
   const MyGridItems({
@@ -81,7 +82,7 @@ class _MyGridItemsState extends State<MyGridItems> {
                               ),
                             ),
                             Text(
-                              '${ad['town']}',
+                              '${ad['district']}',
                               style: const TextStyle(
                                   color: Color.fromARGB(255, 12, 12, 12),
                                   fontSize: 12),
@@ -113,11 +114,39 @@ class _MyGridItemsState extends State<MyGridItems> {
                               },
                             ).then((value) async {
                               if (value == true) {
-                                print('index is $index');
-                                final res = await ClientAPI.deleteMyAd(
+                                final deleted = await ClientAPI.deleteMyAd(
                                     ad['ad_id'] ?? '');
-                                print(res);
-                                setState(() {});
+                                final imageLinks = ad['imageLinks'];
+                                for (final link in imageLinks) {
+                                  final ref =
+                                      FirebaseStorage.instance.refFromURL(link);
+                                  await ref.delete();
+                                }
+
+                                // final directoryRef = FirebaseStorage.instance
+                                //     .ref()
+                                //     .child(
+                                //         '${ad['imageCategory']}/$email/${ad['suffix']}');
+                                // try {
+                                //   await directoryRef.getDownloadURL();
+                                //   await directoryRef.delete();
+                                // } catch (e) {
+                                //   print('no directory found');
+                                // }
+
+                                if (deleted == 1) {
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content:
+                                            Text('Ad deleted Succesfully!'),
+                                      ),
+                                    );
+                                    setState(() {});
+                                  }
+                                } else {
+                                  // Failed to delete ad
+                                }
                               }
                             });
                           },

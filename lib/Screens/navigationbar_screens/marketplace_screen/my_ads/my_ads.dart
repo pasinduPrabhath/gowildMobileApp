@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/my_ads/widgets/my_grid_items.dart';
-import '../marketPlace_newAd.dart';
+import '../equipment_ads/marketPlace_newAd.dart';
 import '../marketplaceBackground.dart';
+import '../marketplace_screen.dart';
 
 class MyAds extends StatefulWidget {
   const MyAds({super.key});

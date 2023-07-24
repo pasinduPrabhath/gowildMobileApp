@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../marketProductDescription.dart';
+import '../equipment_ads/marketProductDescription.dart';
 import 'package:intl/intl.dart';
 
 class GridItems extends StatefulWidget {
@@ -63,7 +63,7 @@ class _GridItemsState extends State<GridItems> {
                               ),
                             ),
                             Text(
-                              '${ad['town']}',
+                              '${ad['district']}',
                               style: const TextStyle(
                                   color: Color.fromARGB(255, 12, 12, 12),
                                   fontSize: 12),
@@ -141,7 +141,10 @@ class _GridItemsState extends State<GridItems> {
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         } else {
-          return const CircularProgressIndicator();
+          return const Padding(
+            padding: EdgeInsets.only(top: 30.0),
+            child: CircularProgressIndicator(),
+          );
         }
       },
     );

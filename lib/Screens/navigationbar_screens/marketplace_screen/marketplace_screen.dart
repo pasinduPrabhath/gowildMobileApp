@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/tour_plan_ads/add_tour_ads.dart';
 import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/widgets/grid_items.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gowild/backend/api_requests/client_api.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'marketPlace_newAd.dart';
+import 'equipment_ads/marketPlace_newAd.dart';
 import 'marketplaceBackground.dart';
 import 'my_ads/my_ads.dart';
+import 'package:custom_floating_action_button/custom_floating_action_button.dart';
 
 class MarketPlaceScreen extends StatefulWidget {
-  const MarketPlaceScreen({super.key});
+  const MarketPlaceScreen({Key? key}) : super(key: key);
 
   @override
   State<MarketPlaceScreen> createState() => _MarketPlaceScreenState();
 }
 
 class _MarketPlaceScreenState extends State<MarketPlaceScreen> {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
   @override
   void initState() {
     GridItems(
@@ -23,151 +26,211 @@ class _MarketPlaceScreenState extends State<MarketPlaceScreen> {
     super.initState();
   }
 
+  Future<void> getPage() async {
+    setState(() {});
+    GridItems(
+      apiFunction: () => ClientAPI.getAds(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return MarketplaceBackground(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: size.height * 0.07,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification is OverscrollNotification) {
+            setState(() {});
+          }
+          return false;
+        },
+        child: CustomFloatingActionButton(
+          backgroundColor: const Color.fromARGB(199, 26, 25, 25),
+          floatinButtonColor: const Color.fromARGB(255, 169, 217, 245),
+          body: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: RefreshIndicator(
+              key: _refreshIndicatorKey,
+              onRefresh: () async {
+                await getPage();
+                setState(() {});
+              },
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
                   children: [
-                    const Text('Marketplace',
-                        style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 14, 14, 14))),
+                    SizedBox(
+                      height: size.height * 0.07,
+                    ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 70.0),
-                      child: WidgetStyleContainer(
-                        size: size,
-                        icon: Icons.search,
-                        text: 'Search',
-                        width: size.width * 0.07,
-                        onPressed: () {},
+                      padding: const EdgeInsets.only(left: 15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text('Marketplace',
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 14, 14, 14))),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 70.0),
+                            child: WidgetStyleContainer(
+                              size: size,
+                              icon: Icons.search,
+                              text: 'Search',
+                              width: size.width * 0.07,
+                              onPressed: () {},
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: WidgetStyleContainer(
+                                size: size,
+                                icon: FontAwesomeIcons.user,
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const MyAds())).then((value) {
+                                    if (value == true) {
+                                      Navigator.popUntil(context,
+                                          ModalRoute.withName('/marketplace'));
+                                    }
+                                  });
+                                }),
+                          ),
+                        ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: WidgetStyleContainer(
-                          size: size,
-                          icon: FontAwesomeIcons.rectangleAd,
-                          onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MyAds()))),
+                    SizedBox(
+                      height: size.height * 0.04,
                     ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                            width: size.width * 0.02,
+                          ),
+                          WidgetStyleBottomContainer(
+                            size: size,
+                            icon: const FaIcon(FontAwesomeIcons.car).icon,
+                            // text: 'Safari',
+                            dropdownValue: 'Tour Items',
+                            width: size.width * 0.3,
+                            items: const [
+                              'Tour Items',
+                              'Safari',
+                              'Rent',
+                              'Food'
+                            ],
+                            icons: const [
+                              FontAwesomeIcons.car,
+                              FontAwesomeIcons.car,
+                              FontAwesomeIcons.houseUser,
+                              FontAwesomeIcons.utensils
+                            ],
+                          ),
+                          SizedBox(
+                            width: size.width * 0.04,
+                          ),
+                          WidgetStyleBottomContainer(
+                            size: size,
+                            icon: const FaIcon(FontAwesomeIcons.camera).icon,
+                            // text: 'Camera',
+                            width: size.width * 0.3,
+                            items: [],
+                            icons: [],
+                          ),
+                          SizedBox(
+                            width: size.width * 0.04,
+                          ),
+                          WidgetStyleBottomContainer(
+                            size: size,
+                            icon: const FaIcon(FontAwesomeIcons.photoFilm).icon,
+                            // text: 'Photos',
+                            width: size.width * 0.3,
+                            items: [],
+                            icons: [],
+                          ),
+                          SizedBox(
+                            width: size.width * 0.04,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const GridItems(apiFunction: ClientAPI.getAds),
                   ],
                 ),
-              ),
-              SizedBox(
-                height: size.height * 0.04,
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    SizedBox(
-                      width: size.width * 0.02,
-                    ),
-                    WidgetStyleBottomContainer(
-                      size: size,
-                      icon: const FaIcon(FontAwesomeIcons.car).icon,
-                      text: 'Safari',
-                      width: size.width * 0.17,
-                    ),
-                    SizedBox(
-                      width: size.width * 0.04,
-                    ),
-                    WidgetStyleBottomContainer(
-                      size: size,
-                      icon: const FaIcon(FontAwesomeIcons.camera).icon,
-                      text: 'Camera',
-                      width: size.width * 0.2,
-                    ),
-                    SizedBox(
-                      width: size.width * 0.04,
-                    ),
-                    WidgetStyleBottomContainer(
-                      size: size,
-                      icon: const FaIcon(FontAwesomeIcons.photoFilm).icon,
-                      text: 'Photos',
-                      width: size.width * 0.2,
-                    ),
-                    SizedBox(
-                      width: size.width * 0.04,
-                    ),
-                    WidgetStyleBottomContainer(
-                      size: size,
-                      icon: const FaIcon(FontAwesomeIcons.hotel).icon,
-                      text: 'Lodging',
-                      width: size.width * 0.18,
-                    ),
-                    SizedBox(
-                      width: size.width * 0.04,
-                    ),
-                    WidgetStyleBottomContainer(
-                      size: size,
-                      icon: const FaIcon(FontAwesomeIcons.hotel).icon,
-                      text: 'Lodging',
-                      width: size.width * 0.18,
-                    ),
-                    SizedBox(
-                      width: size.width * 0.04,
-                    ),
-                  ],
-                ),
-              ),
-              const GridItems(apiFunction: ClientAPI.getAds),
-            ],
-          ),
-        ),
-        floatingActionButton: Stack(children: [
-          Positioned(
-            bottom: 45.0,
-            right: 0.0,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const AddNewAd()));
-              },
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              child: const FaIcon(
-                FontAwesomeIcons.plus,
-                color: Colors.black,
               ),
             ),
           ),
-        ]),
+          options: [
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const AddNewAd()));
+              },
+              child: const CircleAvatar(
+                child: Icon(Icons.sell),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddTourAds()));
+              },
+              child: const CircleAvatar(
+                child: FaIcon(FontAwesomeIcons.vanShuttle),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const AddNewAd()));
+              },
+              child: const CircleAvatar(
+                child: FaIcon(FontAwesomeIcons.vanShuttle),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const AddNewAd()));
+              },
+              child: const CircleAvatar(
+                child: FaIcon(FontAwesomeIcons.vanShuttle),
+              ),
+            ),
+          ],
+          type: CustomFloatingActionButtonType.values[0],
+          openFloatingActionButton: const Icon(Icons.add),
+          closeFloatingActionButton: const Icon(Icons.close),
+        ),
       ),
     );
   }
 }
 
 class WidgetStyleContainer extends StatelessWidget {
-  WidgetStyleContainer({
-    super.key,
+  const WidgetStyleContainer({
+    Key? key,
     required this.size,
     required this.icon,
     this.text = '',
     this.width = 0,
     required this.onPressed,
-  });
+  }) : super(key: key);
 
   final Function() onPressed;
   final Size size;
   final IconData icon;
-  String text;
-  double width;
+  final String text;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
@@ -207,25 +270,40 @@ class WidgetStyleContainer extends StatelessWidget {
   }
 }
 
-class WidgetStyleBottomContainer extends StatelessWidget {
+class WidgetStyleBottomContainer extends StatefulWidget {
   WidgetStyleBottomContainer({
-    super.key,
+    Key? key,
     required this.size,
     required this.icon,
-    this.text = '',
+    // this.text = '',
     this.width = 0,
-  });
+    required this.items,
+    required this.icons,
+    this.dropdownValue,
+  }) : super(key: key);
 
   final Size size;
   final IconData? icon;
-  String text;
-  double width;
+  // final String text;
+  final double width;
+  late String? dropdownValue;
+  final List<String> items;
+  final List<IconData> icons;
+
+  @override
+  State<WidgetStyleBottomContainer> createState() =>
+      _WidgetStyleBottomContainerState();
+}
+
+class _WidgetStyleBottomContainerState
+    extends State<WidgetStyleBottomContainer> {
+  //  dropdownValue = 'Traveling';
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: size.height * 0.03,
-      width: width,
+      height: widget.size.height * 0.04,
+      width: widget.width,
       // padding: const EdgeInsets.all(1),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -241,21 +319,88 @@ class WidgetStyleBottomContainer extends StatelessWidget {
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 17,
-          ),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 10),
-          ),
-          // SizedBox(
-          //   width: width,
-          // )
+          DropdownButton<String>(
+            value: widget.dropdownValue,
+            icon:
+                const Icon(Icons.arrow_drop_down), // Icon before dropdown value
+            iconSize: 24,
+            elevation: 16,
+            style: const TextStyle(color: Colors.black),
+            underline: Container(
+              height: 0,
+              color: Colors.black,
+            ),
+            onChanged: (String? newValue) {
+              setState(() {
+                widget.dropdownValue = newValue!;
+              });
+              //switch case here.
+            },
+            dropdownColor: Colors.white,
+            borderRadius: BorderRadius.circular(10), // Rounded border
+            items: widget.items.map<DropdownMenuItem<String>>((String value) {
+              IconData icon;
+              if (value == widget.items[0]) {
+                icon = widget.icons[0];
+              } else if (value == widget.items[1]) {
+                icon = widget.icons[1];
+              } else if (value == widget.items[2]) {
+                icon = widget.icons[2];
+              } else {
+                icon = widget.icons[3];
+              }
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        icon,
+                        size: 16,
+                      ), // Icon before dropdown value
+                      const SizedBox(
+                          width: 8), // Add some space between icon and text
+                      Text(
+                        value,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          )
         ],
       ),
     );
   }
+  //add custom floating action button on top of your scaffold
+//minimum 2 and maximum 5 items allowed
+}
+
+@override
+Widget build(BuildContext context) {
+  return CustomFloatingActionButton(
+    body: Scaffold(
+      appBar: AppBar(
+        title: const Text('appbar title'),
+      ),
+      body: Container(),
+    ),
+    options: const [
+      CircleAvatar(
+        child: Icon(Icons.height),
+      ),
+      CircleAvatar(
+        child: Icon(Icons.title),
+      ),
+    ],
+    type: CustomFloatingActionButtonType.circular,
+    openFloatingActionButton: const Icon(Icons.add),
+    closeFloatingActionButton: const Icon(Icons.close),
+  );
 }

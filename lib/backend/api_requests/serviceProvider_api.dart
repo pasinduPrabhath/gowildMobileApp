@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:gowild/Screens/navigationbar_screens/profile_screen/serviceProviderProfileView/firstPersonSPView/event.dart';
 import 'package:http/http.dart' as http;
-import '../../Screens/navigationbar_screens/profile_screen/clientProfileView/firstPersonView/profile_screen_model.dart';
+
+import '../../Screens/navigationbar_screens/marketplace_screen/tour_plan_ads/AddTourAdsModel.dart';
 
 class SpAPI {
   static const baseUrl = 'https://gowild.herokuapp.com/api';
@@ -70,5 +70,26 @@ class SpAPI {
       print('Error deleting event: $e');
       return false; // deletion failed
     }
+  }
+
+  static Future<int> createTourAd(
+    AddTourAdsModel tourAdd,
+  ) async {
+    final url = Uri.parse('$baseUrl/serviceProvider/postTourAd');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode(tourAdd.toMap());
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['success'];
+    }
+    if (response.statusCode == 500) {
+      final message = json.decode(response.body)['message'];
+      if (message == 'Database connection error') {
+        throw Exception('Server error, Please try again later');
+      }
+    } else {
+      throw Exception('Failed to Post Ad');
+    }
+    throw Exception('Failed to Post Ad');
   }
 }

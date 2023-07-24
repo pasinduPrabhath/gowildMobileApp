@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../Screens/navigationbar_screens/profile_screen/clientProfileView/thirdPersonView/thirdPersonProfileView.dart';
 import '../Screens/navigationbar_screens/profile_screen/serviceProviderProfileView/thirdPersonSellerView/third_person_sp_view.dart';
 import '../backend/api_requests/client_api.dart';
