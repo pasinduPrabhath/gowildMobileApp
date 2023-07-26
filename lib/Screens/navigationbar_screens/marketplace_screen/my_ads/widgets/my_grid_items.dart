@@ -123,17 +123,6 @@ class _MyGridItemsState extends State<MyGridItems> {
                                   await ref.delete();
                                 }
 
-                                // final directoryRef = FirebaseStorage.instance
-                                //     .ref()
-                                //     .child(
-                                //         '${ad['imageCategory']}/$email/${ad['suffix']}');
-                                // try {
-                                //   await directoryRef.getDownloadURL();
-                                //   await directoryRef.delete();
-                                // } catch (e) {
-                                //   print('no directory found');
-                                // }
-
                                 if (deleted == 1) {
                                   if (mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -146,6 +135,12 @@ class _MyGridItemsState extends State<MyGridItems> {
                                   }
                                 } else {
                                   // Failed to delete ad
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                          Text('Error occured while deleting!'),
+                                    ),
+                                  );
                                 }
                               }
                             });

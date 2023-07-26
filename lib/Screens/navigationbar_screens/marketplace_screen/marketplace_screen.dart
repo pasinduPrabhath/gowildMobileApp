@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/photo_ads/photo_selling_ads.dart';
 import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/tour_plan_ads/add_tour_ads.dart';
 import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/widgets/grid_items.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -256,8 +257,10 @@ class _MarketPlaceScreenState extends State<MarketPlaceScreen> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const AddNewAd()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddPhotoSellingAd()));
               },
               child: const CircleAvatar(
                 child: Icon(Icons.photo),
@@ -454,8 +457,6 @@ class _WidgetStyleBottomContainerState
       ),
     );
   }
-  //add custom floating action button on top of your scaffold
-//minimum 2 and maximum 5 items allowed
 }
 
 @override

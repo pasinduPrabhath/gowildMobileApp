@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import '../../Screens/navigationbar_screens/marketplace_screen/equipment_ads/marketPlaceAddModel.dart';
+import '../../Screens/navigationbar_screens/marketplace_screen/photo_ads/photo_selling_model.dart';
 import '../../Screens/navigationbar_screens/profile_screen/clientProfileView/firstPersonView/profile_screen_model.dart';
 
 class ClientAPI {
@@ -327,5 +328,26 @@ class ClientAPI {
     } else {
       throw Exception('Failed to load ads');
     }
+  }
+
+  static Future<int> createTourAd(
+    PhotoSellingModel photoAd,
+  ) async {
+    final url = Uri.parse('$baseUrl/user/postAnAd');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode(photoAd.toMap());
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['success'];
+    }
+    if (response.statusCode == 500) {
+      final message = json.decode(response.body)['message'];
+      if (message == 'Database connection error') {
+        throw Exception('Server error, Please try again later');
+      }
+    } else {
+      throw Exception('Failed to Post Ad');
+    }
+    throw Exception('Failed to Post Ad');
   }
 }

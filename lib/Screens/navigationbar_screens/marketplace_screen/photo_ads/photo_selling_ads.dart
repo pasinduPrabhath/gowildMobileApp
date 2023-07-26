@@ -1,28 +1,31 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/photo_ads/photo_selling_model.dart';
+import 'package:gowild/backend/api_requests/client_api.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
-import '../../../../backend/api_requests/client_api.dart';
+import '../../../../backend/api_requests/serviceProvider_api.dart';
+// import 'marketPlaceAddModel.dart';
 
-import 'marketPlaceAddModel.dart';
-
-class AddNewAd extends StatefulWidget {
-  const AddNewAd({super.key});
+class AddPhotoSellingAd extends StatefulWidget {
+  const AddPhotoSellingAd({super.key});
 
   @override
-  State<AddNewAd> createState() => _AddNewAdState();
+  State<AddPhotoSellingAd> createState() => _AddPhotoSellingAdState();
 }
 
-class _AddNewAdState extends State<AddNewAd> {
+class _AddPhotoSellingAdState extends State<AddPhotoSellingAd> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _townController = TextEditingController();
   final TextEditingController _districtController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
+  // final TextEditingController _categoryController = TextEditingController();
+  // final TextEditingController _priceController = TextEditingController();
+  // final TextEditingController _halfdaypriceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
-  String? selectedDistrict = 'Ampara';
   String errorMessage = 'Fill all the fields';
+  bool isSwitched = false;
 
   final _formKey = GlobalKey<FormState>();
   List<File> imageFiles = []; // List to store the selected image files
@@ -45,8 +48,8 @@ class _AddNewAdState extends State<AddNewAd> {
     }
   }
 
-  Future<List<String>> uploadImages(
-      List<File> imageFiles, String suffix, String imageCategory) async {
+  Future<List<String>> uploadImages(List<File> imageFiles, String suffix,
+      String imageCategory, String category) async {
     List<String> imageUrls = [];
     Reference referenceRoot = FirebaseStorage.instance.ref();
     for (int i = 0; i < imageFiles.length; i++) {
@@ -57,8 +60,8 @@ class _AddNewAdState extends State<AddNewAd> {
       String uniqueFileName = suffix +
           DateTime.now().millisecondsSinceEpoch.toString() +
           i.toString();
-      Reference fileReference = referenceRoot
-          .child('$imageCategory/equimentAds/$email/$suffix/$uniqueFileName');
+      Reference fileReference = referenceRoot.child(
+          '$imageCategory/photosAds/$category/$email/$suffix/$uniqueFileName');
       try {
         await fileReference.putFile(File(file.path));
         final imageUrl = await fileReference.getDownloadURL();
@@ -75,6 +78,7 @@ class _AddNewAdState extends State<AddNewAd> {
   void initState() {
     print('intied');
     _districtController.text = 'Ampara';
+    // _categoryController.text = 'Safari';
     getEmail();
     super.initState();
   }
@@ -97,22 +101,23 @@ class _AddNewAdState extends State<AddNewAd> {
     try {
       print('going to upload images');
       final imageUrls = await uploadImages(imageFiles, _titleController.text,
-          'marketplace'); // Upload images to firebase storage
-      final marketPlaceAdd = MarketPlaceAdd(
+          'marketplace', 'photos'); // Upload images to firebase storage
+      final photoAds = PhotoSellingModel(
+        adType: 'Photos',
         email: email,
         title: _titleController.text,
         town: _townController.text,
         district: _districtController.text,
-        price: int.parse(_priceController.text),
+        price: 0,
         description: _descriptionController.text,
         phoneNum: int.parse(_phoneNumberController.text),
         imageLinks: imageUrls,
-        adType: 'equipment',
         timestamp: DateTime.now().toUtc().toString(),
       );
+
       print('image urls: $imageUrls');
       // print(marketPlaceAdd.toMap());
-      final adId = await ClientAPI.createMarketPlaceAd(marketPlaceAdd);
+      final adId = await ClientAPI.createTourAd(photoAds);
       print('Ad created with id: $adId');
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -141,19 +146,20 @@ class _AddNewAdState extends State<AddNewAd> {
   void dispose() {
     _titleController.dispose();
     _townController.dispose();
-    _priceController.dispose();
+    // _fulldaypriceController.dispose();
     _descriptionController.dispose();
+    _phoneNumberController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<bool> _isSelected = [false, false];
-    // _districtController.text = 'Ampara';
+    // _categoryController.text = 'Safari';
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Post an ad'),
+        title: const Text('Add a printed photo for sale'),
       ),
       body: Stack(
         children: [
@@ -163,13 +169,10 @@ class _AddNewAdState extends State<AddNewAd> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
-                  ),
                   const Padding(
                     padding: EdgeInsets.only(left: 20, top: 20),
                     child: Text(
-                      'Title for the advertisement:',
+                      'Photo Title :',
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                     ),
@@ -197,7 +200,7 @@ class _AddNewAdState extends State<AddNewAd> {
                   const Padding(
                     padding: EdgeInsets.only(left: 20),
                     child: Text(
-                      'Town :',
+                      'Town / Place :',
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                     ),
@@ -210,7 +213,7 @@ class _AddNewAdState extends State<AddNewAd> {
                           fontSize: 16, fontWeight: FontWeight.w900),
                       controller: _townController,
                       decoration: const InputDecoration(
-                        hintText: 'Enter a town',
+                        hintText: 'Enter place',
                         border: OutlineInputBorder(),
                       ),
                       validator: (value) {
@@ -231,7 +234,7 @@ class _AddNewAdState extends State<AddNewAd> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 22.0, top: 10, bottom: 20, right: 22),
+                        left: 22.0, top: 10, bottom: 25, right: 22),
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -299,54 +302,18 @@ class _AddNewAdState extends State<AddNewAd> {
                     ),
                   ),
                   const Padding(
-                    padding: EdgeInsets.only(left: 20),
+                    padding: EdgeInsets.only(left: 20, bottom: 10),
                     child: Text(
-                      'Price :',
+                      'Description and Price:',
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 22.0, right: 22, bottom: 25, top: 10),
-                    child: TextFormField(
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w900),
-                      controller: _priceController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter a price',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (value) {
-                        try {
-                          int.parse(value);
-                        } catch (e) {
-                          errorMessage = 'Enter Correct type of inputs';
-                        }
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a price';
-                        }
-                        if (int.tryParse(value) == null) {
-                          return 'Please enter a valid price';
-                        }
-                        return null;
-                      },
+                      left: 22.0,
+                      right: 22,
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 20, bottom: 10.0),
-                    child: Text(
-                      'Description :',
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 22.0, right: 22, bottom: 15),
                     child: SizedBox(
                       child: TextFormField(
                         style: const TextStyle(
@@ -354,7 +321,7 @@ class _AddNewAdState extends State<AddNewAd> {
                         controller: _descriptionController,
                         maxLength: 300,
                         decoration: const InputDecoration(
-                          hintText: 'Enter a description',
+                          hintText: 'Enter the description',
                           border: OutlineInputBorder(),
                         ),
                         maxLines: null,
@@ -500,6 +467,9 @@ class _AddNewAdState extends State<AddNewAd> {
                               const Color.fromARGB(255, 22, 65, 102)),
                         ),
                         onPressed: () {
+                          // if (_halfdaypriceController.text.isEmpty) {
+                          //   _halfdaypriceController.text = '0';
+                          // }
                           if (_formKey.currentState!.validate()) {
                             _submitAd();
                           }

@@ -73,11 +73,11 @@ class SpAPI {
   }
 
   static Future<int> createTourAd(
-    AddTourAdsModel tourAdd,
+    AddTourAdsModel tourAd,
   ) async {
     final url = Uri.parse('$baseUrl/serviceProvider/postTourAd');
     final headers = {'Content-Type': 'application/json'};
-    final body = json.encode(tourAdd.toMap());
+    final body = json.encode(tourAd.toMap());
     final response = await http.post(url, headers: headers, body: body);
     if (response.statusCode == 200) {
       return json.decode(response.body)['success'];

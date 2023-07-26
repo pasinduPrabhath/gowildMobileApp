@@ -3,6 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../equipment_ads/marketProductDescription.dart';
 import 'package:intl/intl.dart';
 
+import '../photo_ads/third_person_view/photo_third_person_view.dart';
+
 class GridItems extends StatefulWidget {
   final Future<List<dynamic>> Function() apiFunction;
   const GridItems({
@@ -83,11 +85,19 @@ class _GridItemsState extends State<GridItems> {
                       child: InkWell(
                         onTap: () {
                           // print(ad['user_id']);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ProductDescription(ad: ad)));
+                          if (ad['adType'] == 'Photos') {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        PhotoAdDescription(ad: ad)));
+                          } else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProductDescription(ad: ad)));
+                          }
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),

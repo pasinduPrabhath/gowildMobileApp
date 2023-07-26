@@ -3,18 +3,18 @@ import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/widgets/
 import 'package:gowild/backend/api_requests/client_api.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../../profile_screen/clientProfileView/thirdPersonView/thirdPersonProfileView.dart';
+import '../../../profile_screen/clientProfileView/thirdPersonView/thirdPersonProfileView.dart';
 
-class ProductDescription extends StatefulWidget {
+class PhotoAdDescription extends StatefulWidget {
   final Map<String, dynamic>? ad;
 
-  const ProductDescription({Key? key, required this.ad}) : super(key: key);
+  const PhotoAdDescription({Key? key, required this.ad}) : super(key: key);
 
   @override
-  State<ProductDescription> createState() => _ProductDescriptionState();
+  State<PhotoAdDescription> createState() => _PhotoAdDescriptionState();
 }
 
-class _ProductDescriptionState extends State<ProductDescription> {
+class _PhotoAdDescriptionState extends State<PhotoAdDescription> {
   List<dynamic> userDetails = [];
   bool isLoading = true;
   String formattedTime = '';
@@ -141,18 +141,11 @@ class _ProductDescriptionState extends State<ProductDescription> {
                       height: 15,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                          'Rs ${widget.ad?['price'] ?? ''}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
+                        // const SizedBox(
+                        //   width: 10,
+                        // ),
                         isLoading
                             ? const CircularProgressIndicator()
                             : GestureDetector(
@@ -168,6 +161,16 @@ class _ProductDescriptionState extends State<ProductDescription> {
                                 ),
                                 child: Row(
                                   children: [
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundImage: userDetails.isNotEmpty
+                                          ? NetworkImage(userDetails[0]
+                                              ['profile_picture_url'])
+                                          : null,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
                                     Text(
                                       name,
                                       style: const TextStyle(
@@ -175,16 +178,6 @@ class _ProductDescriptionState extends State<ProductDescription> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15,
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    CircleAvatar(
-                                      radius: 20,
-                                      backgroundImage: userDetails.isNotEmpty
-                                          ? NetworkImage(userDetails[0]
-                                              ['profile_picture_url'])
-                                          : null,
                                     ),
                                   ],
                                 ),
@@ -202,34 +195,32 @@ class _ProductDescriptionState extends State<ProductDescription> {
                     const SizedBox(
                       height: 15,
                     ),
-                    const Text(
-                      'Description',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      widget.ad?['description'] ?? '',
-                      style: const TextStyle(
-                        fontSize: 15,
-                      ),
-                      textAlign: TextAlign.justify,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      height: 1,
-                      width: MediaQuery.of(context).size.width,
-                      color: const Color.fromARGB(255, 223, 223, 223),
-                    ),
                   ],
                 ),
-              )
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 20.0),
+                child: Text(
+                  'Description',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Text(
+                  widget.ad?['description'] ?? '',
+                  style: const TextStyle(
+                    fontSize: 15,
+                  ),
+                  textAlign: TextAlign.justify,
+                ),
+              ),
             ],
           ),
         ),

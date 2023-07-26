@@ -26,6 +26,7 @@ class _AddTourAdsState extends State<AddTourAds> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   String errorMessage = 'Fill all the fields';
+  bool isSwitched = false;
 
   final _formKey = GlobalKey<FormState>();
   List<File> imageFiles = []; // List to store the selected image files
@@ -159,6 +160,7 @@ class _AddTourAdsState extends State<AddTourAds> {
   Widget build(BuildContext context) {
     // _categoryController.text = 'Safari';
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Post a new service'),
@@ -358,13 +360,29 @@ class _AddTourAdsState extends State<AddTourAds> {
                       ),
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 20),
-                    child: Text(
-                      'Price :',
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                    ),
+                  Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Text(
+                          'Price Variation:',
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Switch(
+                        value: isSwitched,
+                        onChanged: (value) {
+                          setState(() {
+                            isSwitched = value;
+                            print(isSwitched);
+                          });
+                        },
+                        activeTrackColor:
+                            const Color.fromARGB(255, 57, 181, 230),
+                        activeColor: const Color.fromARGB(255, 53, 123, 144),
+                      ),
+                    ],
                   ),
                   Row(
                     // Use Row to display fields side by side
@@ -372,7 +390,10 @@ class _AddTourAdsState extends State<AddTourAds> {
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              right: 5.0, left: 22, bottom: 25, top: 10),
+                            right: 22.0,
+                            left: 22,
+                            bottom: 25,
+                          ),
                           child: TextFormField(
                             style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w900),
@@ -394,7 +415,7 @@ class _AddTourAdsState extends State<AddTourAds> {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter a price';
                               }
-                              if (int.tryParse(value!) == null) {
+                              if (int.tryParse(value) == null) {
                                 return 'Please enter a valid price';
                               }
                               return null;
@@ -402,36 +423,46 @@ class _AddTourAdsState extends State<AddTourAds> {
                           ),
                         ),
                       ),
-                      Expanded(
-                        // Use Expanded to make sure the fields take equal space
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              right: 22.0, left: 5, bottom: 25, top: 10),
-                          child: TextFormField(
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w900),
-                            controller: _halfdaypriceController,
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              hintText: 'Half day price',
-                              border: OutlineInputBorder(),
+                      if (isSwitched)
+                        Expanded(
+                          // Use Expanded to make sure the fields take equal space
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                right: 22.0, left: 5, bottom: 25, top: 10),
+                            child: TextFormField(
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w900),
+                              controller: _halfdaypriceController,
+                              keyboardType: TextInputType.number,
+                              initialValue: '0',
+                              decoration: const InputDecoration(
+                                hintText: 'Half day price',
+                                border: OutlineInputBorder(),
+                              ),
+                              onChanged: (value) {
+                                try {
+                                  // if (value.isEmpty) {
+                                  //   value = '0';
+                                  // }
+                                  print('calling onchange');
+                                  int.parse(value);
+                                } catch (e) {
+                                  errorMessage = 'Enter Correct type of inputs';
+                                }
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  value = '0';
+                                  print('value is $value');
+                                }
+                                if (value!.contains(RegExp(r'[^\d]'))) {
+                                  return 'Please enter a valid price';
+                                }
+                                return null;
+                              },
                             ),
-                            onChanged: (value) {
-                              try {
-                                int.parse(value);
-                              } catch (e) {
-                                errorMessage = 'Enter Correct type of inputs';
-                              }
-                            },
-                            validator: (value) {
-                              if (value!.contains(RegExp(r'[^\d]'))) {
-                                return 'Please enter a valid price';
-                              }
-                              return null;
-                            },
                           ),
                         ),
-                      ),
                     ],
                   ),
                   const Padding(
@@ -600,6 +631,9 @@ class _AddTourAdsState extends State<AddTourAds> {
                               const Color.fromARGB(255, 22, 65, 102)),
                         ),
                         onPressed: () {
+                          if (_halfdaypriceController.text.isEmpty) {
+                            _halfdaypriceController.text = '0';
+                          }
                           if (_formKey.currentState!.validate()) {
                             _submitAd();
                           }
