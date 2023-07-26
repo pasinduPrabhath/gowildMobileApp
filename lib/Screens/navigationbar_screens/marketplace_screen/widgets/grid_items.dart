@@ -5,7 +5,10 @@ import 'package:intl/intl.dart';
 
 class GridItems extends StatefulWidget {
   final Future<List<dynamic>> Function() apiFunction;
-  const GridItems({Key? key, required this.apiFunction}) : super(key: key);
+  const GridItems({
+    super.key,
+    required this.apiFunction,
+  });
 
   @override
   State<GridItems> createState() => _GridItemsState();

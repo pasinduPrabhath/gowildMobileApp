@@ -283,4 +283,49 @@ class ClientAPI {
     }
     throw Exception('Failed to create user');
   }
+
+  static Future<List<dynamic>> getAdsByCategory(
+      String category, String location) async {
+    // if (category == null || category.isEmpty || category == 'All ads') {
+    //   return getAds();
+    // }
+    // if (location == null || location.isEmpty || location == 'Location') {
+    //   return getAds();
+    // }
+    final url = Uri.parse('$baseUrl/user/getAdsByCategory');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({
+      'category': category,
+      'location': location,
+    });
+    // final response = await http.post(url, headers: headers, body: body);
+    final response = await http.post(url, headers: headers, body: body);
+    // Uri.parse('$baseUrl/user/getAllAds'),
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      return jsonResponse['data'];
+    } else {
+      throw Exception('Failed to load ads');
+    }
+  }
+
+  static Future<List<dynamic>> getAdsByLocation(String location) async {
+    if (location == null || location.isEmpty || location == 'Location') {
+      return getAds();
+    }
+    final url = Uri.parse('$baseUrl/user/getAdsByLocation');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({'location': location});
+    // final response = await http.post(url, headers: headers, body: body);
+    final response = await http.post(url, headers: headers, body: body);
+    // Uri.parse('$baseUrl/user/getAllAds'),
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      return jsonResponse['data'];
+    } else {
+      throw Exception('Failed to load ads');
+    }
+  }
 }

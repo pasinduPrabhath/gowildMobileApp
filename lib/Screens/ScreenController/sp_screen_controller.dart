@@ -48,7 +48,7 @@ class _SpScreenControllerState extends State<SpScreenController> {
         items: <Widget>[
           Icon(Icons.home,
               size: 30, color: Theme.of(context).colorScheme.background),
-          Icon(Icons.search,
+          Icon(Icons.person_search_rounded,
               size: 30, color: Theme.of(context).colorScheme.background),
           Icon(Icons.shopping_bag,
               size: 30, color: Theme.of(context).colorScheme.background),

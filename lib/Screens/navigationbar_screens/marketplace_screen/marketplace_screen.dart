@@ -16,26 +16,33 @@ class MarketPlaceScreen extends StatefulWidget {
 }
 
 class _MarketPlaceScreenState extends State<MarketPlaceScreen> {
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+  String? selectedCategory;
+  String? selectedLocation;
+
   @override
   void initState() {
-    GridItems(
-      apiFunction: () => ClientAPI.getAds(),
-    );
+    selectedCategory = 'All ads';
+    selectedLocation = 'All Locations';
+
     super.initState();
   }
 
-  Future<void> getPage() async {
-    setState(() {});
-    GridItems(
-      apiFunction: () => ClientAPI.getAds(),
-    );
+  void onCategoryChanged(String? newCategory) {
+    setState(() {
+      selectedCategory = newCategory;
+    });
+  }
+
+  void onLocationChanged(String? newLocation) {
+    setState(() {
+      selectedLocation = newLocation;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return MarketplaceBackground(
       child: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
@@ -50,9 +57,9 @@ class _MarketPlaceScreenState extends State<MarketPlaceScreen> {
           body: Scaffold(
             backgroundColor: Colors.transparent,
             body: RefreshIndicator(
-              key: _refreshIndicatorKey,
+              // key: _refreshIndicatorKey,
               onRefresh: () async {
-                await getPage();
+                // await getPage();
                 setState(() {});
               },
               child: SingleChildScrollView(
@@ -118,20 +125,28 @@ class _MarketPlaceScreenState extends State<MarketPlaceScreen> {
                             size: size,
                             icon: const FaIcon(FontAwesomeIcons.car).icon,
                             // text: 'Safari',
-                            dropdownValue: 'Tour Items',
-                            width: size.width * 0.3,
+                            dropdownValue: selectedCategory,
+                            width: size.width * 0.33,
                             items: const [
-                              'Tour Items',
+                              'All ads',
                               'Safari',
                               'Rent',
-                              'Food'
+                              'Food',
+                              'Equipments',
+                              'Photos',
+                              'Lodging'
                             ],
                             icons: const [
-                              FontAwesomeIcons.car,
+                              FontAwesomeIcons.circleCheck,
                               FontAwesomeIcons.car,
                               FontAwesomeIcons.houseUser,
-                              FontAwesomeIcons.utensils
+                              FontAwesomeIcons.utensils,
+                              FontAwesomeIcons.cameraRetro,
+                              FontAwesomeIcons.photoFilm,
+                              FontAwesomeIcons.hotel
                             ],
+                            selectedCategory: selectedCategory,
+                            onCategoryChanged: onCategoryChanged,
                           ),
                           SizedBox(
                             width: size.width * 0.04,
@@ -140,20 +155,67 @@ class _MarketPlaceScreenState extends State<MarketPlaceScreen> {
                             size: size,
                             icon: const FaIcon(FontAwesomeIcons.camera).icon,
                             // text: 'Camera',
-                            width: size.width * 0.3,
-                            items: [],
-                            icons: [],
-                          ),
-                          SizedBox(
-                            width: size.width * 0.04,
-                          ),
-                          WidgetStyleBottomContainer(
-                            size: size,
-                            icon: const FaIcon(FontAwesomeIcons.photoFilm).icon,
-                            // text: 'Photos',
-                            width: size.width * 0.3,
-                            items: [],
-                            icons: [],
+                            dropdownValue: selectedLocation,
+                            width: size.width * 0.35,
+                            items: const [
+                              'All Locations',
+                              'Ampara',
+                              'Anuradhapura',
+                              'Badulla',
+                              'Batticaloa',
+                              'Colombo',
+                              'Galle',
+                              'Gampaha',
+                              'Hambantota',
+                              'Jaffna',
+                              'Kalutara',
+                              'Kandy',
+                              'Kegalle',
+                              'Kilinochchi',
+                              'Kurunegala',
+                              'Mannar',
+                              'Matale',
+                              'Matara',
+                              'Monaragala',
+                              'Mullaitivu',
+                              'Nuwara Eliya',
+                              'Polonnaruwa',
+                              'Puttalam',
+                              'Ratnapura',
+                              'Trincomalee',
+                              'Vavuniya',
+                              'Wilpattu'
+                            ],
+                            icons: const [
+                              FontAwesomeIcons.locationArrow,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                              FontAwesomeIcons.locationDot,
+                            ],
+                            selectedCategory: selectedLocation,
+                            onCategoryChanged: onLocationChanged,
                           ),
                           SizedBox(
                             width: size.width * 0.04,
@@ -161,7 +223,11 @@ class _MarketPlaceScreenState extends State<MarketPlaceScreen> {
                         ],
                       ),
                     ),
-                    const GridItems(apiFunction: ClientAPI.getAds),
+                    GridItems(
+                      apiFunction: () => ClientAPI.getAdsByCategory(
+                          selectedCategory!, selectedLocation!),
+                      // selectedCategory: selectedCategory,
+                    ),
                   ],
                 ),
               ),
@@ -194,16 +260,7 @@ class _MarketPlaceScreenState extends State<MarketPlaceScreen> {
                     MaterialPageRoute(builder: (context) => const AddNewAd()));
               },
               child: const CircleAvatar(
-                child: FaIcon(FontAwesomeIcons.vanShuttle),
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const AddNewAd()));
-              },
-              child: const CircleAvatar(
-                child: FaIcon(FontAwesomeIcons.vanShuttle),
+                child: Icon(Icons.photo),
               ),
             ),
           ],
@@ -257,7 +314,11 @@ class WidgetStyleContainer extends StatelessWidget {
             child: IconButton(
               tooltip: 'Search',
               icon: Icon(icon, size: 20),
-              onPressed: onPressed,
+              onPressed: () async {
+                onPressed();
+                // final res = await ClientAPI.getAdsByCategory('safari');
+                // print('res: $res');
+              },
             ),
           ),
           Text(text),
@@ -280,15 +341,18 @@ class WidgetStyleBottomContainer extends StatefulWidget {
     required this.items,
     required this.icons,
     this.dropdownValue,
+    required this.selectedCategory,
+    required this.onCategoryChanged,
   }) : super(key: key);
 
   final Size size;
   final IconData? icon;
-  // final String text;
+  final void Function(String?) onCategoryChanged;
   final double width;
   late String? dropdownValue;
   final List<String> items;
   final List<IconData> icons;
+  late String? selectedCategory;
 
   @override
   State<WidgetStyleBottomContainer> createState() =>
@@ -319,9 +383,10 @@ class _WidgetStyleBottomContainerState
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           DropdownButton<String>(
+            menuMaxHeight: MediaQuery.of(context).size.height * 0.3,
             value: widget.dropdownValue,
             icon:
                 const Icon(Icons.arrow_drop_down), // Icon before dropdown value
@@ -335,9 +400,12 @@ class _WidgetStyleBottomContainerState
             onChanged: (String? newValue) {
               setState(() {
                 widget.dropdownValue = newValue!;
+                widget.selectedCategory = newValue;
               });
+              widget.onCategoryChanged(newValue);
               //switch case here.
             },
+            itemHeight: 50,
             dropdownColor: Colors.white,
             borderRadius: BorderRadius.circular(10), // Rounded border
             items: widget.items.map<DropdownMenuItem<String>>((String value) {
@@ -348,27 +416,35 @@ class _WidgetStyleBottomContainerState
                 icon = widget.icons[1];
               } else if (value == widget.items[2]) {
                 icon = widget.icons[2];
-              } else {
+              } else if (value == widget.items[3]) {
                 icon = widget.icons[3];
+              } else if (value == widget.items[4]) {
+                icon = widget.icons[4];
+              } else if (value == widget.items[5]) {
+                icon = widget.icons[5];
+              } else {
+                icon = widget.icons[6];
               }
               return DropdownMenuItem<String>(
                 value: value,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        icon,
-                        size: 16,
-                      ), // Icon before dropdown value
-                      const SizedBox(
-                          width: 8), // Add some space between icon and text
-                      Text(
-                        value,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ],
+                  child: SizedBox(
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          icon,
+                          size: 16,
+                        ), // Icon before dropdown value
+                        const SizedBox(
+                            width: 10), // Add some space between icon and text
+                        Text(
+                          value,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );

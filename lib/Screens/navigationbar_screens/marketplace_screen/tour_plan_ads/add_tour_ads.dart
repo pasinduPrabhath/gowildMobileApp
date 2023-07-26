@@ -157,7 +157,7 @@ class _AddTourAdsState extends State<AddTourAds> {
 
   @override
   Widget build(BuildContext context) {
-    _categoryController.text = 'Safari';
+    // _categoryController.text = 'Safari';
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(

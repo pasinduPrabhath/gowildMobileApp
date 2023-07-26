@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gowild/Screens/registartion_screen/registration_screen_model.dart';
+import 'package:gowild/Screens/registration_screen/registration_screen_model.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import '../../backend/api_requests/registration_screen_api.dart';
@@ -7,7 +7,7 @@ import '/reusable_components/inputFieldRegistration.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:gowild/Screens/registartion_screen/service_provider_model.dart';
+import 'package:gowild/Screens/registration_screen/service_provider_model.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});

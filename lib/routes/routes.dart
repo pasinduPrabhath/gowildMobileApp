@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 // import '../Screens/home_screen/feed_screen.dart';
 import '../Screens/ScreenController/client_screen_controller.dart';
 import '../Screens/ScreenController/sp_screen_controller.dart';
-import '../Screens/navigationbar_screens/marketplace_screen/equipment_ads/marketProductDescription.dart';
-import '../screens/registartion_screen/registration_screen.dart';
-import '../Screens/registartion_screen/test_upload.dart';
+import '../screens/registration_screen/registration_screen.dart';
+import '../Screens/registration_screen/test_upload.dart';
 
 class AppRoutes {
   static const String home = '/';
