@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gowild/Screens/navigationbar_screens/travel_buddy_screen/MySpace/widgets/myInterestShowCard.dart';
 import 'package:gowild/Screens/navigationbar_screens/travel_buddy_screen/MySpace/widgets/myRequestShowCard.dart';
 import 'package:gowild/Screens/navigationbar_screens/travel_buddy_screen/MySpace/widgets/myTripRequestShowCard.dart';
 import 'package:gowild/Screens/navigationbar_screens/travel_buddy_screen/widgets/requestShowCard.dart';
@@ -83,7 +84,7 @@ class _MySpaceScreenState extends State<MySpaceScreen> {
             SingleChildScrollView(
               child: Column(
                 children: [
-                  RequestCardView(size: size),
+                  MyInterestShowCard(size: size),
                 ],
               ),
             ),

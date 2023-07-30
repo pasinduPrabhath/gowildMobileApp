@@ -368,7 +368,7 @@ class ClientAPI {
     throw Exception('Failed to Post Ad');
   }
 
-  static Future<List<Request>> getTrevelBuddyReq(String email) async {
+  static Future<List<Request>> getTravelBuddyReq(String email) async {
     final body = json.encode({'email': 'pasinduprabhath@gmail.com'});
     final headers = {'Content-Type': 'application/json'};
     final response = await http.post(
@@ -412,5 +412,60 @@ class ClientAPI {
     } else {
       throw Exception('Failed to add interest');
     }
+  }
+
+  static Future<List<Request>> getTravelBuddyReqById(String email) async {
+    final body = json.encode({'email': 'pasinduprabhath@gmail.com'});
+    final headers = {'Content-Type': 'application/json'};
+    final response = await http.post(
+        Uri.parse('$baseUrl/user/getTravelBuddyReqById'),
+        body: body,
+        headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body)['data'];
+
+      return data.map((json) => Request.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch requests');
+    }
+  }
+
+  static Future<List<Request>> getInterestedTravelBuddyReq(String email) async {
+    final body = json.encode({'email': 'pasinduprabhath@gmail.com'});
+    final headers = {'Content-Type': 'application/json'};
+    final response = await http.post(
+        Uri.parse('$baseUrl/user/getInterestedTravelBuddyReq'),
+        body: body,
+        headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body)['data'];
+
+      return data.map((json) => Request.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch requests');
+    }
+  }
+
+  static Future<int> deleteTravelBuddyReq(int postId) async {
+    final url = Uri.parse('$baseUrl/user/deleteTravelBuddyReq');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({
+      'postId': postId,
+    });
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['success'];
+    }
+    if (response.statusCode == 500) {
+      final message = json.decode(response.body)['message'];
+      if (message == 'Database connection error') {
+        throw Exception('Server error, Please try again later');
+      }
+    } else {
+      throw Exception('Failed to create user');
+    }
+    throw Exception('Failed to create user');
   }
 }

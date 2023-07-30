@@ -5,10 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../../profile_screen/clientProfileView/thirdPersonView/thirdPersonProfileView.dart';
+import '../../../profile_screen/clientProfileView/thirdPersonView/thirdPersonProfileView.dart';
 
-class RequestCardView extends StatefulWidget {
-  RequestCardView({
+class MyInterestShowCard extends StatefulWidget {
+  MyInterestShowCard({
     Key? key,
     required this.size,
     // email,
@@ -18,10 +18,10 @@ class RequestCardView extends StatefulWidget {
   String email = '';
 
   @override
-  State<RequestCardView> createState() => _RequestCardViewState();
+  State<MyInterestShowCard> createState() => _MyInterestShowCardState();
 }
 
-class _RequestCardViewState extends State<RequestCardView> {
+class _MyInterestShowCardState extends State<MyInterestShowCard> {
   bool isloading = false;
   Future<void> _getDetails() async {
     final prefs = await SharedPreferences.getInstance();
@@ -68,7 +68,7 @@ class _RequestCardViewState extends State<RequestCardView> {
       SizedBox(
         height: widget.size.height * 0.8,
         child: FutureBuilder<List<Request>>(
-          future: ClientAPI.getTravelBuddyReq(widget.email),
+          future: ClientAPI.getInterestedTravelBuddyReq(widget.email),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final requests = snapshot.data!;
