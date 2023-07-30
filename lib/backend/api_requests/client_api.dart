@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import '../../Screens/navigationbar_screens/marketplace_screen/equipment_ads/marketPlaceAddModel.dart';
 import '../../Screens/navigationbar_screens/marketplace_screen/photo_ads/photo_selling_model.dart';
 import '../../Screens/navigationbar_screens/profile_screen/clientProfileView/firstPersonView/profile_screen_model.dart';
+import '../../Screens/navigationbar_screens/travel_buddy_screen/MySpace/travelBuddyModel.dart';
+import '../../Screens/navigationbar_screens/travel_buddy_screen/widgets/requestModel.dart';
 
 class ClientAPI {
   static const baseUrl = 'https://gowild.herokuapp.com/api';
@@ -287,12 +289,6 @@ class ClientAPI {
 
   static Future<List<dynamic>> getAdsByCategory(
       String category, String location) async {
-    // if (category == null || category.isEmpty || category == 'All ads') {
-    //   return getAds();
-    // }
-    // if (location == null || location.isEmpty || location == 'Location') {
-    //   return getAds();
-    // }
     final url = Uri.parse('$baseUrl/user/getAdsByCategory');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode({
@@ -349,5 +345,72 @@ class ClientAPI {
       throw Exception('Failed to Post Ad');
     }
     throw Exception('Failed to Post Ad');
+  }
+
+  static Future<int> createTravelBuddyReq(
+    TravelBuddyModel travelBuddy,
+  ) async {
+    final url = Uri.parse('$baseUrl/user/postTravelBuddyReq');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode(travelBuddy.toMap());
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['success'];
+    }
+    if (response.statusCode == 500) {
+      final message = json.decode(response.body)['message'];
+      if (message == 'Database connection error') {
+        throw Exception('Server error, Please try again later');
+      }
+    } else {
+      throw Exception('Failed to Post Ad');
+    }
+    throw Exception('Failed to Post Ad');
+  }
+
+  static Future<List<Request>> getTrevelBuddyReq(String email) async {
+    final body = json.encode({'email': 'pasinduprabhath@gmail.com'});
+    final headers = {'Content-Type': 'application/json'};
+    final response = await http.post(
+        Uri.parse('$baseUrl/user/getTravelBuddyReq'),
+        body: body,
+        headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body)['data'];
+
+      return data.map((json) => Request.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch requests');
+    }
+  }
+
+  static Future<int> addInterestToTB(String interestEmail, int postId) async {
+    final url = Uri.parse('$baseUrl/user/addInterestedUserForTB');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({'email': interestEmail, 'postId': postId});
+    print(body);
+
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['success'];
+    } else {
+      throw Exception('Failed to add interest');
+    }
+  }
+
+  static Future<int> removeInterestToTB(
+      String interestEmail, int postId) async {
+    final url = Uri.parse('$baseUrl/user/removeInterestForTB');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({'email': interestEmail, 'postId': postId});
+    print(body);
+
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['success'];
+    } else {
+      throw Exception('Failed to add interest');
+    }
   }
 }

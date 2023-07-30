@@ -4,10 +4,7 @@ import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/tour_pla
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
-import '../../../../backend/api_requests/client_api.dart';
 import '../../../../backend/api_requests/serviceProvider_api.dart';
-import '../equipment_ads/marketPlaceAddModel.dart';
-// import 'marketPlaceAddModel.dart';
 
 class AddTourAds extends StatefulWidget {
   const AddTourAds({super.key});

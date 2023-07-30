@@ -63,6 +63,8 @@ dependencies:
   image: ^4.0.17
   timeago: ^3.5.0
   custom_floating_action_button: ^0.0.3
+  google_maps_flutter: ^2.4.0
+  buttons_tabbar: ^1.3.7+1
 
 
   

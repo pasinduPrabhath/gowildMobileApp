@@ -17,6 +17,16 @@ class GridItems extends StatefulWidget {
 }
 
 class _GridItemsState extends State<GridItems> {
+  final adIcons = const [
+    FontAwesomeIcons.circleCheck,
+    FontAwesomeIcons.car,
+    FontAwesomeIcons.houseUser,
+    FontAwesomeIcons.utensils,
+    FontAwesomeIcons.cameraRetro,
+    FontAwesomeIcons.photoFilm,
+    FontAwesomeIcons.hotel
+  ];
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<dynamic>>(
@@ -35,6 +45,28 @@ class _GridItemsState extends State<GridItems> {
             ),
             itemBuilder: (context, index) {
               final ad = ads[index];
+              final adType = ad['adType'];
+              IconData adIcon = Icons.location_city;
+              if (adType == 'Photos') {
+                adIcon = adIcons[adIcons.indexOf(FontAwesomeIcons.photoFilm)];
+              }
+              if (adType == 'Equipment') {
+                adIcon = adIcons[adIcons.indexOf(FontAwesomeIcons.utensils)];
+              }
+              if (adType == 'Safari') {
+                adIcon = adIcons[adIcons.indexOf(FontAwesomeIcons.car)];
+              }
+              if (adType == 'Rent') {
+                adIcon = adIcons[adIcons.indexOf(FontAwesomeIcons.houseUser)];
+              }
+              if (adType == 'Lodging') {
+                adIcon = adIcons[adIcons.indexOf(FontAwesomeIcons.hotel)];
+              }
+              if (adType == 'Food') {
+                adIcon = adIcons[adIcons.indexOf(FontAwesomeIcons.utensils)];
+              }
+
+              //  adIcon = adIcons[adIconIndex];
 
               return Container(
                 height: MediaQuery.of(context).size.height * 0.15,
@@ -45,108 +77,121 @@ class _GridItemsState extends State<GridItems> {
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3))
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3),
+                    )
                   ],
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(12),
-                  child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(right: 5.0, bottom: 2),
-                              child: Icon(
-                                FontAwesomeIcons.locationDot,
-                                size: 12,
-                              ),
-                            ),
-                            Text(
-                              '${ad['district']}',
-                              style: const TextStyle(
-                                  color: Color.fromARGB(255, 12, 12, 12),
-                                  fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: InkWell(
-                        onTap: () {
-                          // print(ad['user_id']);
-                          if (ad['adType'] == 'Photos') {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        PhotoAdDescription(ad: ad)));
-                          } else {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ProductDescription(ad: ad)));
-                          }
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            ad['imageLinks'][0],
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            ad['title'],
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Color.fromARGB(255, 12, 12, 12),
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01,
-                          ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              // Display the related icon based on adType
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 8.0, bottom: 2),
+                                child: Icon(
+                                  adIcon,
+                                  size: 12,
+                                ),
+                              ),
                               Text(
-                                'Rs. ${NumberFormat('#,##0').format(ad['price'])}',
+                                '${ad['district']}',
                                 style: const TextStyle(
-                                  color: Color.fromARGB(255, 68, 67, 67),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 12, 12, 12),
+                                  fontSize: 12,
                                 ),
                               ),
                             ],
                           ),
                         ],
                       ),
-                    )
-                  ]),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: InkWell(
+                          onTap: () {
+                            // print(ad['user_id']);
+                            if (adType == 'Photos') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PhotoAdDescription(ad: ad),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ProductDescription(ad: ad),
+                                ),
+                              );
+                            }
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              ad['imageLinks'][0],
+                              height: 100,
+                              width: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              ad['title'],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 12, 12, 12),
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.01,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  adType == 'Photos'
+                                      ? 'Tap for prices'
+                                      : 'Rs. ${NumberFormat('#,##0').format(ad['price'])}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: Color.fromARGB(255, 68, 67, 67),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               );
             },

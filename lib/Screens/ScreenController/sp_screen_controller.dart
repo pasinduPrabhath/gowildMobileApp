@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import '../navigationbar_screens/profile_screen/serviceProviderProfileView/firstPersonSPView/service_provider_profile_screen.dart';
-import '../navigationbar_screens/search_screen/search_screen.dart';
+
 import '../navigationbar_screens/marketplace_screen/marketplace_screen.dart';
 import '../navigationbar_screens/message_screen/message_screen.dart';
 // import '../navigationbar_screens/profile_screen/clientProfileView/firstPersonView/profile_screen.dart';
 import '../navigationbar_screens/home_screen/home_screen.dart';
+import '../navigationbar_screens/travel_buddy_screen/travel_buddy_main_screen.dart';
 
 class SpScreenController extends StatefulWidget {
   const SpScreenController({super.key});
@@ -19,7 +20,7 @@ class _SpScreenControllerState extends State<SpScreenController> {
       'https://cdn.creatureandcoagency.com/uploads/2014/09/leopard-facts-10-1.jpg';
   final screens = [
     const HomeScreen(),
-    const SearchScreen(),
+    const TravelBuddyMainScreen(),
     const MarketPlaceScreen(),
     const MessageScreen(),
     const ServiceProviderProfileScreen(),

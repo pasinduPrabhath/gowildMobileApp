@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/widgets/product_images_slider.dart';
 import 'package:gowild/backend/api_requests/client_api.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
+import 'package:url_launcher/url_launcher.dart';
 import '../../../profile_screen/clientProfileView/thirdPersonView/thirdPersonProfileView.dart';
 
 class PhotoAdDescription extends StatefulWidget {
@@ -29,6 +29,7 @@ class _PhotoAdDescriptionState extends State<PhotoAdDescription> {
   }
 
   void getDetails() async {
+    // print(widget.ad?['phone_num']);
     userDetails =
         await ClientAPI.getSimpleUserDetails(widget.ad?['user_id'] ?? '');
     setState(() {
@@ -235,7 +236,14 @@ class _PhotoAdDescriptionState extends State<PhotoAdDescription> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             InkWell(
-              onTap: () {},
+              onTap: () async {
+                String? phoneNumber = widget.ad?['phone_num'].toString();
+                final Uri launchUri = Uri(
+                  scheme: 'tel',
+                  path: phoneNumber,
+                );
+                await launchUrl(launchUri);
+              },
               child: Padding(
                 padding: const EdgeInsets.only(left: 16.0),
                 child: Container(

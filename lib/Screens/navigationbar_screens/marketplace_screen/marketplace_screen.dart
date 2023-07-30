@@ -244,6 +244,8 @@ class _MarketPlaceScreenState extends State<MarketPlaceScreen> {
                 child: Icon(Icons.sell),
               ),
             ),
+            //load only if user is service provider
+
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -457,27 +459,4 @@ class _WidgetStyleBottomContainerState
       ),
     );
   }
-}
-
-@override
-Widget build(BuildContext context) {
-  return CustomFloatingActionButton(
-    body: Scaffold(
-      appBar: AppBar(
-        title: const Text('appbar title'),
-      ),
-      body: Container(),
-    ),
-    options: const [
-      CircleAvatar(
-        child: Icon(Icons.height),
-      ),
-      CircleAvatar(
-        child: Icon(Icons.title),
-      ),
-    ],
-    type: CustomFloatingActionButtonType.circular,
-    openFloatingActionButton: const Icon(Icons.add),
-    closeFloatingActionButton: const Icon(Icons.close),
-  );
 }
