@@ -7,6 +7,7 @@ class User {
   String? birthday;
   String? country;
   String? town;
+  String? district;
   String? mobileNumber;
   String? gender;
   String? profPicUrl;
@@ -19,6 +20,7 @@ class User {
     this.birthday,
     this.country,
     this.town,
+    this.district,
     this.mobileNumber,
     this.gender,
     this.email,
@@ -35,6 +37,7 @@ class User {
       'birthday': birthday,
       'country': country,
       'town': town,
+      'district': district,
       'mobileNumber': mobileNumber,
       'gender': gender,
       'email': email,
@@ -52,6 +55,7 @@ class User {
       birthday: map['birthday'],
       country: map['country'],
       town: map['town'],
+      district: map['district'],
       mobileNumber: map['mobileNumber'],
       gender: map['gender'],
       email: map['email'],

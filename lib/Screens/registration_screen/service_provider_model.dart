@@ -6,6 +6,7 @@ class ServiceProvider {
   String? birthday;
   String? country;
   String? town;
+  String? district;
   String? mobileNumber;
   String? gender;
   String? nicNumber;
@@ -21,6 +22,7 @@ class ServiceProvider {
     this.birthday,
     this.country,
     this.town,
+    this.district,
     this.email,
     this.password,
     this.mobileNumber,
@@ -40,6 +42,7 @@ class ServiceProvider {
       'birthday': birthday,
       'country': country,
       'town': town,
+      'district': district,
       'email': email,
       'password': password,
       'mobileNumber': mobileNumber,

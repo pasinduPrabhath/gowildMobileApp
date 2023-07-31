@@ -26,6 +26,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _townController = TextEditingController();
   final _mobileNumberController = TextEditingController();
   final _nicNumberController = TextEditingController();
+  final _districtController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -35,6 +36,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late DateTime _birthday;
   late String _country = '';
   late String _town = '';
+  late String _district = 'Ampara';
   late String _mobileNumber = '';
   late String _gender = '';
   late String _email;
@@ -70,6 +72,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           birthday: DateFormat('yyyy-MM-dd').format(_birthday),
           country: _country,
           town: _town,
+          district: _district,
           mobileNumber: _mobileNumber,
           gender: _gender,
           email: _email,
@@ -81,7 +84,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           profPicUrl: _profilePicUrl,
           timestamp: DateTime.now().toUtc().toString(),
         );
-
+        // print(serviceProvider.di)
         final spId = await Api.registerServiceProvider(serviceProvider);
         // print(profPicId);
         print(spId);
@@ -102,6 +105,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         birthday: DateFormat('yyyy-MM-dd').format(_birthday),
         country: _country,
         town: _town,
+        district: _district,
         mobileNumber: _mobileNumber,
         gender: _gender,
         email: _email,
@@ -109,6 +113,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         profPicUrl: _profilePicUrl,
         timestamp: DateTime.now().toUtc().toString(),
       );
+      print('district is ${user.district}');
       print('going to create user');
       final userId = await Api.createUser(user);
       print('user created');
@@ -164,6 +169,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     _townController.text = _town;
     _mobileNumberController.text = _mobileNumber;
     _nicNumberController.text = _nicNumber;
+    _districtController.text = _district;
   }
 
   @override
@@ -300,6 +306,75 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         _town = value;
                       },
                       keyboardType: TextInputType.name,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(0),
+                        border: Border.all(
+                          color: Color.fromARGB(255, 112, 112, 112),
+                          width: 1,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: DropdownButtonFormField<String>(
+                          value: _district, // Set the initial value
+                          menuMaxHeight:
+                              MediaQuery.of(context).size.height * 0.3,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _district = newValue ??
+                                  ''; // Update the controller's text
+                              print(_district);
+                            });
+                          },
+                          items: <String>[
+                            "Ampara",
+                            "Anuradhapura",
+                            "Badulla",
+                            "Batticaloa",
+                            "Colombo",
+                            "Galle",
+                            "Gampaha",
+                            "Hambantota",
+                            "Jaffna",
+                            "Kalutara",
+                            "Kandy",
+                            "Kegalle",
+                            "Kilinochchi",
+                            "Kurunegala",
+                            "Mannar",
+                            "Matale",
+                            "Matara",
+                            "Monaragala",
+                            "Mullaitivu",
+                            "Nuwara Eliya",
+                            "Polonnaruwa",
+                            "Puttalam",
+                            "Ratnapura",
+                            "Trincomalee",
+                            "Vavuniya"
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w700),
+                              ),
+                            );
+                          }).toList(),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select a district';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.03,
                     ),
                     CustomTextFormField(
                       labelText: 'Mobile Number',
