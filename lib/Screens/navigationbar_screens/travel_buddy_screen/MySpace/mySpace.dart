@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gowild/Screens/navigationbar_screens/travel_buddy_screen/MySpace/widgets/myInterestShowCard.dart';
-import 'package:gowild/Screens/navigationbar_screens/travel_buddy_screen/MySpace/widgets/myRequestShowCard.dart';
-import 'package:gowild/Screens/navigationbar_screens/travel_buddy_screen/MySpace/widgets/myTripRequestShowCard.dart';
+import 'package:gowild/Screens/navigationbar_screens/travel_buddy_screen/MySpace/widgets/myInterestShow.dart';
+import 'package:gowild/Screens/navigationbar_screens/travel_buddy_screen/MySpace/widgets/myInvitationShow.dart';
+import 'package:gowild/Screens/navigationbar_screens/travel_buddy_screen/MySpace/widgets/myTripsShow.dart';
 import 'package:gowild/Screens/navigationbar_screens/travel_buddy_screen/widgets/requestShowCard.dart';
 
 import 'createNewTravelBuddyInvite.dart';
@@ -35,7 +35,7 @@ class _MySpaceScreenState extends State<MySpaceScreen> {
                     SizedBox(
                       width: 5,
                     ),
-                    Text('My Posts', style: TextStyle(fontSize: 12)),
+                    Text('My Invitations', style: TextStyle(fontSize: 12)),
                   ],
                 ),
               ),
@@ -77,7 +77,7 @@ class _MySpaceScreenState extends State<MySpaceScreen> {
             SingleChildScrollView(
               child: Column(
                 children: [
-                  MyRequestShowCard(size: size),
+                  MyInvitationsShowView(size: size),
                 ],
               ),
             ),
@@ -91,7 +91,7 @@ class _MySpaceScreenState extends State<MySpaceScreen> {
             SingleChildScrollView(
               child: Column(
                 children: [
-                  MyTripRequestCardView(size: size),
+                  MyTripsShowView(size: size),
                 ],
               ),
             ),

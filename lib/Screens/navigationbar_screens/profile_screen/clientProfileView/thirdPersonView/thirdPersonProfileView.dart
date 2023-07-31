@@ -78,7 +78,7 @@ class _ThirdPersonProfileScreenState extends State<ThirdPersonProfileScreen> {
     isFollowStatLoading = false;
     if (_imageUrls.isEmpty) {
       final response = await ClientAPI.getImages(widget.email);
-      print(response[0]);
+      // print(response[0]);
 
       setState(() {
         _imageUrls = response;

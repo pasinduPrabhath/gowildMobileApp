@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 // import 'dart:html';
 
 import 'package:http/http.dart' as http;
@@ -6,6 +7,7 @@ import '../../Screens/navigationbar_screens/marketplace_screen/equipment_ads/mar
 import '../../Screens/navigationbar_screens/marketplace_screen/photo_ads/photo_selling_model.dart';
 import '../../Screens/navigationbar_screens/profile_screen/clientProfileView/firstPersonView/profile_screen_model.dart';
 import '../../Screens/navigationbar_screens/travel_buddy_screen/MySpace/travelBuddyModel.dart';
+import '../../Screens/navigationbar_screens/travel_buddy_screen/MySpace/widgets/interestedPopUpModel.dart';
 import '../../Screens/navigationbar_screens/travel_buddy_screen/widgets/requestModel.dart';
 
 class ClientAPI {
@@ -369,7 +371,7 @@ class ClientAPI {
   }
 
   static Future<List<Request>> getTravelBuddyReq(String email) async {
-    final body = json.encode({'email': 'pasinduprabhath@gmail.com'});
+    final body = json.encode({'email': email});
     final headers = {'Content-Type': 'application/json'};
     final response = await http.post(
         Uri.parse('$baseUrl/user/getTravelBuddyReq'),
@@ -415,7 +417,8 @@ class ClientAPI {
   }
 
   static Future<List<Request>> getTravelBuddyReqById(String email) async {
-    final body = json.encode({'email': 'pasinduprabhath@gmail.com'});
+    print('email: $email');
+    final body = json.encode({'email': email});
     final headers = {'Content-Type': 'application/json'};
     final response = await http.post(
         Uri.parse('$baseUrl/user/getTravelBuddyReqById'),
@@ -432,7 +435,7 @@ class ClientAPI {
   }
 
   static Future<List<Request>> getInterestedTravelBuddyReq(String email) async {
-    final body = json.encode({'email': 'pasinduprabhath@gmail.com'});
+    final body = json.encode({'email': email});
     final headers = {'Content-Type': 'application/json'};
     final response = await http.post(
         Uri.parse('$baseUrl/user/getInterestedTravelBuddyReq'),
@@ -467,5 +470,55 @@ class ClientAPI {
       throw Exception('Failed to create user');
     }
     throw Exception('Failed to create user');
+  }
+
+  static Future<List<InterestedUser>> getInterestedUsersForTBInvitation(
+      int postId) async {
+    print('postId: $postId');
+    final body = json.encode({'postId': postId});
+    final headers = {'Content-Type': 'application/json'};
+    final response = await http.post(
+        Uri.parse('$baseUrl/user/getInterestedUsersForTBInvitation'),
+        body: body,
+        headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body)['data'];
+
+      return data.map((json) => InterestedUser.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch interested users');
+    }
+  }
+
+  static Future<int> approveTravelBuddyReq(int userId, int postId) async {
+    final url = Uri.parse('$baseUrl/user/approveTravelBuddyReq');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({'userId': userId, 'postId': postId});
+    print(body);
+
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['success'];
+    } else {
+      throw Exception('Failed to add interest');
+    }
+  }
+
+  static Future<List<Request>> getInterestedAprovedTrips(String email) async {
+    final body = json.encode({'email': email});
+    final headers = {'Content-Type': 'application/json'};
+    final response = await http.post(
+        Uri.parse('$baseUrl/user/getInterestedAprovedTrips'),
+        body: body,
+        headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body)['data'];
+
+      return data.map((json) => Request.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch requests');
+    }
   }
 }

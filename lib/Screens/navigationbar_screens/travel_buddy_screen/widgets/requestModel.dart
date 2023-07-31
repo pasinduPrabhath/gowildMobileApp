@@ -12,6 +12,7 @@ class Request {
   final int noOfParticipants;
   final String email;
   final int isLiked;
+  final int approvedCount;
 
   Request({
     required this.userId,
@@ -27,6 +28,7 @@ class Request {
     this.isLiked = 0,
     this.timestamp = '',
     this.email = '',
+    required this.approvedCount,
   });
 
   factory Request.fromJson(Map<String, dynamic> json) {
@@ -43,6 +45,7 @@ class Request {
       email: json['email'],
       noOfParticipants: json['no_of_participants'],
       isLiked: json['isLiked'],
+      approvedCount: json['approvedCount'],
       timestamp: json['timestamp'],
     );
   }

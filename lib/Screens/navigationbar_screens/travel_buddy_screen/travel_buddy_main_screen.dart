@@ -20,7 +20,9 @@ class _TravelBuddyMainScreenState extends State<TravelBuddyMainScreen> {
   @override
   void initState() {
     //get email from shared preferences
-    _getDetails();
+    _getDetails().then((_) {
+      setState(() {});
+    });
     // TODO: implement initState
     super.initState();
   }

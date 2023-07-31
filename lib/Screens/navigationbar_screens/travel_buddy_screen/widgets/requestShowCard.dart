@@ -15,18 +15,18 @@ class RequestCardView extends StatefulWidget {
   }) : super(key: key);
 
   final Size size;
-  String email = '';
 
   @override
   State<RequestCardView> createState() => _RequestCardViewState();
 }
 
 class _RequestCardViewState extends State<RequestCardView> {
+  String email = '';
   bool isloading = false;
   Future<void> _getDetails() async {
     final prefs = await SharedPreferences.getInstance();
-    widget.email = prefs.getString('email') ?? '';
-    print('email is ${widget.email}');
+    email = prefs.getString('email') ?? '';
+    print('email is ${email}');
   }
 
   // bool isInterested = false;
@@ -42,8 +42,8 @@ class _RequestCardViewState extends State<RequestCardView> {
     isloading = true;
     // Update the interested button color immediately
     final interestresult = likeStatus == 1
-        ? ClientAPI.addInterestToTB(widget.email, postId)
-        : ClientAPI.removeInterestToTB(widget.email, postId);
+        ? ClientAPI.addInterestToTB(email, postId)
+        : ClientAPI.removeInterestToTB(email, postId);
 
     interestresult.then((value) {
       print('interest result: $value');
@@ -68,7 +68,7 @@ class _RequestCardViewState extends State<RequestCardView> {
       SizedBox(
         height: widget.size.height * 0.8,
         child: FutureBuilder<List<Request>>(
-          future: ClientAPI.getTravelBuddyReq(widget.email),
+          future: ClientAPI.getTravelBuddyReq(email),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final requests = snapshot.data!;
@@ -197,7 +197,7 @@ class _RequestCardViewState extends State<RequestCardView> {
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    print('email: ${widget.email}');
+                                    print('email: ${email}');
                                     setState(() {
                                       toggleInterested(
                                           request.postId, request.isLiked);
@@ -229,9 +229,9 @@ class _RequestCardViewState extends State<RequestCardView> {
                                     const SizedBox(width: 5),
                                     Row(
                                       children: [
-                                        const Text(
-                                          '2/',
-                                          style: TextStyle(
+                                        Text(
+                                          '${request.approvedCount} / ',
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.w600),
                                         ),
                                         Text(
