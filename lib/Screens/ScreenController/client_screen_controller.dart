@@ -21,7 +21,7 @@ class _ClientScreenControllerState extends State<ClientScreenController> {
     const HomeScreen(),
     const TravelBuddyMainScreen(),
     const MarketPlaceScreen(),
-    const MessageScreen(),
+    // const MessageScreen(),
     const ProfileScreen(),
   ];
   int index = 0;
@@ -52,8 +52,8 @@ class _ClientScreenControllerState extends State<ClientScreenController> {
               size: 30, color: Theme.of(context).colorScheme.background),
           Icon(Icons.shopping_bag,
               size: 30, color: Theme.of(context).colorScheme.background),
-          Icon(Icons.message_rounded,
-              size: 30, color: Theme.of(context).colorScheme.background),
+          // Icon(Icons.message_rounded,
+          //     size: 30, color: Theme.of(context).colorScheme.background),
           Icon(Icons.account_circle,
               size: 30, color: Theme.of(context).colorScheme.background),
         ],
