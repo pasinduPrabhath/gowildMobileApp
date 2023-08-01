@@ -73,25 +73,32 @@ class _MarketPlaceScreenState extends State<MarketPlaceScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 15.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          const Text('Marketplace',
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 14, 14, 14))),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 70.0),
-                            child: WidgetStyleContainer(
-                              size: size,
-                              icon: Icons.search,
-                              text: 'Search',
-                              width: size.width * 0.07,
-                              onPressed: () {},
-                            ),
+                          const Row(
+                            children: [
+                              Text('Marketplace',
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromARGB(255, 14, 14, 14))),
+                            ],
                           ),
+                          SizedBox(
+                            width: size.width * 0.3,
+                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.only(left: 70.0),
+                          //   child: WidgetStyleContainer(
+                          //     size: size,
+                          //     icon: Icons.search,
+                          //     text: 'Search',
+                          //     width: size.width * 0.07,
+                          //     onPressed: () {},
+                          //   ),
+                          // ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 10.0),
+                            padding: const EdgeInsets.only(right: 18.0),
                             child: WidgetStyleContainer(
                                 size: size,
                                 icon: FontAwesomeIcons.user,

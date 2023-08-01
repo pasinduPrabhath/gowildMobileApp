@@ -276,7 +276,10 @@ class _PhotoAdDescriptionState extends State<PhotoAdDescription> {
               ),
             ),
             InkWell(
-              onTap: () {},
+              onTap: () async {
+                final phone = widget.ad?['phone_num'];
+                launch('https://wa.me/$phone?text=Hello is this available?');
+              },
               child: Padding(
                 padding: const EdgeInsets.only(right: 16.0),
                 child: Container(

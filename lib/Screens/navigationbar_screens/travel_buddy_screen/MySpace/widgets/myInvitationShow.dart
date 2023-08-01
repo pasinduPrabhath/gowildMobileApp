@@ -310,24 +310,24 @@ class _MyInvitationsShowViewState extends State<MyInvitationsShowView> {
                                       children: [
                                         Row(
                                           children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                print('email: ${email}');
-                                                setState(() {
-                                                  toggleInterested(
-                                                      request.postId,
-                                                      request.isLiked);
-                                                });
-                                              },
-                                              child: Icon(
-                                                request.isLiked == 1
-                                                    ? Icons.favorite
-                                                    : Icons.favorite_border,
-                                                color: request.isLiked == 1
-                                                    ? Colors.red
-                                                    : null,
-                                              ),
-                                            ),
+                                            // GestureDetector(
+                                            //   onTap: () {
+                                            //     print('email: ${email}');
+                                            //     setState(() {
+                                            //       toggleInterested(
+                                            //           request.postId,
+                                            //           request.isLiked);
+                                            //     });
+                                            //   },
+                                            //   child: Icon(
+                                            //     request.isLiked == 1
+                                            //         ? Icons.favorite
+                                            //         : Icons.favorite_border,
+                                            //     color: request.isLiked == 1
+                                            //         ? Colors.red
+                                            //         : null,
+                                            //   ),
+                                            // ),
                                             const SizedBox(width: 5),
                                             GestureDetector(
                                               onTap: () async {
@@ -349,7 +349,7 @@ class _MyInvitationsShowViewState extends State<MyInvitationsShowView> {
                                                 });
                                               },
                                               child: const Text(
-                                                'Interested',
+                                                'View Interested',
                                                 style: TextStyle(fontSize: 14),
                                               ),
                                             ),

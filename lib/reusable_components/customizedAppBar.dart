@@ -69,19 +69,19 @@ class _CustomizedAppBarState extends State<CustomizedAppBar> {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: IconButton(
-              icon: const Icon(
-                Icons.notifications_none_outlined,
-                color: Colors.black,
-              ),
-              onPressed: () async {
-                // final result = await ClientAPI.searchUsers('ser');
-                // print(result[0]['firstName']);
-              },
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: IconButton(
+          //     icon: const Icon(
+          //       Icons.notifications_none_outlined,
+          //       color: Colors.black,
+          //     ),
+          //     onPressed: () async {
+          //       // final result = await ClientAPI.searchUsers('ser');
+          //       // print(result[0]['firstName']);
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );

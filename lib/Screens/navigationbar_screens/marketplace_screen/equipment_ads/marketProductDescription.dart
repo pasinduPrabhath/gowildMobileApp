@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/widgets/product_images_slider.dart';
 import 'package:gowild/backend/api_requests/client_api.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:phone_number/phone_number.dart';
 
 import '../../profile_screen/clientProfileView/thirdPersonView/thirdPersonProfileView.dart';
 
@@ -244,7 +246,13 @@ class _ProductDescriptionState extends State<ProductDescription> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             InkWell(
-              onTap: () {},
+              onTap: () {
+                print(widget.ad?['phone_num']);
+                final phoneNum = widget.ad?['phone_num'];
+                if (phoneNum != null) {
+                  launchUrl(Uri.parse('tel:$phoneNum'));
+                }
+              },
               child: Padding(
                 padding: const EdgeInsets.only(left: 16.0),
                 child: Container(
@@ -277,7 +285,10 @@ class _ProductDescriptionState extends State<ProductDescription> {
               ),
             ),
             InkWell(
-              onTap: () {},
+              onTap: () async {
+                final phone = widget.ad?['phone_num'];
+                launch('https://wa.me/$phone?text=Hello is this available?');
+              },
               child: Padding(
                 padding: const EdgeInsets.only(right: 16.0),
                 child: Container(
