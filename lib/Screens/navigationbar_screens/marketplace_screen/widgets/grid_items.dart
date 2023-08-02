@@ -142,12 +142,14 @@ class _GridItemsState extends State<GridItems> {
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              ad['imageLinks'][0],
-                              height: 100,
-                              width: 100,
-                              fit: BoxFit.cover,
-                            ),
+                            child: ad['imageLinks'].isEmpty
+                                ? Container() // Show empty container if imageLinks is empty
+                                : Image.network(
+                                    ad['imageLinks'][0],
+                                    height: 100,
+                                    width: 100,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
                         ),
                       ),

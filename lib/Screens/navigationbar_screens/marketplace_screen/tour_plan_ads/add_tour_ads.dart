@@ -431,7 +431,7 @@ class _AddTourAdsState extends State<AddTourAds> {
                                   fontSize: 16, fontWeight: FontWeight.w900),
                               controller: _halfdaypriceController,
                               keyboardType: TextInputType.number,
-                              initialValue: '0',
+                              initialValue: null,
                               decoration: const InputDecoration(
                                 hintText: 'Half day price',
                                 border: OutlineInputBorder(),

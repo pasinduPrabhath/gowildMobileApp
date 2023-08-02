@@ -4,6 +4,7 @@ import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/tour_pla
 import 'package:gowild/Screens/navigationbar_screens/marketplace_screen/widgets/grid_items.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gowild/backend/api_requests/client_api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'equipment_ads/marketPlace_newAd.dart';
 import 'marketplaceBackground.dart';
 import 'my_ads/my_ads.dart';
@@ -19,13 +20,24 @@ class MarketPlaceScreen extends StatefulWidget {
 class _MarketPlaceScreenState extends State<MarketPlaceScreen> {
   String? selectedCategory;
   String? selectedLocation;
+  String accountType = '';
 
   @override
   void initState() {
     selectedCategory = 'All ads';
     selectedLocation = 'All Locations';
+    getAccountType();
 
     super.initState();
+  }
+
+  Future<String> getAccountType() async {
+    //get account type from shared preferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    accountType = prefs.getString('role')!;
+    print('account type: $accountType');
+    return accountType;
+    // print('account type: $accountType');
   }
 
   void onCategoryChanged(String? newCategory) {
@@ -52,234 +64,248 @@ class _MarketPlaceScreenState extends State<MarketPlaceScreen> {
           }
           return false;
         },
-        child: CustomFloatingActionButton(
-          backgroundColor: const Color.fromARGB(199, 26, 25, 25),
-          floatinButtonColor: const Color.fromARGB(255, 169, 217, 245),
-          body: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: RefreshIndicator(
-              // key: _refreshIndicatorKey,
-              onRefresh: () async {
-                // await getPage();
-                setState(() {});
-              },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: size.height * 0.07,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        child: FutureBuilder<String>(
+            future: getAccountType(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final accountType = snapshot.data;
+                return Scaffold(
+                  backgroundColor: Colors.transparent,
+                  body: RefreshIndicator(
+                    // key: _refreshIndicatorKey,
+                    onRefresh: () async {
+                      // await getPage();
+                      setState(() {});
+                    },
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Column(
                         children: [
-                          const Row(
-                            children: [
-                              Text('Marketplace',
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(255, 14, 14, 14))),
-                            ],
-                          ),
                           SizedBox(
-                            width: size.width * 0.3,
+                            height: size.height * 0.07,
                           ),
-                          // Padding(
-                          //   padding: const EdgeInsets.only(left: 70.0),
-                          //   child: WidgetStyleContainer(
-                          //     size: size,
-                          //     icon: Icons.search,
-                          //     text: 'Search',
-                          //     width: size.width * 0.07,
-                          //     onPressed: () {},
-                          //   ),
-                          // ),
                           Padding(
-                            padding: const EdgeInsets.only(right: 18.0),
-                            child: WidgetStyleContainer(
-                                size: size,
-                                icon: FontAwesomeIcons.user,
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const MyAds())).then((value) {
-                                    if (value == true) {
-                                      Navigator.popUntil(context,
-                                          ModalRoute.withName('/marketplace'));
-                                    }
-                                  });
-                                }),
+                            padding: const EdgeInsets.only(left: 15.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                const Row(
+                                  children: [
+                                    Text('Marketplace',
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 14, 14, 14))),
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: size.width * 0.3,
+                                ),
+                                // Padding(
+                                //   padding: const EdgeInsets.only(left: 70.0),
+                                //   child: WidgetStyleContainer(
+                                //     size: size,
+                                //     icon: Icons.search,
+                                //     text: 'Search',
+                                //     width: size.width * 0.07,
+                                //     onPressed: () {},
+                                //   ),
+                                // ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 18.0),
+                                  child: WidgetStyleContainer(
+                                      size: size,
+                                      icon: FontAwesomeIcons.user,
+                                      onPressed: () {
+                                        Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => MyAds(
+                                                        accountType:
+                                                            accountType)))
+                                            .then((value) {
+                                          if (value == true) {
+                                            Navigator.popUntil(
+                                                context,
+                                                ModalRoute.withName(
+                                                    '/marketplace'));
+                                          }
+                                        });
+                                      }),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: size.height * 0.04,
+                          ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SizedBox(
+                                  width: size.width * 0.02,
+                                ),
+                                WidgetStyleBottomContainer(
+                                  size: size,
+                                  icon: const FaIcon(FontAwesomeIcons.car).icon,
+                                  // text: 'Safari',
+                                  dropdownValue: selectedCategory,
+                                  width: size.width * 0.33,
+                                  items: const [
+                                    'All ads',
+                                    'Safari',
+                                    'Rent',
+                                    'Food',
+                                    'Equipments',
+                                    'Photos',
+                                    'Lodging'
+                                  ],
+                                  icons: const [
+                                    FontAwesomeIcons.circleCheck,
+                                    FontAwesomeIcons.car,
+                                    FontAwesomeIcons.houseUser,
+                                    FontAwesomeIcons.utensils,
+                                    FontAwesomeIcons.cameraRetro,
+                                    FontAwesomeIcons.photoFilm,
+                                    FontAwesomeIcons.hotel
+                                  ],
+                                  selectedCategory: selectedCategory,
+                                  onCategoryChanged: onCategoryChanged,
+                                ),
+                                SizedBox(
+                                  width: size.width * 0.04,
+                                ),
+                                WidgetStyleBottomContainer(
+                                  size: size,
+                                  icon: const FaIcon(FontAwesomeIcons.camera)
+                                      .icon,
+                                  // text: 'Camera',
+                                  dropdownValue: selectedLocation,
+                                  width: size.width * 0.35,
+                                  items: const [
+                                    'All Locations',
+                                    'Ampara',
+                                    'Anuradhapura',
+                                    'Badulla',
+                                    'Batticaloa',
+                                    'Colombo',
+                                    'Galle',
+                                    'Gampaha',
+                                    'Hambantota',
+                                    'Jaffna',
+                                    'Kalutara',
+                                    'Kandy',
+                                    'Kegalle',
+                                    'Kilinochchi',
+                                    'Kurunegala',
+                                    'Mannar',
+                                    'Matale',
+                                    'Matara',
+                                    'Monaragala',
+                                    'Mullaitivu',
+                                    'Nuwara Eliya',
+                                    'Polonnaruwa',
+                                    'Puttalam',
+                                    'Ratnapura',
+                                    'Trincomalee',
+                                    'Vavuniya',
+                                    'Wilpattu'
+                                  ],
+                                  icons: const [
+                                    FontAwesomeIcons.locationArrow,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                    FontAwesomeIcons.locationDot,
+                                  ],
+                                  selectedCategory: selectedLocation,
+                                  onCategoryChanged: onLocationChanged,
+                                ),
+                                SizedBox(
+                                  width: size.width * 0.04,
+                                ),
+                              ],
+                            ),
+                          ),
+                          GridItems(
+                            apiFunction: () => ClientAPI.getAdsByCategory(
+                                selectedCategory!, selectedLocation!),
+                            // selectedCategory: selectedCategory,
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: size.height * 0.04,
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          SizedBox(
-                            width: size.width * 0.02,
-                          ),
-                          WidgetStyleBottomContainer(
-                            size: size,
-                            icon: const FaIcon(FontAwesomeIcons.car).icon,
-                            // text: 'Safari',
-                            dropdownValue: selectedCategory,
-                            width: size.width * 0.33,
-                            items: const [
-                              'All ads',
-                              'Safari',
-                              'Rent',
-                              'Food',
-                              'Equipments',
-                              'Photos',
-                              'Lodging'
-                            ],
-                            icons: const [
-                              FontAwesomeIcons.circleCheck,
-                              FontAwesomeIcons.car,
-                              FontAwesomeIcons.houseUser,
-                              FontAwesomeIcons.utensils,
-                              FontAwesomeIcons.cameraRetro,
-                              FontAwesomeIcons.photoFilm,
-                              FontAwesomeIcons.hotel
-                            ],
-                            selectedCategory: selectedCategory,
-                            onCategoryChanged: onCategoryChanged,
-                          ),
-                          SizedBox(
-                            width: size.width * 0.04,
-                          ),
-                          WidgetStyleBottomContainer(
-                            size: size,
-                            icon: const FaIcon(FontAwesomeIcons.camera).icon,
-                            // text: 'Camera',
-                            dropdownValue: selectedLocation,
-                            width: size.width * 0.35,
-                            items: const [
-                              'All Locations',
-                              'Ampara',
-                              'Anuradhapura',
-                              'Badulla',
-                              'Batticaloa',
-                              'Colombo',
-                              'Galle',
-                              'Gampaha',
-                              'Hambantota',
-                              'Jaffna',
-                              'Kalutara',
-                              'Kandy',
-                              'Kegalle',
-                              'Kilinochchi',
-                              'Kurunegala',
-                              'Mannar',
-                              'Matale',
-                              'Matara',
-                              'Monaragala',
-                              'Mullaitivu',
-                              'Nuwara Eliya',
-                              'Polonnaruwa',
-                              'Puttalam',
-                              'Ratnapura',
-                              'Trincomalee',
-                              'Vavuniya',
-                              'Wilpattu'
-                            ],
-                            icons: const [
-                              FontAwesomeIcons.locationArrow,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                              FontAwesomeIcons.locationDot,
-                            ],
-                            selectedCategory: selectedLocation,
-                            onCategoryChanged: onLocationChanged,
-                          ),
-                          SizedBox(
-                            width: size.width * 0.04,
-                          ),
-                        ],
-                      ),
-                    ),
-                    GridItems(
-                      apiFunction: () => ClientAPI.getAdsByCategory(
-                          selectedCategory!, selectedLocation!),
-                      // selectedCategory: selectedCategory,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          options: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const AddNewAd()));
-              },
-              child: const CircleAvatar(
-                child: Icon(Icons.sell),
-              ),
-            ),
-            //load only if user is service provider
-
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AddTourAds()));
-              },
-              child: const CircleAvatar(
-                child: FaIcon(FontAwesomeIcons.vanShuttle),
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AddPhotoSellingAd()));
-              },
-              child: const CircleAvatar(
-                child: Icon(Icons.photo),
-              ),
-            ),
-          ],
-          type: CustomFloatingActionButtonType.values[0],
-          openFloatingActionButton: const Icon(Icons.add),
-          closeFloatingActionButton: const Icon(Icons.close),
-        ),
+                  ),
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            }),
+        // options: [
+        //   GestureDetector(
+        //     onTap: () {
+        //       Navigator.push(
+        //         context,
+        //         MaterialPageRoute(builder: (context) => const AddNewAd()),
+        //       );
+        //     },
+        //     child: const CircleAvatar(
+        //       child: Icon(Icons.sell),
+        //     ),
+        //   ),
+        //   // Show only if user is a service provider
+        //   if (accountType == 'sp')
+        //     GestureDetector(
+        //       onTap: () {
+        //         Navigator.push(
+        //           context,
+        //           MaterialPageRoute(builder: (context) => const AddTourAds()),
+        //         );
+        //       },
+        //       child: const CircleAvatar(
+        //         child: FaIcon(FontAwesomeIcons.vanShuttle),
+        //       ),
+        //     ),
+        //   GestureDetector(
+        //     onTap: () {
+        //       Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //             builder: (context) => const AddPhotoSellingAd()),
+        //       );
+        //     },
+        //     child: const CircleAvatar(
+        //       child: Icon(Icons.photo),
+        //     ),
+        //   ),
+        // ],
+        // type: CustomFloatingActionButtonType.values[0],
+        // openFloatingActionButton: const Icon(Icons.add),
+        // closeFloatingActionButton: const Icon(Icons.close),
       ),
     );
   }

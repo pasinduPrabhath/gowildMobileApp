@@ -258,8 +258,9 @@ class _CreateNewTravelBuddyInviteState
                             final DateTime? picked = await showDatePicker(
                               context: context,
                               initialDate: _birthday,
-                              firstDate: DateTime(1900),
-                              lastDate: DateTime.now().add(Duration(days: 90)),
+                              firstDate: DateTime.now(),
+                              lastDate:
+                                  DateTime.now().add(const Duration(days: 90)),
                               builder: (BuildContext context, Widget? child) {
                                 return Theme(
                                   data: ThemeData.dark(),

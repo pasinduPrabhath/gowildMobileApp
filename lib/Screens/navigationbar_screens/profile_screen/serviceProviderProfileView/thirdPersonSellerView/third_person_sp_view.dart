@@ -10,6 +10,7 @@ import '../../widgets/profile_background.dart';
 import 'dart:math' as math;
 import 'package:image_picker/image_picker.dart';
 import '../thirdPersonViewcalendar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ThirdPersomSpProfileScreen extends StatefulWidget {
   final String email;
@@ -209,40 +210,78 @@ class _ThirdPersomSpProfileScreenState
               const SizedBox(
                 height: 6.0,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ThirdPersonViewCalendar(
-                        email: widget.email,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ThirdPersonViewCalendar(
+                            email: widget.email,
+                          ),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color.fromARGB(104, 55, 170, 199),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
+                      minimumSize: const Size(100, 40),
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Color.fromARGB(104, 55, 170, 199),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Calendar',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        SizedBox(width: 3),
+                        Icon(
+                          Icons.calendar_month_rounded,
+                          size: 20,
+                        ),
+                      ],
+                    ),
                   ),
-                  minimumSize: const Size(100, 40),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Calendar',
-                      style: TextStyle(fontSize: 14),
+                  const SizedBox(
+                    width: 15.0,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      final phone = 0773663365;
+                      launch(
+                          'https://wa.me/$phone?text=Hello is this available?');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color.fromARGB(104, 55, 170, 199),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      minimumSize: const Size(100, 40),
                     ),
-                    SizedBox(width: 3),
-                    Icon(
-                      Icons.calendar_month_rounded,
-                      size: 20,
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Contact',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        SizedBox(width: 3),
+                        Icon(
+                          Icons.message_rounded,
+                          size: 20,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 6.0,

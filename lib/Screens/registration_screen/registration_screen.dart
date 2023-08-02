@@ -377,7 +377,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       height: MediaQuery.of(context).size.height * 0.03,
                     ),
                     CustomTextFormField(
-                      labelText: 'Mobile Number',
+                      labelText: 'Whatsapp Mobile Number (Preffered)',
                       controller: _mobileNumberController,
                       errorText: 'Please enter a valid Mobile Number',
                       onSaved: (value) {
@@ -421,7 +421,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.01,
                     ),
-                    Text('Are you a service provider?',
+                    Text('Do you need seller verification?',
                         style: Theme.of(context).textTheme.titleMedium),
                     Row(
                       children: <Widget>[

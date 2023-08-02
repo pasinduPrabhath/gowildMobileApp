@@ -40,9 +40,11 @@ class _LoginScreenState extends State<LoginScreen> {
       // print('login ${loginData['role']}');
       if (loginData['success'] == 1) {
         if (loginData['role'] == 'client') {
+          prefs.setString('role', 'client');
           Navigator.pushReplacementNamed(context, '/client_screen_controller');
         } else if (loginData['role'] == 'sp') {
           print('sp login');
+          prefs.setString('role', 'serviceProvider');
           Navigator.pushReplacementNamed(context, '/sp_screen_controller');
         }
         // Navigator.pushReplacementNamed(context, '/client_screen_controller');

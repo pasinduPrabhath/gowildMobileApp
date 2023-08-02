@@ -1,9 +1,25 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import './widgets/background.dart';
+import 'package:gowild/Screens/navigationbar_screens/home_screen/widgets/background.dart';
+import 'package:http/http.dart' as http;
+
 import '../../../reusable_components/customizedAppBar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  Future<List<dynamic>> fetchUserPicsForFeed() async {
+    final response = await http.post(Uri.parse(
+        'https://gowild.herokuapp.com/api/user/getAllUserPicsForFeed'));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['data'];
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,86 +35,77 @@ class HomeScreen extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 2,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                      vertical: 32.0,
-                    ),
-                    padding: const EdgeInsets.all(14.0),
-                    height: size.height * 0.4,
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      // color: const Color.fromARGB(255, 124, 25, 25),
-                      image: DecorationImage(
-                        image: AssetImage(
-                            'assets/images/bird/bird-${index + 1}.jpg'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    child: Column(children: [
-                      Row(
-                        children: [
-                          const Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 16.0,
-                                backgroundImage: AssetImage(
-                                    'assets/images/adminProfPic.png'),
-                              ),
-                              SizedBox(width: 8.0),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Pasindu Prabhath',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  Text(
-                                    '2 hours ago',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                            ],
+              FutureBuilder<List<dynamic>>(
+                future: fetchUserPicsForFeed(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    print(snapshot.error);
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    final data = snapshot.data;
+                    return ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: data?.length,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        final user = data?[index];
+                        return Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 24.0,
+                            vertical: 32.0,
                           ),
-                          const Spacer(),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.more_vert,
-                              color: Color.fromARGB(255, 255, 255, 255),
+                          padding: const EdgeInsets.all(14.0),
+                          height: size.height * 0.4,
+                          width: size.width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            image: DecorationImage(
+                              image: NetworkImage(user?['url']),
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        ],
-                      ),
-                      const Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildPostStat(
-                              context: context,
-                              likeCount: '120k',
-                              icon: const Icon(Icons.favorite_border,
-                                  color: Colors.white)),
-                          _buildPostStat(
-                              context: context,
-                              likeCount: '20k',
-                              icon: const Icon(
-                                Icons.bookmark_border_outlined,
-                                color: Colors.white,
-                              )),
-                        ],
-                      ),
-                    ]),
-                  );
+                          child: Column(children: [
+                            Row(
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 16.0,
+                                      backgroundImage: NetworkImage(
+                                          user?['profile_picture_url']),
+                                    ),
+                                    SizedBox(width: 8.0),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${user?['firstName']} ${user?['lastName']}',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Spacer(),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.more_vert,
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ]),
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ],
@@ -108,33 +115,33 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Container _buildPostStat({
-    required BuildContext context,
-    required String likeCount,
-    required Icon icon,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Color.fromARGB(150, 190, 184, 184),
-        borderRadius: BorderRadius.circular(35.0),
-      ),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () {},
-            icon: icon,
-          ),
-          Text(
-            likeCount,
-            style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                  color: Colors.white,
-                ),
-          ),
-          const SizedBox(width: 15.0),
-        ],
-      ),
-    );
-  }
+  // Container _buildPostStat({
+  //   required BuildContext context,
+  //   required String likeCount,
+  //   required Icon icon,
+  // }) {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       color: Color.fromARGB(150, 190, 184, 184),
+  //       borderRadius: BorderRadius.circular(35.0),
+  //     ),
+  //     child: Row(
+  //       children: [
+  //         IconButton(
+  //           onPressed: () {},
+  //           icon: icon,
+  //         ),
+  //         Text(
+  //           likeCount,
+  //           style: Theme.of(context).textTheme.bodyText1!.copyWith(
+  //                 color: Colors.white,
+  //               ),
+  //         ),
+  //         const SizedBox(width: 15.0),
+  //       ],
+  //     ),
+  //   );
+  // }
 }
 
 class SearchWidget extends StatelessWidget {

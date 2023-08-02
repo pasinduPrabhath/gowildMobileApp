@@ -133,6 +133,10 @@ class _ThirdPersonViewCalendarState extends State<ThirdPersonViewCalendar> {
                     },
                     eventLoader: _getEventsfromDay,
                   ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 28.0),
+                    child: Text('⚫️ represents the busy dates'),
+                  ),
                 ],
               ),
             ],

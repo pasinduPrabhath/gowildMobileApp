@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../navigationbar_screens/profile_screen/serviceProviderProfileView/firstPersonSPView/service_provider_profile_screen.dart';
 
 import '../navigationbar_screens/marketplace_screen/marketplace_screen.dart';
@@ -16,6 +17,18 @@ class SpScreenController extends StatefulWidget {
 }
 
 class _SpScreenControllerState extends State<SpScreenController> {
+  String accountType = '';
+  @override
+  void initState() {
+    // getAccountType();
+    super.initState();
+  }
+
+  // Future<void> getAccountType() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   accountType = prefs.getString('accountType')!;
+  // }
+
   final String imageUrl =
       'https://cdn.creatureandcoagency.com/uploads/2014/09/leopard-facts-10-1.jpg';
   final screens = [
