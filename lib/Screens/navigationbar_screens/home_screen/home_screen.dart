@@ -10,8 +10,10 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   Future<List<dynamic>> fetchUserPicsForFeed() async {
-    final response = await http.post(Uri.parse(
-        'https://gowild.herokuapp.com/api/user/getAllUserPicsForFeed'));
+    // final response = await http.post(Uri.parse(
+    //     'http://127.0.0.1:3000/api/user/getAllUserPicsForFeed'));
+    final response = await http.post(
+        Uri.parse('http://127.0.0.1:3000/api/user/getAllUserPicsForFeed'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);

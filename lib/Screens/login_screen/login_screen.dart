@@ -36,10 +36,12 @@ class _LoginScreenState extends State<LoginScreen> {
       print('login complete');
       final prefs = await SharedPreferences.getInstance();
       final token = loginData['success'];
-      print('login $token');
+      print('logins $token');
       // print('login ${loginData['role']}');
       if (loginData['success'] == 1) {
+        print('data = 1');
         if (loginData['role'] == 'client') {
+          print('client');
           prefs.setString('role', 'client');
           Navigator.pushReplacementNamed(context, '/client_screen_controller');
         } else if (loginData['role'] == 'sp') {

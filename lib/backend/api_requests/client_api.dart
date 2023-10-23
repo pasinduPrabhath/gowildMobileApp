@@ -11,7 +11,8 @@ import '../../Screens/navigationbar_screens/travel_buddy_screen/MySpace/widgets/
 import '../../Screens/navigationbar_screens/travel_buddy_screen/widgets/requestModel.dart';
 
 class ClientAPI {
-  static const baseUrl = 'https://gowild.herokuapp.com/api';
+  // static const baseUrl = 'https://gowild.herokuapp.com/api';
+  static const baseUrl = 'http://127.0.0.1:3000/api';
   // List<String> name = [];
 
   static Future<List<Profile>> getUserProfileDetails(String email) async {
@@ -241,7 +242,8 @@ class ClientAPI {
 
   static Future<List<dynamic>> getSimpleUserDetails(int userID) async {
     final url =
-        Uri.parse('https://gowild.herokuapp.com/api/user/getSimpleUserDetails');
+        // Uri.parse('https://gowild.herokuapp.com/api/user/getSimpleUserDetails');
+        Uri.parse('http://127.0.0.1:3000/api/user/getSimpleUserDetails');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode({'userId': userID});
     final response = await http.post(url, headers: headers, body: body);

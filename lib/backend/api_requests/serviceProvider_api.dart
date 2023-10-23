@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 import '../../Screens/navigationbar_screens/marketplace_screen/tour_plan_ads/AddTourAdsModel.dart';
 
 class SpAPI {
-  static const baseUrl = 'https://gowild.herokuapp.com/api';
+  // static const baseUrl = 'https://gowild.herokuapp.com/api';
+  static const baseUrl = 'http://127.0.0.1:3000/api';
   static Future<int> updateCalender(
       String? email, String? date, String? eventDetails) async {
     final url = Uri.parse('$baseUrl/serviceProvider/addEventToCalendar');

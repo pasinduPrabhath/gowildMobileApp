@@ -7,7 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../Screens/registration_screen/service_provider_model.dart';
 
 class Api {
-  static const baseUrl = 'https://gowild.herokuapp.com/api';
+  // static const baseUrl = 'https://gowild.herokuapp.com/api';
+  static const baseUrl = 'http://127.0.0.1:3000/api';
 
   static Future<int> createUser(User user) async {
     final url = Uri.parse('$baseUrl/user/registerClient');
